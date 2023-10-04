@@ -1,0 +1,113 @@
+*{
+    margin: 0;
+    box-sizing: border-box;
+}
+body{
+    display: flex;
+    flex-direction: row;
+    background: black;
+}
+.cabecalho{
+    width: 300px;
+    height: 900px;
+    background-color: #33333399;
+}
+.menu{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.btnmenu{
+    background-color: whitesmoke;
+    padding: 12px 0;
+    text-align: center;
+    border: 1px solid black; 
+    border-radius: 10px;
+    text-decoration: none;
+    color: black ;
+    font-weight: bold;
+}
+.mainmenubtn {
+    background-color: whitesmoke;
+    color: black;
+    border: none;
+    cursor: pointer;
+    padding:10px 72px;
+    margin-top:20px;
+    position: relative;
+    left:48px;
+}
+.mainmenubtn:hover {
+    background-color: #33333399;
+}
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+.dropdown-child {
+    display: none;
+    background-color: #33333399;
+    width: 195px;
+    gap:10px;
+    position: relative;
+    left: 47px;
+}
+ .seta{
+    position: relative;
+    left:20px;
+    top: 3px;
+}
+.dropdown-child a {
+    color: black;
+    padding: 10px;
+    text-decoration: none;
+    display: block;
+    margin-top:10px;
+    margin-bottom: 10px;
+}
+.dropdown:hover .dropdown-child  {
+    display: flex;
+    flex-direction: column;
+    gap:10px;
+}
+.mainmenubtn:hover .seta {
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+.container{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    height: 500px;
+    padding: 0px 0px ;
+    
+}
+.card1:nth-of-type(odd){
+    height: 110px;
+    width: 1050px;
+    background: black;
+    border-radius: 10px;
+    color: white;
+    justify-content: center;
+}
+.card1:nth-of-type(odd):hover,.card6:nth-of-type(even):hover{
+    height: 500px;
+    width: 1050px;
+    background: rgb(211, 209, 75);
+    border-radius: 10px;
+    color: rgb(0, 0, 0);
+    justify-content: center;
+    transition: 1.5s;
+    font-size: 1.5rem;
+}
+.card1:nth-of-type(even){
+    height: 110px;
+    width: 1050px;
+    background: black;
+    border-radius: 10px;
+    color: white;
+    justify-content: center;
+}

@@ -215,29 +215,3 @@ body{
     color: white;
     justify-content: center;
 }
-.card6:nth-of-type(odd){
-    height: 110px;
-    width: 1050px;
-    background: black;
-    border-radius: 10px;
-    color: white;
-    justify-content: center;
-}
-.card6:nth-of-type(odd):hover,.card6:nth-of-type(even):hover{
-    height: 500px;
-    width: 1050px;
-    background: rgb(211, 209, 75);
-    border-radius: 10px;
-    color: rgb(0, 0, 0);
-    justify-content: center;
-    transition: 1.5s;
-    font-size: 1.5rem;
-}
-.card6:nth-of-type(even){
-    height: 110px;
-    width: 1050px;
-    background: black;
-    border-radius: 10px;
-    color: white;
-    justify-content: center;
-}
