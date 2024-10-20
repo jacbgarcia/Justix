@@ -1,0 +1,33 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  body {
+    background-color: #B2B2B2;
+  }
+  
+  .maincontent {
+    width: 100%;
+    margin: 2rem auto;
+    text-align: center;
+    margin-top: auto;
+}
+
+  .illustration {
+    top: 0;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+  
+  .illustrationimg {
+    width: 100%;
+    height: auto;
+  }
