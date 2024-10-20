@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Adicionado useNavigate
 import styles from "./Cadastro.module.css";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import ContainerHome from "../../components/ContainerHome";
 
 function Cadastro() {
+    const navigate = useNavigate(); // Para navegação programática
+    
     const [formData, setFormData] = useState({
         nome: '',
         cpf: '',
@@ -22,6 +24,12 @@ function Cadastro() {
         telefone: '',
         senha: '',
         confirmarSenha: ''
+    });
+
+    // Novo estado para status do envio
+    const [submitStatus, setSubmitStatus] = useState({
+        message: '',
+        type: ''
     });
 
     // Função para formatar CPF
@@ -83,7 +91,6 @@ function Cadastro() {
         const { id, value } = e.target;
         let formattedValue = value;
 
-        // Aplica formatação específica para CPF e telefone
         if (id === 'cpf') {
             formattedValue = formatCPF(value);
         } else if (id === 'telefone') {
@@ -101,7 +108,6 @@ function Cadastro() {
             [id]: error
         }));
 
-        // Valida confirmação de senha quando a senha é alterada
         if (id === 'senha') {
             const confirmarSenhaError = formData.confirmarSenha 
                 ? validateField('confirmarSenha', formData.confirmarSenha) 
@@ -113,7 +119,8 @@ function Cadastro() {
         }
     };
 
-    const handleSubmit = (e) => {
+    // Função de envio modificada
+    const handleSubmit = async (e) => {
         e.preventDefault();
         
         // Valida todos os campos
@@ -128,8 +135,46 @@ function Cadastro() {
             return;
         }
         
-        // Se chegou aqui, o formulário está válido
-        console.log('Dados do formulário:', formData);
+        try {
+            const response = await fetch('http://localhost:5000/api/usuarios/cadastro', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    nome: formData.nome,
+                    cpf: formData.cpf.replace(/\D/g, ''), // Remove formatação
+                    email: formData.email,
+                    telefone: formData.telefone.replace(/\D/g, ''), // Remove formatação
+                    senha: formData.senha
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setSubmitStatus({
+                    message: 'Cadastro realizado com sucesso!',
+                    type: 'success'
+                });
+                
+                // Redireciona após sucesso
+                setTimeout(() => {
+                    navigate('/Tribunais'); // Usando navigate ao invés de window.location
+                }, 2000);
+            } else {
+                setSubmitStatus({
+                    message: data.error || 'Erro ao realizar cadastro',
+                    type: 'error'
+                });
+            }
+        } catch (error) {
+            console.error('Erro ao enviar dados:', error);
+            setSubmitStatus({
+                message: 'Erro ao conectar com o servidor',
+                type: 'error'
+            });
+        }
     };
 
     return (
@@ -149,6 +194,13 @@ function Cadastro() {
                         </Link>
                         
                         <h2 className={styles.title}>CADASTRO</h2>
+
+                        {/* Mensagem de status */}
+                        {submitStatus.message && (
+                            <div className={`${styles.statusMessage} ${styles[submitStatus.type]}`}>
+                                {submitStatus.message}
+                            </div>
+                        )}
                         
                         <form onSubmit={handleSubmit} className={styles.cadastroForm}>
                             <div className={styles.formGroup}>
@@ -243,11 +295,11 @@ function Cadastro() {
                                     <span className={styles.errorText}>{errors.confirmarSenha}</span>
                                 )}
                             </div>
-                            <Link to="/Tribunais">
+
+                            {/* Botão de submit sem Link */}
                             <button type="submit" className={styles.submitButton}>
                                 Cadastrar
                             </button>
-                            </Link>
                         </form>
                     </div>
                 </section>
