@@ -1,25 +1,25 @@
 // src/pages/Tribunais/TribunaisFormPage.js
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import AudienciasListPageO from '../../components/BD/AudienciasFormPage';
+import AudienciasFormPageO from '../../components/BD/AudienciasFormPage';
 
 const AudienciasFormPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const juizAtivo = location.state?.juiz || null;
 
-  const handleSave = async (tribunal) => {
+  const handleSave = async (juiz) => {
     // Lógica de salvamento via API
-    navigate('/juiz');
+    navigate('/admin/dashboard/juiz');
   };
 
   const handleCancel = () => {
-    navigate('/juiz');
+    navigate('/admin/dashboard/juiz');
   };
 
   return (
     <div>
-      <AudienciasListPageO juizAtivo={juizAtivo} onSave={handleSave} onCancel={handleCancel} />
+      <AudienciasFormPageO juizAtivo={juizAtivo} onSave={handleSave} onCancel={handleCancel} />
     </div>
   );
 };

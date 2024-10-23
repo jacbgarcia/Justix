@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from "react-router-dom"; // Adicionado useNavigate
-import styles from "./Cadastro.module.css";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import ContainerHome from "../../components/ContainerHome";
+import { Link, useNavigate } from 'react-router-dom';
+import styles from './Cadastro.module.css';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+import ContainerHome from '../../components/ContainerHome';
 
 function Cadastro() {
-    const navigate = useNavigate(); // Para navegação programática
-    
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState({
         nome: '',
         cpf: '',
@@ -26,13 +26,11 @@ function Cadastro() {
         confirmarSenha: ''
     });
 
-    // Novo estado para status do envio
     const [submitStatus, setSubmitStatus] = useState({
         message: '',
         type: ''
     });
 
-    // Função para formatar CPF
     const formatCPF = (value) => {
         return value
             .replace(/\D/g, '')
@@ -42,7 +40,6 @@ function Cadastro() {
             .replace(/(-\d{2})\d+?$/, '$1');
     };
 
-    // Função para formatar telefone
     const formatTelefone = (value) => {
         return value
             .replace(/\D/g, '')
@@ -51,37 +48,30 @@ function Cadastro() {
             .replace(/(-\d{4})\d+?$/, '$1');
     };
 
-    // Validações
     const validateField = (name, value) => {
         switch (name) {
             case 'nome':
                 return value.length < 3 ? 'Nome deve ter pelo menos 3 caracteres' : '';
-            
             case 'cpf':
                 return value.replace(/\D/g, '').length !== 11 
                     ? 'CPF deve ter 11 dígitos' 
                     : '';
-            
             case 'email':
                 return !value.includes('@') || !value.includes('.com')
                     ? 'Email deve conter @ e .com'
                     : '';
-            
             case 'telefone':
                 return value.replace(/\D/g, '').length < 11
                     ? 'Telefone deve ter 11 dígitos'
                     : '';
-            
             case 'senha':
                 return value.length < 6
                     ? 'Senha deve ter pelo menos 6 caracteres'
                     : '';
-            
             case 'confirmarSenha':
                 return value !== formData.senha
                     ? 'As senhas não coincidem'
                     : '';
-            
             default:
                 return '';
         }
@@ -97,111 +87,89 @@ function Cadastro() {
             formattedValue = formatTelefone(value);
         }
 
-        setFormData(prevState => ({
+        setFormData((prevState) => ({
             ...prevState,
             [id]: formattedValue
         }));
 
         const error = validateField(id, formattedValue);
-        setErrors(prevState => ({
+        setErrors((prevState) => ({
             ...prevState,
             [id]: error
         }));
 
         if (id === 'senha') {
-            const confirmarSenhaError = formData.confirmarSenha 
-                ? validateField('confirmarSenha', formData.confirmarSenha) 
+            const confirmarSenhaError = formData.confirmarSenha
+                ? validateField('confirmarSenha', formData.confirmarSenha)
                 : '';
-            setErrors(prevState => ({
+            setErrors((prevState) => ({
                 ...prevState,
                 confirmarSenha: confirmarSenhaError
             }));
         }
     };
 
-    // Função de envio modificada
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        // Valida todos os campos
-        const newErrors = {};
-        Object.keys(formData).forEach(key => {
-            newErrors[key] = validateField(key, formData[key]);
-        });
-
-        // Verifica se há algum erro
-        if (Object.values(newErrors).some(error => error !== '')) {
-            setErrors(newErrors);
-            return;
-        }
-        
         try {
-            const response = await fetch('http://localhost:5000/api/usuarios/cadastro', {
+            console.log('Enviando dados:', formData); // Log dos dados enviados
+    
+            const response = await fetch('http://localhost:3001/usuarios', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     nome: formData.nome,
-                    cpf: formData.cpf.replace(/\D/g, ''), // Remove formatação
+                    cpf: formData.cpf.replace(/\D/g, ''),
                     email: formData.email,
-                    telefone: formData.telefone.replace(/\D/g, ''), // Remove formatação
+                    telefone: formData.telefone.replace(/\D/g, ''),
                     senha: formData.senha
                 })
             });
-
+    
             const data = await response.json();
-
+            console.log('Resposta do servidor:', data); // Log da resposta
+    
             if (response.ok) {
                 setSubmitStatus({
                     message: 'Cadastro realizado com sucesso!',
                     type: 'success'
                 });
-                
-                // Redireciona após sucesso
-                setTimeout(() => {
-                    navigate('/Tribunais'); // Usando navigate ao invés de window.location
-                }, 2000);
+                setTimeout(() => navigate('/login'), 2000);
             } else {
-                setSubmitStatus({
-                    message: data.error || 'Erro ao realizar cadastro',
-                    type: 'error'
-                });
+                throw new Error(data.error || 'Erro ao realizar cadastro');
             }
         } catch (error) {
-            console.error('Erro ao enviar dados:', error);
+            console.error('Erro no cadastro:', error);
             setSubmitStatus({
-                message: 'Erro ao conectar com o servidor',
+                message: error.message || 'Erro ao conectar com o servidor',
                 type: 'error'
             });
         }
     };
-
     return (
-        <>
-            <Header>
-                <div className={styles.navleft}>
-                    <Link to="/Login" className={styles.navlinksl}>Login</Link>
-                    <Link to="/Sobre_nos"className={styles.navlinks}>Sobre nós</Link>
-                </div>
+       
+            <>
+            <Header> 
+            <div className={styles.navleft}>
+            <Link to="/login" className={styles.navlinksl}>Login</Link>
+            <Link to="/info" className={styles.navlinks}>Sobre nós</Link>
+            </div>
             </Header>
             <ContainerHome>
                 <section className={styles.cadastroSection}>
                     <div className={styles.cadastroContainer}>
-                        <Link to="/" className={styles.backButton}>
-                            <span className={styles.backArrow}>←</span>
-                            Voltar
-                        </Link>
-                        
-                        <h2 className={styles.title}>CADASTRO</h2>
+                        <Link to="/" className={styles.backButton}>← Voltar</Link>
+                        <h2 className={styles.title}>Cadastro</h2>
 
-                        {/* Mensagem de status */}
                         {submitStatus.message && (
                             <div className={`${styles.statusMessage} ${styles[submitStatus.type]}`}>
                                 {submitStatus.message}
                             </div>
                         )}
-                        
+
                         <form onSubmit={handleSubmit} className={styles.cadastroForm}>
                             <div className={styles.formGroup}>
                                 <label htmlFor="nome">Nome:</label>
@@ -210,12 +178,9 @@ function Cadastro() {
                                     id="nome"
                                     value={formData.nome}
                                     onChange={handleInputChange}
-                                    className={errors.nome ? styles.inputError : ''}
                                     required
                                 />
-                                {errors.nome && (
-                                    <span className={styles.errorText}>{errors.nome}</span>
-                                )}
+                                {errors.nome && <span className={styles.errorText}>{errors.nome}</span>}
                             </div>
 
                             <div className={styles.formGroup}>
@@ -225,13 +190,10 @@ function Cadastro() {
                                     id="cpf"
                                     value={formData.cpf}
                                     onChange={handleInputChange}
-                                    className={errors.cpf ? styles.inputError : ''}
-                                    maxLength="14"
                                     required
+                                    maxLength="14"
                                 />
-                                {errors.cpf && (
-                                    <span className={styles.errorText}>{errors.cpf}</span>
-                                )}
+                                {errors.cpf && <span className={styles.errorText}>{errors.cpf}</span>}
                             </div>
 
                             <div className={styles.formGroup}>
@@ -241,12 +203,9 @@ function Cadastro() {
                                     id="email"
                                     value={formData.email}
                                     onChange={handleInputChange}
-                                    className={errors.email ? styles.inputError : ''}
                                     required
                                 />
-                                {errors.email && (
-                                    <span className={styles.errorText}>{errors.email}</span>
-                                )}
+                                {errors.email && <span className={styles.errorText}>{errors.email}</span>}
                             </div>
 
                             <div className={styles.formGroup}>
@@ -256,14 +215,10 @@ function Cadastro() {
                                     id="telefone"
                                     value={formData.telefone}
                                     onChange={handleInputChange}
-                                    className={errors.telefone ? styles.inputError : ''}
-                                    placeholder="(XX) XXXXX-XXXX"
-                                    maxLength="15"
                                     required
+                                    maxLength="15"
                                 />
-                                {errors.telefone && (
-                                    <span className={styles.errorText}>{errors.telefone}</span>
-                                )}
+                                {errors.telefone && <span className={styles.errorText}>{errors.telefone}</span>}
                             </div>
 
                             <div className={styles.formGroup}>
@@ -273,12 +228,9 @@ function Cadastro() {
                                     id="senha"
                                     value={formData.senha}
                                     onChange={handleInputChange}
-                                    className={errors.senha ? styles.inputError : ''}
                                     required
                                 />
-                                {errors.senha && (
-                                    <span className={styles.errorText}>{errors.senha}</span>
-                                )}
+                                {errors.senha && <span className={styles.errorText}>{errors.senha}</span>}
                             </div>
 
                             <div className={styles.formGroup}>
@@ -288,7 +240,6 @@ function Cadastro() {
                                     id="confirmarSenha"
                                     value={formData.confirmarSenha}
                                     onChange={handleInputChange}
-                                    className={errors.confirmarSenha ? styles.inputError : ''}
                                     required
                                 />
                                 {errors.confirmarSenha && (
@@ -296,10 +247,7 @@ function Cadastro() {
                                 )}
                             </div>
 
-                            {/* Botão de submit sem Link */}
-                            <button type="submit" className={styles.submitButton}>
-                                Cadastrar
-                            </button>
+                            <button type="submit" className={styles.submitButton}>Cadastrar</button>
                         </form>
                     </div>
                 </section>

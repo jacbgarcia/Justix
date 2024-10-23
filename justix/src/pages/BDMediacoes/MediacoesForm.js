@@ -10,11 +10,11 @@ const MediacoesFormPage = () => {
 
   const handleSave = async (mediador) => {
     // Lógica de salvamento via API
-    navigate('/mediador');
+    navigate('/admin/dashboard/mediador');
   };
 
   const handleCancel = () => {
-    navigate('/mediador');
+    navigate('/admin/dashboard/mediador');
   };
 
   return (

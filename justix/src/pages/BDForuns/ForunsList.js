@@ -7,11 +7,11 @@ const ForunsListPage = () => {
   const navigate = useNavigate();
 
   const handleEdit = (forum) => {
-    navigate('/foruns/edit', { state: { forum } });
+    navigate('/admin/dashboard/foruns/edit', { state: { forum } });
   };
 
   const handleNew = () => {
-    navigate('/foruns/new');
+    navigate('/admin/dashboard/foruns/new');
   };
 
   return (

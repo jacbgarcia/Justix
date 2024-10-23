@@ -7,12 +7,12 @@ import AudienciasListPageO from '../../components/BD/AudienciasListPage';
 const AudienciasListPage = () => {
   const navigate = useNavigate();
 
-  const handleEdit = (tribunal) => {
-    navigate('/juiz/edit', { state: { tribunal } });
+  const handleEdit = (juiz) => {
+    navigate('/admin/dashboard/juiz/edit', { state: { juiz } });
   };
 
   const handleNew = () => {
-    navigate('/juiz/new');
+    navigate('/admin/dashboard/juiz/new');
   };
 
   return (

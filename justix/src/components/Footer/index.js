@@ -4,7 +4,7 @@ function Footer() {
     return (
         <footer>
             <nav className={styles.footbar}>
-                <p>JUSTIX&copy; Desenvolido por JEJE's Bizarre Programing 2024</p>
+                <p>JUSTIX&copy; Desenvolvido por JEJE's Bizarre Programing 2024</p>
             </nav>
         </footer>
     );

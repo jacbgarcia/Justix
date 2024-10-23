@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import styles from './SearchSection.module.css';
 
-const SearchSection = ({ onSearch }) => {
+const SearchSection = ({ onSearch, activeFilters }) => {
     const [searchTerm, setSearchTerm] = useState('');
 
     const handleSearch = (e) => {
         const value = e.target.value;
         setSearchTerm(value);
         if (onSearch) {
-            onSearch(value);
+            // Chama onSearch com o termo de pesquisa e os filtros ativos
+            onSearch(value, activeFilters);
         }
     };
 

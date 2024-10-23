@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
-import styles from "./Login.module.css";
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate,  Link } from 'react-router-dom'; 
+
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import ContainerHome from "../../components/ContainerHome";
+import styles from './Login.module.css'; // Certifique-se de ter um arquivo CSS para os estilos
 
 function Login() {
-    const [formData, setFormData] = useState({
-        email: '',
-        senha: ''
-    });
-    const [errors, setErrors] = useState({
-        email: '',
-        senha: ''
-    });
+    const { login } = useAuth();
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({ email: '', senha: '' });
+    const [errors, setErrors] = useState({ email: '', senha: '' });
+    const [error, setError] = useState('');
 
     const validateEmail = (email) => {
         if (!email) return 'Email é obrigatório';
@@ -24,40 +23,57 @@ function Login() {
 
     const handleInputChange = (e) => {
         const { id, value } = e.target;
-        setFormData(prevState => ({
-            ...prevState,
-            [id]: value
-        }));
-
-        setErrors(prevState => ({
-            ...prevState,
-            [id]: ''
-        }));
+        setFormData(prev => ({ ...prev, [id]: value }));
+        setErrors(prev => ({ ...prev, [id]: '' }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         const emailError = validateEmail(formData.email);
         const senhaError = !formData.senha ? 'Senha é obrigatória' : '';
 
         if (emailError || senhaError) {
-            setErrors({
-                email: emailError,
-                senha: senhaError
-            });
+            setErrors({ email: emailError, senha: senhaError });
             return;
         }
-        
-        console.log('Dados do formulário:', formData);
+
+        try {
+            const response = await fetch('http://localhost:3001/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                login(data);
+
+                // Redirecionar baseado no role
+                switch(data.user.role) {
+                    case 'admin':
+                        navigate('/admin/dashboard/foruns');
+                        break;
+                    default:
+                        navigate('/user/dashboard/foruns');
+                }
+            } else {
+                setError(data.error);
+            }
+        } catch (error) {
+            setError('Erro ao fazer login');
+        }
     };
 
     return (
         <>
             <Header>
                 <div className={styles.navleft}>
-                    <Link to="/Cadastro" className={styles.cadastrese}>Cadastre-se</Link>
-                    <Link to="/Sobre_nos" className={styles.navlinks}>Sobre nós</Link>
+                    <Link to="/cadastro" className={styles.cadastrese}>Cadastre-se</Link>
+                    <Link to="/info" className={styles.navlinks}>Sobre nós</Link>
                 </div>
             </Header>
             <ContainerHome>
@@ -69,6 +85,7 @@ function Login() {
                         </Link>
                         
                         <h2 className={styles.title}>LOGIN</h2>
+                        {error && <span className={styles.errorText}>{error}</span>}
                         
                         <form onSubmit={handleSubmit} className={styles.loginForm}>
                             <div className={styles.formGroup}>
@@ -81,9 +98,7 @@ function Login() {
                                     className={errors.email ? styles.inputError : ''}
                                     required
                                 />
-                                {errors.email && (
-                                    <span className={styles.errorText}>{errors.email}</span>
-                                )}
+                                {errors.email && <span className={styles.errorText}>{errors.email}</span>}
                             </div>
 
                             <div className={styles.formGroup}>
@@ -96,15 +111,12 @@ function Login() {
                                     className={errors.senha ? styles.inputError : ''}
                                     required
                                 />
-                                {errors.senha && (
-                                    <span className={styles.errorText}>{errors.senha}</span>
-                                )}
+                                {errors.senha && <span className={styles.errorText}>{errors.senha}</span>}
                             </div>
-                            <Link to="/Tribunais">
+
                             <button type="submit" className={styles.submitButton}>
                                 Entrar
                             </button>
-                            </Link>
                         </form>
                     </div>
                 </section>

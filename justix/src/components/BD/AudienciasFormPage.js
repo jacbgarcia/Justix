@@ -14,28 +14,73 @@ const AudienciasFormPageO = () => {
     avaliacao_media: 0
   });
 
+  const [imagemFile, setImagemFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+
+
   useEffect(() => {
     if (juizAtivo) {
       setFormData(juizAtivo);
+      if (juizAtivo.imagem) {
+        setPreviewUrl(`http://localhost:3001/uploads/${juizAtivo.imagem}`);
+      }
     }
   }, [juizAtivo]);
+
+  const handleImagemChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImagemFile(file);
+      const fileUrl = URL.createObjectURL(file);
+      setPreviewUrl(fileUrl);
+    }
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (juizAtivo) {
-        await axios.put(`http://localhost:3001/juiz/${juizAtivo.id_juiz}`, formData);
-      } else {
-        await axios.post('http://localhost:3001/juiz', formData);
+      const submitFormData = new FormData();
+      
+      // Adiciona todos os campos do formulário ao FormData
+      Object.keys(formData).forEach(key => {
+        submitFormData.append(key, formData[key]);
+      });
+
+      // Adiciona a imagem apenas se uma nova imagem foi selecionada
+      if (imagemFile) {
+        submitFormData.append('imagem', imagemFile);
       }
-      navigate('/juiz');
+
+      if (juizAtivo) {
+        await axios.put(
+          `http://localhost:3001/juiz/${juizAtivo.id_juiz}`,
+          submitFormData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+        );
+      } else {
+        await axios.post(
+          'http://localhost:3001/juiz',
+          submitFormData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+        );
+      }
+      navigate('/admin/dashboard/juiz');
     } catch (err) {
       console.error('Erro ao salvar juiz:', err);
     }
   };
 
   const handleCancel = () => {
-    navigate('/juiz');
+    navigate('/admin/dashboard/juiz');
   };
 
   return (
@@ -80,6 +125,23 @@ const AudienciasFormPageO = () => {
             max="10"
             required
           />
+        </div>
+        <div>
+          <label>Foto:</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImagemChange}
+          />
+          {previewUrl && (
+            <div>
+              <img 
+                src={previewUrl} 
+                alt="Preview" 
+                style={{ maxWidth: '200px', marginTop: '10px' }}
+              />
+            </div>
+          )}
         </div>
         <button type="submit">
           {juizAtivo ? 'Salvar Alterações' : 'Criar Juiz'}

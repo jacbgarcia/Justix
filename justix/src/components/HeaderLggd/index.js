@@ -6,12 +6,12 @@ function HeaderLggd({children}) {
     const location = useLocation();
     
     const navigation = [
-        { name: 'Tribunais', path: '/tribunais' },
-        { name: 'Fóruns', path: '/foruns' },
-        { name: 'Audiências', path: '/audiencias' },
-        { name: 'Mediações', path: '/mediacoes' },
-        { name: 'Advocacia', path: '/advocacia' },
-        { name: 'Portais', path: '/portais' }
+        { name: 'Tribunais', path: '/user/dashboard/tribunais' },
+        { name: 'Fóruns', path: '/user/dashboard/foruns' },
+        { name: 'Audiências', path: '/user/dashboard/audiencias' },
+        { name: 'Mediações', path: '/user/dashboard/mediacoes' },
+        { name: 'Advocacia', path: '/user/dashboard/advocacia' },
+        { name: 'Portais', path: '/user/dashboard/portais' }
     ];
 
     const getCurrentTitle = () => {

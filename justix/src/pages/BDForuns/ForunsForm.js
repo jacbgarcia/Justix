@@ -10,11 +10,11 @@ const ForunsFormPage = () => {
 
   const handleSave = async (forum) => {
     // Lógica de salvamento via API
-    navigate('/foruns');
+    navigate('/admin/dashboard/foruns');
   };
 
   const handleCancel = () => {
-    navigate('/foruns');
+    navigate('/admin/dashboard/foruns');
   };
 
   return (

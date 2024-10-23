@@ -10,8 +10,8 @@ function Sobre(){
         <>
         <Header>
         <div className={styles.navleft}>
-        <Link to="/Cadastro" className={styles.cadastrese}>Cadastre-se</Link>
-        <Link to="/Login" className={styles.navlinksl}>Login</Link>
+        <Link to="/cadastro" className={styles.cadastrese}>Cadastre-se</Link>
+        <Link to="/login" className={styles.navlinksl}>Login</Link>
         </div>
         </Header>
         <ContainerHome>

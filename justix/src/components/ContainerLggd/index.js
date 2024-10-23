@@ -2,17 +2,26 @@ import React, { useState } from 'react';
 import styles from "./ContainerLggd.module.css";
 import { useLocation } from 'react-router-dom';
 
+
+
+
+
+
+
 const ContainerLggd = ({ children, onSearch }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const location = useLocation();
+
+
+
     
     const navigation = [
-        { name: 'Tribunais', path: '/tribunais' },
-        { name: 'Fóruns', path: '/foruns' },
-        { name: 'Audiências', path: '/audiencias' },
-        { name: 'Mediações', path: '/mediacoes' },
-        { name: 'Advocacia', path: '/advocacia' },
-        { name: 'Portais', path: '/portais' }
+        { name: 'Tribunais', path: '/user/dashboard/tribunais' },
+        { name: 'Fóruns', path: '/user/dashboard/foruns' },
+        { name: 'Audiências', path: '/user/dashboard/audiencias' },
+        { name: 'Mediações', path: '/user/dashboard/mediacoes' },
+        { name: 'Advocacia', path: '/user/dashboard/advocacia' },
+        { name: 'Portais', path: '/user/dashboard/portais' }
     ];
 
     const title = navigation.find(
@@ -26,6 +35,16 @@ const ContainerLggd = ({ children, onSearch }) => {
             onSearch(value);
         }
     };
+
+    // const handleSearch = async (searchTerm, activeFilters) => {
+    //     try {
+    //         const response = await fetch(`/api/search?term=${searchTerm}&filters=${JSON.stringify(activeFilters)}`);
+    //         const data = await response.json();
+    //         // Atualize o estado com os resultados da pesquisa
+    //     } catch (error) {
+    //         console.error('Erro ao buscar dados:', error);
+    //     }
+    // };
 
     return (
         <section>

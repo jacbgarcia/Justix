@@ -8,11 +8,11 @@ const TribunaisListPage = () => {
   const navigate = useNavigate();
 
   const handleEdit = (tribunal) => {
-    navigate('/tribunais/edit', { state: { tribunal } });
+    navigate('/admin/dashboard/tribunais/edit', { state: { tribunal } });
   };
 
   const handleNew = () => {
-    navigate('/tribunais/new');
+    navigate('/admin/dashboard/tribunais/new');
   };
 
   return (

@@ -7,11 +7,11 @@ const MediacoesListPage = () => {
   const navigate = useNavigate();
 
   const handleEdit = (mediador) => {
-    navigate('/mediador/edit', { state: { mediador } });
+    navigate('/admin/dashboard/mediador/edit', { state: { mediador } });
   };
 
   const handleNew = () => {
-    navigate('/mediador/new');
+    navigate('/admin/dashboard/mediador/new');
   };
 
   return (

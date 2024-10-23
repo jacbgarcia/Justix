@@ -10,11 +10,11 @@ const TribunaisFormPage = () => {
 
   const handleSave = async (tribunal) => {
     // Lógica de salvamento via API
-    navigate('/tribunais');
+    navigate('/admin/dashboard/tribunais');
   };
 
   const handleCancel = () => {
-    navigate('/tribunais');
+    navigate('/admin/dashboard/tribunais');
   };
 
   return (
