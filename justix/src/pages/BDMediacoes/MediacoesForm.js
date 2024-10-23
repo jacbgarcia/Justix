@@ -2,6 +2,8 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import MediacoesFormPageO from '../../components/BD/MediacoesFormPage';
+import HeaderLggd from '../../components/HeaderLggd';
+import Footer from '../../components/Footer';
 
 const MediacoesFormPage = () => {
   const navigate = useNavigate();
@@ -18,9 +20,13 @@ const MediacoesFormPage = () => {
   };
 
   return (
+    <>
+    <HeaderLggd></HeaderLggd>
     <div>
       <MediacoesFormPageO mediadorAtivo={mediadorAtivo} onSave={handleSave} onCancel={handleCancel} />
     </div>
+    <Footer></Footer>
+    </>
   );
 };
 

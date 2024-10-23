@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import style from '../Card/Card.module.css';
 
 const MediacoesListPageO = () => {
   const [mediador, setMediadores] = useState([]);
@@ -41,70 +42,51 @@ const MediacoesListPageO = () => {
   };
 
   return (
-    <div>
-      <table border="1" cellPadding="10" cellSpacing="0">
-        <thead>
-          <tr>
-            <th>Imagem</th>
-            <th>Nome</th>
-            <th>Estado</th>
-            <th>Avaliação Média</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
+    
+        <div>
           {mediador.map(mediador => (
-            <tr key={mediador.id_mediador}>
-              <td style={{ width: '150px', textAlign: 'center' }}>
+            <div key={mediador.id_mediador} className={style.card}>
+              <div className={style.cardleft}>
                 {mediador.imagem ? (
                   <img
                     src={getImagemUrl(mediador.imagem)}
                     alt={`Imagem de ${mediador.nome}`}
-                    style={{
-                      maxWidth: '120px',
-                      maxHeight: '120px',
-                      objectFit: 'cover',
-                      borderRadius: '4px'
-                    }}
+                    className={style.cardleft1}
                   />
                 ) : (
-                  <div
-                    style={{
-                      width: '120px',
-                      height: '120px',
-                      backgroundColor: '#f0f0f0',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderRadius: '4px',
-                      margin: '0 auto'
-                    }}
-                  >
+                  <div className={style.profileimg}>
                     Sem imagem
                   </div>
                 )}
-              </td>
-              <td>{mediador.nome}</td>
-              <td>{mediador.estado}</td>
-              <td>{mediador.avaliacao_media}</td>
-              <td>
-                <button 
+                <div className={style.cardinfo}>
+              <h3>{mediador.nome}</h3>
+              <p className={style.tag}>
+                {mediador.estado}
+              </p>
+              <p className={style.tag1}>
+                Média:  ★ {mediador.avaliacao_media}
+              </p>
+            </div>
+            </div>
+                <div>
+                <button
+                  className={style.visualizarbtn}
                   onClick={() => handleEdit(mediador)}
                   style={{ marginRight: '5px' }}
                 >
                   Editar
                 </button>
-                <button 
+                <button
+                  className={style.visualizarbtn} 
                   onClick={() => excluirMediador(mediador.id_mediador)}
                 >
                   Excluir
                 </button>
-              </td>
-            </tr>
+                </div>
+              
+            </div>
           ))}
-        </tbody>
-      </table>
-    </div>
+        </div>
   );
 };
 

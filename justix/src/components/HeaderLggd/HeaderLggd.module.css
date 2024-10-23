@@ -3,59 +3,161 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Montserrat', sans-serif;
-  }
-  
-  body {
+}
+
+body {
     background-color: #B2B2B2;
-  }
-  
-  .navbar {
+    padding-top: 70px; /* Espaço para o navbar fixo */
+}
+
+.navbar {
     top: 0;
     position: fixed;
     width: 100%;
     background-color: #D9D9D9;
-    padding: 1rem 1rem;
-    margin-bottom: 2rem;
-    display: flex; 
-    justify-content: space-between;   
+    padding: 0.75rem 1rem;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    gap: 1%;
-  }
-  
-  .brand {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 1000; /* Garantir que fique acima de outros elementos */
+}
+
+.brand {
     color: #4169E1;
     text-decoration: none;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: bold;
-    padding-left: 50%;
-  }
+    padding-left: 0; /* Removido padding-left fixo */
+    white-space: nowrap; /* Evitar quebra do texto */
+}
 
-  .navleft {
+.navleft {
     display: flex;
-    gap: 2rem;
+    gap: 1.5rem;
     align-items: center;
-  }
-  
-  .usuario {
-    width: 2rem;
-    height: 2rem;
+    flex-wrap: nowrap; /* Evitar quebra dos itens */
+}
+
+.usuario {
+    min-width: 2rem;
+    min-height: 2rem;
     background-color: black;
     color: white;
-    padding: 0.5rem 0.5rem;
-    border-radius: 100px;
+    padding: 0.5rem;
+    border-radius: 50%;
     text-decoration: none;
     font-weight: bolder;
     display: flex;
     justify-content: center;
     align-items: center;
-    left: 2rem;
-  }
+    font-size: 0.875rem;
+}
 
-  .navButton{
-    padding: 2%;
+.navButton {
+    padding: 0.5rem;
     text-decoration: none;
     color: black;
-    gap: 1rem;
-    padding-right: 1%;
-  }
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+}
+
+/* Hover states para desktop */
+@media (hover: hover) {
+    .navButton:hover {
+        color: #4169E1;
+    }
+}
+
+/* Media Queries */
+@media screen and (max-width: 768px) {
+    .navbar {
+        padding: 0.6rem 0.75rem;
+    }
+
+    .brand {
+        font-size: 1.1rem;
+    }
+
+    .navleft {
+        gap: 1rem;
+    }
+
+    .usuario {
+        min-width: 1.75rem;
+        min-height: 1.75rem;
+        font-size: 0.75rem;
+    }
+
+    .navButton {
+        padding: 0.4rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    body {
+        padding-top: 60px;
+    }
+
+    .navbar {
+        padding: 0.5rem;
+    }
+
+    .brand {
+        font-size: 1rem;
+    }
+
+    .navleft {
+        gap: 0.75rem;
+    }
+
+    .usuario {
+        min-width: 1.5rem;
+        min-height: 1.5rem;
+        font-size: 0.7rem;
+    }
+
+    .navButton {
+        padding: 0.3rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* Para telas muito pequenas */
+@media screen and (max-width: 360px) {
+    .navbar {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.4rem;
+    }
+
+    .brand {
+        order: -1;
+        width: 100%;
+        text-align: center;
+        padding: 0;
+    }
+
+    .navleft {
+        justify-content: center;
+        width: 100%;
+    }
+}
+
+/* Para telas muito largas */
+@media screen and (min-width: 1200px) {
+    .navbar {
+        padding: 1rem 2rem;
+    }
+
+    .brand {
+        font-size: 1.75rem;
+    }
+
+    .navButton {
+        font-size: 1.1rem;
+    }
+}

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import styles from '../../pages/Login/Login.module.css';
+import ContainerHome from '../ContainerHome';
 
 const TribunaisFormPageO = () => {
   const navigate = useNavigate();
@@ -84,10 +86,12 @@ const TribunaisFormPageO = () => {
   };
 
   return (
-    <div>
-      <h3>{tribunalAtivo ? 'Editar Tribunal' : 'Novo Tribunal'}</h3>
-      <form onSubmit={handleSubmit}>
-        <div>
+    <ContainerHome>
+    <section className={styles.loginSection}>
+    <div className={styles.loginContainer}>
+      <h3 className={styles.title}>{tribunalAtivo ? 'Editar Tribunal' : 'Novo Tribunal'}</h3>
+      <form onSubmit={handleSubmit} className={styles.loginForm}>
+        <div className={styles.formGroup}>
           <label>Nome:</label>
           <input
             type="text"
@@ -96,7 +100,7 @@ const TribunaisFormPageO = () => {
             required
           />
         </div>
-        <div>
+        <div className={styles.formGroup}>
           <label>Cidade:</label>
           <input
             type="text"
@@ -105,7 +109,7 @@ const TribunaisFormPageO = () => {
             required
           />
         </div>
-        <div>
+        <div className={styles.formGroup}>
           <label>Estado:</label>
           <input
             type="text"
@@ -114,7 +118,7 @@ const TribunaisFormPageO = () => {
             required
           />
         </div>
-        <div>
+        <div className={styles.formGroup}>
           <label>Endereço:</label>
           <input
             type="text"
@@ -122,7 +126,7 @@ const TribunaisFormPageO = () => {
             onChange={(e) => setFormData({ ...formData, endereco: e.target.value })}
           />
         </div>
-        <div>
+        <div className={styles.formGroup}>
           <label>CEP:</label>
           <input
             type="text"
@@ -130,8 +134,8 @@ const TribunaisFormPageO = () => {
             onChange={(e) => setFormData({ ...formData, cep: e.target.value })}
           />
         </div>
-        <div>
-          <label>Avaliação Média:</label>
+        <div className={styles.formGroup}>
+          <label>Média:</label>
           <input
             type="number"
             value={formData.avaliacao_media}
@@ -142,7 +146,7 @@ const TribunaisFormPageO = () => {
             required
           />
         </div>
-        <div>
+        <div className={styles.formGroup}>
           <label>Foto:</label>
           <input
             type="file"
@@ -159,14 +163,16 @@ const TribunaisFormPageO = () => {
             </div>
           )}
         </div>
-        <button type="submit">
+        <button type="submit" className={styles.submitButton}>
           {tribunalAtivo ? 'Salvar Alterações' : 'Criar Tribunal'}
         </button>
-        <button type="button" onClick={handleCancel}>
+        <button type="button" onClick={handleCancel} className={styles.submitButton}>
           Cancelar
         </button>
       </form>
     </div>
+    </section>
+    </ContainerHome>
   );
 };
 

@@ -2,6 +2,8 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import AudienciasFormPageO from '../../components/BD/AudienciasFormPage';
+import HeaderLggd from '../../components/HeaderLggd';
+import Footer from '../../components/Footer';
 
 const AudienciasFormPage = () => {
   const navigate = useNavigate();
@@ -18,9 +20,13 @@ const AudienciasFormPage = () => {
   };
 
   return (
+    <>
+    <HeaderLggd></HeaderLggd>
     <div>
       <AudienciasFormPageO juizAtivo={juizAtivo} onSave={handleSave} onCancel={handleCancel} />
     </div>
+    <Footer></Footer>
+    </>
   );
 };
 

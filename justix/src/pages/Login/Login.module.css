@@ -1,7 +1,10 @@
+/* Base styles */
 .navleft {
     display: flex;
     gap: 2rem;
     align-items: center;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    padding: 0 1rem; /* Add some padding on the sides */
   }
   
   .cadastrese {
@@ -10,96 +13,156 @@
     padding: 0.5rem 1rem;
     border-radius: 10px;
     text-decoration: none;
+    white-space: nowrap; /* Prevent text from breaking */
   }
   
   .navlinks {
     text-decoration: none;
     color: black;
   }
-
+  
   .loginSection {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 2rem;
-}
-
-.loginContainer {
+    padding: 1rem; /* Reduced padding for mobile */
+    min-height: 100vh; /* Ensure full height coverage */
+  }
+  
+  .loginContainer {
     width: 100%;
     max-width: 400px;
-    padding: 2rem;
-    margin-top: -10px;
+    padding: 1.5rem; /* Slightly reduced padding for mobile */
+    margin: 1rem; /* Add margin instead of negative margin */
     background-color: #797b7d3c;
-    border-radius: 30px;
-}
-
-.backButton {
+    border-radius: 20px; /* Slightly reduced border radius */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
+  }
+  
+  .backButton {
     display: flex;
     align-items: center;
     text-decoration: none;
     color: black;
     margin-bottom: 1.5rem;
-}
-
-.backArrow {
+    font-size: 0.9rem; /* Slightly smaller font for mobile */
+  }
+  
+  .backArrow {
     margin-right: 0.5rem;
-}
-
-.title {
-    font-size: 1.5rem;
+  }
+  
+  .title {
+    font-size: 1.25rem; /* Slightly smaller font for mobile */
     font-weight: bold;
     text-align: center;
     margin-bottom: 1.5rem;
-}
-
-.loginForm {
+  }
+  
+  .loginForm {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-}
-
-.formGroup {
+  }
+  
+  .formGroup {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-}
-
-.formGroup label {
+  }
+  
+  .formGroup label {
     font-size: 0.875rem;
     font-weight: 500;
-}
-
-.formGroup input {
-    padding: 0.5rem;
+  }
+  
+  .formGroup input {
+    padding: 0.75rem; /* Increased padding for better touch targets */
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 8px; /* Increased border radius */
     font-size: 1rem;
-}
-
-.formGroup input:focus {
+    width: 100%;
+    box-sizing: border-box; /* Ensure padding doesn't affect width */
+  }
+  
+  .formGroup input:focus {
     outline: none;
     border-color: black;
     box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
-}
-
-.submitButton {
+  }
+  
+  .submitButton {
     background-color: black;
     color: white;
-    padding: 0.75rem;
+    padding: 0.875rem; /* Increased padding for better touch targets */
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.2s;
     width: 100%;
-}
-
-.submitButton:hover {
+    margin-top: 0.5rem;
+  }
+  
+  .submitButton:hover {
     background-color: #494e53;
-}
-
-.errorMessage {
+  }
+  
+  .errorMessage {
     color: #dc2626;
     text-align: center;
     margin-top: 1rem;
-}
+    font-size: 0.875rem;
+  }
+  
+  /* Media Queries */
+  @media screen and (max-width: 768px) {
+    .navleft {
+      gap: 1rem; /* Reduced gap for mobile */
+    }
+    
+    .loginContainer {
+      margin: 0.5rem;
+      padding: 1.25rem;
+    }
+    
+    .title {
+      font-size: 1.2rem;
+    }
+    
+    .formGroup input {
+      font-size: 16px; /* Prevent zoom on iOS */
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    .navleft {
+      justify-content: center;
+      padding: 0.5rem;
+    }
+    
+    .cadastrese {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.9rem;
+    }
+    
+    .loginSection {
+      padding: 0.5rem;
+    }
+    
+    .loginContainer {
+      margin: 0;
+      border-radius: 15px;
+    }
+    
+    .backButton {
+      font-size: 0.85rem;
+    }
+  }
+  
+  /* Hover states for touch devices */
+  @media (hover: none) {
+    .submitButton:hover {
+      background-color: black; /* Remove hover effect on touch devices */
+    }
+  }

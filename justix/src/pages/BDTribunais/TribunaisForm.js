@@ -2,6 +2,8 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import TribunaisFormPageO from '../../components/BD/TribunaisFormPage';
+import HeaderLggd from '../../components/HeaderLggd';
+import Footer from '../../components/Footer';
 
 const TribunaisFormPage = () => {
   const navigate = useNavigate();
@@ -18,9 +20,13 @@ const TribunaisFormPage = () => {
   };
 
   return (
+    <>
+    <HeaderLggd></HeaderLggd>
     <div>
       <TribunaisFormPageO tribunalAtivo={tribunalAtivo} onSave={handleSave} onCancel={handleCancel} />
     </div>
+    <Footer></Footer>
+    </>
   );
 };
 

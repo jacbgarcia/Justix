@@ -24,7 +24,8 @@
     height: 160px;
     min-height: 160px;
     background-image: url('../../../../justix/public/images/Logo.jpeg');
-    background-size:cover;
+    background-size:contain;
+    background-repeat: no-repeat;
     background-position: center;
     border-radius: 10px;
     padding-right: 50px;
@@ -32,13 +33,28 @@
     padding-top: 0;
 }
 
+@media screen and (max-width: 768px) {
+  .banner {
+      width: 250px;              /* Reduz o tamanho máximo em tablets */
+      height: auto;                  /* Ajusta automaticamente a altura */
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .banner {
+      width: 200px;              /* Reduz o tamanho máximo em dispositivos móveis */
+      height: auto;                  /* Garante que a altura seja proporcional */
+  }
+}
+
 .backButton {
+
     display: flex;
     align-items: center;
     text-decoration: none;
     color: black;
-    margin-bottom: 1.5rem;
-    margin-top: -25px;
+    
+    
 }
 
 .description {

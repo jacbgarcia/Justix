@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from "./ContainerLggd.module.css";
-import { useLocation } from 'react-router-dom';
+// import { useLocation } from 'react-router-dom';
 
 
 
@@ -8,33 +8,33 @@ import { useLocation } from 'react-router-dom';
 
 
 
-const ContainerLggd = ({ children, onSearch }) => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const location = useLocation();
+const ContainerLggd = ({ children }) => {
+    // const [searchTerm, setSearchTerm] = useState('');
+    // const location = useLocation();
 
 
 
     
-    const navigation = [
-        { name: 'Tribunais', path: '/user/dashboard/tribunais' },
-        { name: 'Fóruns', path: '/user/dashboard/foruns' },
-        { name: 'Audiências', path: '/user/dashboard/audiencias' },
-        { name: 'Mediações', path: '/user/dashboard/mediacoes' },
-        { name: 'Advocacia', path: '/user/dashboard/advocacia' },
-        { name: 'Portais', path: '/user/dashboard/portais' }
-    ];
+    // const navigation = [
+    //     { name: 'Tribunais', path: '/user/dashboard/tribunais' },
+    //     { name: 'Fóruns', path: '/user/dashboard/foruns' },
+    //     { name: 'Audiências', path: '/user/dashboard/audiencias' },
+    //     { name: 'Mediações', path: '/user/dashboard/mediacoes' },
+    //     { name: 'Advocacia', path: '/user/dashboard/advocacia' },
+    //     { name: 'Portais', path: '/user/dashboard/portais' }
+    // ];
 
-    const title = navigation.find(
-        item => item.path.toLowerCase() === location.pathname.toLowerCase()
-    )?.name || 'Página Inicial';
+    // const title = navigation.find(
+    //     item => item.path.toLowerCase() === location.pathname.toLowerCase()
+    // )?.name || 'Página Inicial';
 
-    const handleSearch = (e) => {
-        const value = e.target.value;
-        setSearchTerm(value);
-        if (onSearch) {
-            onSearch(value);
-        }
-    };
+    // const handleSearch = (e) => {
+    //     const value = e.target.value;
+    //     setSearchTerm(value);
+    //     if (onSearch) {
+    //         onSearch(value);
+    //     }
+    // };
 
     // const handleSearch = async (searchTerm, activeFilters) => {
     //     try {
@@ -49,17 +49,7 @@ const ContainerLggd = ({ children, onSearch }) => {
     return (
         <section>
             <div className={styles.container}>
-                <div className={styles.searchpad}>
-                    <input
-                        type="text"
-                        placeholder="Pesquisar..."
-                        value={searchTerm}
-                        onChange={handleSearch}
-                        className={styles.searchpa}
-                    />
-                </div>
-                <div className={styles.titulo}>{title}</div>
-                <div className="w-96"></div>
+                
             </div>
             <main className="p-6">
                 {children}

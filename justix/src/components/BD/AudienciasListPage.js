@@ -1,7 +1,7 @@
-// src/pages/Juiz/JuizListPage.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import style from '../Card/Card.module.css';
 
 const AudienciasListPageO = () => {
   const [juiz, setJuiz] = useState([]);
@@ -43,71 +43,49 @@ const AudienciasListPageO = () => {
   };
 
   return (
-    <div>
-      <table border="1" cellPadding="10" cellSpacing="0">
-        <thead>
-          <tr>
-            <th>Imagem</th>
-            <th>Nome</th>
-            <th>Tempo de Serviço</th>
-            <th>Casos Julgados</th>
-            <th>Avaliação Média</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
+    <div> 
           {juiz.map(juiz => (
-            <tr key={juiz.id_juiz}>
-              <td style={{ width: '150px', textAlign: 'center' }}>
+            <div key={juiz.id_juiz} className={style.card}>
+              <div className={style.cardleft}>
                 {juiz.imagem ? (
                   <img
                     src={getImagemUrl(juiz.imagem)}
                     alt={`Imagem de ${juiz.nome}`}
-                    style={{
-                      maxWidth: '120px',
-                      maxHeight: '120px',
-                      objectFit: 'cover',
-                      borderRadius: '4px'
-                    }}
+                    className={style.cardleft1}
+                    
                   />
                 ) : (
-                  <div
-                    style={{
-                      width: '120px',
-                      height: '120px',
-                      backgroundColor: '#f0f0f0',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderRadius: '4px',
-                      margin: '0 auto'
-                    }}
-                  >
+                  <div className={style.profileimg}>
                     Sem imagem
                   </div>
                 )}
-              </td>
-              <td>{juiz.nome}</td>
-              <td>{juiz.tempo_servico}</td>
-              <td>{juiz.casos_julgados}</td>
-              <td>{juiz.avaliacao_media}</td>
-              <td>
-                <button 
+               <div className={style.cardinfo}>
+              <h3>{juiz.nome}</h3>
+              <p className={style.tag}>
+                {juiz.tempo_servico} anos de serviço - {juiz.casos_julgados} casos julgados
+              </p>
+              <p className={style.tag1}>
+                Média:  ★ {juiz.avaliacao_media}
+              </p>
+            </div>
+          </div>
+              <div>
+                <button
+                  className={style.visualizarbtn}
                   onClick={() => handleEdit(juiz)}
                   style={{ marginRight: '5px' }}
                 >
                   Editar
                 </button>
                 <button 
+                  className={style.visualizarbtn}
                   onClick={() => excluirJuiz(juiz.id_juiz)}
                 >
                   Excluir
                 </button>
-              </td>
-            </tr>
+              </div>
+            </div>
           ))}
-        </tbody>
-      </table>
     </div>
   );
 };

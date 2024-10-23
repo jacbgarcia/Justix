@@ -2,6 +2,8 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ForunsFormPageO from '../../components/BD/ForunsFormPage';
+import HeaderLggd from '../../components/HeaderLggd';
+import Footer from '../../components/Footer';
 
 const ForunsFormPage = () => {
   const navigate = useNavigate();
@@ -18,9 +20,13 @@ const ForunsFormPage = () => {
   };
 
   return (
+    <>
+    <HeaderLggd></HeaderLggd>
     <div>
       <ForunsFormPageO forumAtivo={forumAtivo} onSave={handleSave} onCancel={handleCancel} />
     </div>
+    <Footer></Footer>
+    </>
   );
 };
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import style from '../Card/Card.module.css';
 
 const TribunaisListPageO = () => {
   const [tribunais, setTribunais] = useState([]);
@@ -42,74 +43,48 @@ const TribunaisListPageO = () => {
 
   return (
     <div>
-      <table border="1" cellPadding="10" cellSpacing="0">
-        <thead>
-          <tr>
-            <th>Imagem</th>
-            <th>Nome</th>
-            <th>Cidade</th>
-            <th>Estado</th>
-            <th>Endereço</th>
-            <th>CEP</th>
-            <th>Avaliação Média</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tribunais.map(tribunal => (
-            <tr key={tribunal.id_tribunal}>
-              <td style={{ width: '150px', textAlign: 'center' }}>
-                {tribunal.imagem ? (
-                  <img
-                    src={getImagemUrl(tribunal.imagem)}
-                    alt={`Imagem de ${tribunal.nome}`}
-                    style={{
-                      maxWidth: '120px',
-                      maxHeight: '120px',
-                      objectFit: 'cover',
-                      borderRadius: '4px'
-                    }}
-                  />
-                ) : (
-                  <div
-                    style={{
-                      width: '120px',
-                      height: '120px',
-                      backgroundColor: '#f0f0f0',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderRadius: '4px',
-                      margin: '0 auto'
-                    }}
-                  >
-                    Sem imagem
-                  </div>
-                )}
-              </td>
-              <td>{tribunal.nome}</td>
-              <td>{tribunal.cidade}</td>
-              <td>{tribunal.estado}</td>
-              <td>{tribunal.endereco}</td>
-              <td>{tribunal.cep}</td>
-              <td>{tribunal.avaliacao_media}</td>
-              <td>
-                <button 
-                  onClick={() => handleEdit(tribunal)}
-                  style={{ marginRight: '5px' }}
-                >
-                  Editar
-                </button>
-                <button 
-                  onClick={() => excluirTribunal(tribunal.id_tribunal)}
-                >
-                  Excluir
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {tribunais.map(tribunal => (
+        <div key={tribunal.id_tribunal} className={style.card}>
+          <div className={style.cardleft}>
+            {tribunal.imagem ? (
+              <img
+                src={getImagemUrl(tribunal.imagem)}
+                alt={`Imagem de ${tribunal.nome}`}
+                className={style.cardleft1}
+              />
+            ) : (
+              <div className={style.profileimg}>
+                Sem imagem
+              </div>
+            )}
+            <div className={style.cardinfo}>
+              <h3>{tribunal.nome}</h3>
+              <p className={style.tag}>
+                {tribunal.endereco}, {tribunal.cidade} - {tribunal.estado}, {tribunal.cep}
+              </p>
+              <p className={style.tag1}>
+                Média:  ★ {tribunal.avaliacao_media}
+              </p>
+            </div>
+          </div>
+          
+          <div>
+            <button 
+              className={style.visualizarbtn}
+              onClick={() => handleEdit(tribunal)}
+              style={{ marginRight: '10px' }}
+            >
+              Editar
+            </button>
+            <button 
+              className={style.visualizarbtn}
+              onClick={() => excluirTribunal(tribunal.id_tribunal)}
+            >
+              Excluir
+            </button>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };

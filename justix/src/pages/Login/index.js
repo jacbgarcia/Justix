@@ -55,10 +55,10 @@ function Login() {
                 // Redirecionar baseado no role
                 switch(data.user.role) {
                     case 'admin':
-                        navigate('/admin/dashboard/foruns');
+                        navigate('/admin/dashboard/tribunais');
                         break;
                     default:
-                        navigate('/user/dashboard/foruns');
+                        navigate('/user/dashboard/tribunais');
                 }
             } else {
                 setError(data.error);

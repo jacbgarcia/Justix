@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import styles from '../../pages/Login/Login.module.css';
+import ContainerHome from '../ContainerHome';
 
 const AudienciasFormPageO = () => {
   const navigate = useNavigate();
@@ -84,10 +86,12 @@ const AudienciasFormPageO = () => {
   };
 
   return (
-    <div>
-      <h3>{juizAtivo ? 'Editar Juiz' : 'Novo Juiz'}</h3>
-      <form onSubmit={handleSubmit}>
-        <div>
+    <ContainerHome>
+      <section className={styles.loginSection}>
+    <div className={styles.loginContainer}>
+      <h3 className={styles.title}>{juizAtivo ? 'Editar Juiz' : 'Novo Juiz'}</h3>
+      <form onSubmit={handleSubmit} className={styles.loginForm}>
+        <div className={styles.formGroup}>
           <label>Nome:</label>
           <input
             type="text"
@@ -96,7 +100,7 @@ const AudienciasFormPageO = () => {
             required
           />
         </div>
-        <div>
+        <div className={styles.formGroup}>
           <label>Tempo de Serviço:</label>
           <input
             type="text"
@@ -105,7 +109,7 @@ const AudienciasFormPageO = () => {
             required
           />
         </div>
-        <div>
+        <div className={styles.formGroup}>
           <label>Casos Julgados:</label>
           <input
             type="text"
@@ -114,7 +118,7 @@ const AudienciasFormPageO = () => {
             required
           />
         </div>
-        <div>
+        <div className={styles.formGroup}>
           <label>Avaliação Média:</label>
           <input
             type="number"
@@ -126,7 +130,7 @@ const AudienciasFormPageO = () => {
             required
           />
         </div>
-        <div>
+        <div className={styles.formGroup}>
           <label>Foto:</label>
           <input
             type="file"
@@ -143,14 +147,16 @@ const AudienciasFormPageO = () => {
             </div>
           )}
         </div>
-        <button type="submit">
+        <button type="submit" className={styles.submitButton}>
           {juizAtivo ? 'Salvar Alterações' : 'Criar Juiz'}
         </button>
-        <button type="button" onClick={handleCancel}>
+        <button type="button" onClick={handleCancel} className={styles.submitButton}>
           Cancelar
         </button>
       </form>
     </div>
+    </section>
+    </ContainerHome>
   );
 };
 

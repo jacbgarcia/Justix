@@ -1,29 +1,10 @@
 
-// import Home from "./pages/Home";
-// import Login from "./pages/Login";
-// import Cadastro from "./pages/Cadastro";
-
-
-// function AppRoutes() {
-//     return(
-//         <BrowserRouter>
-//             <Routes>
-//                 <Route path="/" element={ <Home /> }></Route>
-//                 <Route path="/Login" element={ <Login/> }></Route>
-//                 <Route path="/Cadastro" element={ <Cadastro/> }></Route>
-                
-//             </Routes>
-//         </BrowserRouter>
-//     );
-// }
-
-// export default AppRoutes;
 import Home from "./pages/Home";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import ForunsList from "./pages/BDForuns/ForunsList";
 import ForunsForm from "./pages/BDForuns/ForunsForm";
 import React, { useState } from 'react';
-import Foruns from "./pages/Foruns";
+import Forunsindex from "./pages/Foruns/Forunsindex";
 import TribunaisList from './pages/BDTribunais/TribunaisList';
 import TribunaisForm from './pages/BDTribunais/TribunaisForm';
 import AudienciasList from './pages/BDAudiencias/AudienciasList';
@@ -35,9 +16,9 @@ import UsuariosForm from './pages/BDUsuarios/UsuariosForm';
 import Login from './pages/Login';
 import Cadastro from './pages/Cadastro';
 import Sobre from "./pages/Sobre";
-import Tribunais from "./pages/Tribunais";
-import Audiencias from "./pages/Audiencias"
-import Mediacoes from "./pages/Mediacoes";
+import Tribunaisindex from "./pages/Tribunais/Tribunaisindex";
+import Audienciasindex from "./pages/Audiencias/Audienciasindex"
+import Mediacoesindex from "./pages/Mediacoes/Mediacoesindex";
 import Advocacia from "./pages/Advocacias";
 import Portais from "./pages/Portais";
 
@@ -57,10 +38,10 @@ function App() {
         <Route path="/cadastro"   element={<Cadastro />}></Route>
         <Route path="/" element={ <Home /> }></Route>
         <Route path="/info" element={ <Sobre/> }></Route>
-        <Route path="/user/dashboard/tribunais" element={ <Tribunais/> }></Route>
-        <Route path="/user/dashboard/foruns" element={ <Foruns/> }></Route>
-        <Route path="/user/dashboard/audiencias" element={ <Audiencias/> }></Route>
-        <Route path="/user/dashboard/mediacoes" element={ <Mediacoes/> }></Route>
+        <Route path="/user/dashboard/tribunais" element={ <Tribunaisindex/> }></Route>
+        <Route path="/user/dashboard/foruns" element={ <Forunsindex/> }></Route>
+        <Route path="/user/dashboard/audiencias" element={ <Audienciasindex/> }></Route>
+        <Route path="/user/dashboard/mediacoes" element={ <Mediacoesindex/> }></Route>
         <Route path="/user/dashboard/advocacia" element={ <Advocacia/> }></Route>
         <Route path="/user/dashboard/portais" element={ <Portais/> }></Route>
         <Route

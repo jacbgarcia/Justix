@@ -25,29 +25,10 @@ function HeaderLggd({children}) {
         <header>
             <nav className={styles.navbar}>
                 <div className={styles.navleft}>
-                    <Link className={styles.usuario}>U</Link>
+                    <Link to="/" className={styles.usuario}>U</Link>
                 </div>
                 
-                <div className={styles.navButtons}>
-                    {navigation.map((item) => (
-                        <Link
-                            key={item.path}
-                            to={item.path}
-                            className={`${styles.navButton} ${
-                                location.pathname.toLowerCase() === item.path.toLowerCase() 
-                                    ? styles.active 
-                                    : ''
-                            }`}
-                            onClick={(e) => {
-                                if (location.pathname.toLowerCase() === item.path.toLowerCase()) {
-                                    e.preventDefault();
-                                }
-                            }}
-                        >
-                            {item.name}
-                        </Link>
-                    ))}
-                </div>
+               
                 
                 {children}
                 <span className={styles.brand}>JUSTIX</span>
