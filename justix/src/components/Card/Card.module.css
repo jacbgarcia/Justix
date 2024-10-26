@@ -1,3 +1,5 @@
+
+
 .card {
     background: white;
     margin: 15px;
@@ -82,6 +84,7 @@
     background: rgb(71, 70, 70);
 }
 
+
 .visualizarbtn1 {
     margin-left: 42%;
     background: #B2B2B2;
@@ -100,8 +103,95 @@
     transition: 0.5ms;
 }
 
+.container {
+    margin-left: 85%;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 16px; /* Ajuste opcional para dar um pouco de margem */
+}
+
+select {
+    width: 100%; /* Ocupa 100% em telas pequenas */
+    max-width: 10rem; /* Limite de largura em telas maiores */
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: all 0.3s ease; /* Aplica uma transição suave a todas as propriedades */
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+select:focus {
+    border-color: #4A90E2; /* Cor de borda ao focar */
+    box-shadow: 0 0 5px rgba(74, 144, 226, 0.5); /* Efeito de sombra ao focar */
+}
+.navlinkscontainer {
+    width: 100%;
+    display:grid;
+    gap: 100px;
+    margin: 0;
+  }
+
+  .navlinks1 {
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+    
+    font-weight: 500;
+    height: 2px;
+  }
+  
+  .navlinks2 {
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+   
+    font-weight: 500;
+  }
+
+.menuIcon {
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 10px;
+  }
+  
+  /* Menu mobile que será exibido no modo mobile */
+  .mobileMenu {
+    position: absolute;
+    top: 60px; /* Ajuste conforme o layout */
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .mobileMenu a {
+    padding: 15px 20px;
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .mobileMenu a:last-child {
+    border-bottom: none;
+  }
+
+
 /* Tablet Styles */
 @media screen and (max-width: 768px) {
+    .container {
+        width: 7rem;
+        margin-left: 60%;
+        font-size: small;
+        justify-content: center;
+        
+    }
+   
     .card {
         margin: 10px;
         padding: 12px;

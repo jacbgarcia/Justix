@@ -20,7 +20,10 @@
     .footbar {
         height: auto;  /* Ajusta a altura conforme necessário */
         padding: 0.8rem 1rem;  /* Aumenta o padding para melhorar o espaçamento */
-        font-size: 0.9rem;  /* Diminui o tamanho da fonte para melhor ajuste */
+        font-size: 0.9rem;
+        bottom: 0;
+        position: static;
+        display: block;
     }
 }
 

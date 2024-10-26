@@ -2,8 +2,10 @@
 import { Link, useLocation } from "react-router-dom";
 import styles from "./HeaderLggd.module.css";
 
+
 function HeaderLggd({children}) {
     const location = useLocation();
+
     
     const navigation = [
         { name: 'Tribunais', path: '/user/dashboard/tribunais' },
@@ -13,6 +15,8 @@ function HeaderLggd({children}) {
         { name: 'Advocacia', path: '/user/dashboard/advocacia' },
         { name: 'Portais', path: '/user/dashboard/portais' }
     ];
+
+    
 
     const getCurrentTitle = () => {
         const currentRoute = navigation.find(
@@ -29,7 +33,6 @@ function HeaderLggd({children}) {
                 </div>
                 
                
-                
                 {children}
                 <span className={styles.brand}>JUSTIX</span>
             </nav>

@@ -5,10 +5,14 @@ import ForunsList from "./pages/BDForuns/ForunsList";
 import ForunsForm from "./pages/BDForuns/ForunsForm";
 import React, { useState } from 'react';
 import Forunsindex from "./pages/Foruns/Forunsindex";
+import AdvocaciasList from "./pages/BDAdvocacias/AdvocaciasList";
+import AdvocaciasForm from "./pages/BDAdvocacias/AdvocaciasForm";
 import TribunaisList from './pages/BDTribunais/TribunaisList';
 import TribunaisForm from './pages/BDTribunais/TribunaisForm';
 import AudienciasList from './pages/BDAudiencias/AudienciasList';
 import AudienciasForm from './pages/BDAudiencias/AudienciasForm';
+import PortaisList from "./pages/BDPortais/PortaisList";
+import  PortaisForm from "./pages/BDPortais/PortaisForm";
 import MediacoesList from "./pages/BDMediacoes/MediacoesList";
 import MediacoesForm from "./pages/BDMediacoes/MediacoesForm";
 import UsuariosList from './pages/BDUsuarios/UsuariosList';
@@ -19,14 +23,17 @@ import Sobre from "./pages/Sobre";
 import Tribunaisindex from "./pages/Tribunais/Tribunaisindex";
 import Audienciasindex from "./pages/Audiencias/Audienciasindex"
 import Mediacoesindex from "./pages/Mediacoes/Mediacoesindex";
-import Advocacia from "./pages/Advocacias";
-import Portais from "./pages/Portais";
+import Advocaciaindex  from "./pages/Advocacias/Advocaciasindex";
+import Portaisindex  from "./pages/Portais/Portaisindex";
+
 
 function App() {
   const [forumEditado, setForumEditado] = useState(null);
   const [tribunalEditado, setTribunalEditado] = useState(null);
   const [juizEditado, setJuizEditado] = useState(null);
   const [mediadorEditado, setMediadorEditado] = useState(null);
+  const [advocaciaEditado, setAdvocaciaEditado] = useState(null);
+  const [portaisEditado, setPortaisEditado] = useState(null);
   const [usuarioEditado, setUsuarioEditado] = useState(null);
 
   return (
@@ -42,8 +49,32 @@ function App() {
         <Route path="/user/dashboard/foruns" element={ <Forunsindex/> }></Route>
         <Route path="/user/dashboard/audiencias" element={ <Audienciasindex/> }></Route>
         <Route path="/user/dashboard/mediacoes" element={ <Mediacoesindex/> }></Route>
-        <Route path="/user/dashboard/advocacia" element={ <Advocacia/> }></Route>
-        <Route path="/user/dashboard/portais" element={ <Portais/> }></Route>
+        <Route path="/user/dashboard/advocacia" element={ <Advocaciaindex/> }></Route>
+        <Route path="/user/dashboard/portais" element={ <Portaisindex/> }></Route>
+        <Route 
+          path="/admin/dashboard/portais"
+          element={<PortaisList onEdit={setPortaisEditado} />}
+        />
+        <Route 
+          path="/admin/dashboard/portais/new"
+          element={<PortaisForm portaisAtivo={null} onSave={() => {}} />}
+        />
+        <Route 
+          path="/admin/dashboard/portais/edit"
+          element={<PortaisForm portaisAtivo={portaisEditado} onSave={() => {}} onCancel={() => setPortaisEditado(null)} />}
+        />
+        <Route 
+          path="/admin/dashboard/advocacia"
+          element={<AdvocaciasList onEdit={setAdvocaciaEditado} />}
+        />
+        <Route 
+          path="/admin/dashboard/advocacia/new"
+          element={<AdvocaciasForm advocaciaAtivo={null} onSave={() => {}} />}
+        />
+        <Route 
+          path="/admin/dashboard/advocacia/edit"
+          element={<AdvocaciasForm advocaciaAtivo={advocaciaEditado} onSave={() => {}} onCancel={() => setAdvocaciaEditado(null)} />}
+        />
         <Route
           path="/admin/dashboard/foruns"
           element={<ForunsList onEdit={setForumEditado} />}

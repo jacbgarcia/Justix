@@ -11,19 +11,20 @@ body {
 }
 
 .navbar {
+    flex-wrap: nowrap;
     top: 0;
     position: fixed;
     width: 100%;
     background-color: #D9D9D9;
     padding: 0.75rem 1rem;
     display: flex;
-    justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     z-index: 1000; /* Garantir que fique acima de outros elementos */
 }
 
 .brand {
+    margin-left: 40%;
     color: #4169E1;
     text-decoration: none;
     font-size: 1.25rem;
@@ -31,6 +32,16 @@ body {
     padding-left: 0; /* Removido padding-left fixo */
     white-space: nowrap; /* Evitar quebra do texto */
 }
+.containerlinks {
+    width: 90%;
+    gap: 100px;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
 
 .navleft {
     display: flex;
@@ -63,6 +74,8 @@ body {
     transition: color 0.2s;
 }
 
+
+
 /* Hover states para desktop */
 @media (hover: hover) {
     .navButton:hover {
@@ -72,12 +85,39 @@ body {
 
 /* Media Queries */
 @media screen and (max-width: 768px) {
+
+    .containerlinks {
+        justify-content: space-between;
+    }
+
+    .menu {
+        display: none; /* Esconda os links inicialmente no mobile */
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        position: absolute;
+        top: 50px; /* Ajuste conforme necessário */
+        left: 0;
+        background-color: white;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .hamburger {
+        display: block; /* Exibe o ícone de hambúrguer no mobile */
+    }
+
+    .menu.active {
+        display: flex; /* Exibe o menu quando ativado */
+    }
     .navbar {
         padding: 0.6rem 0.75rem;
+        
     }
 
     .brand {
         font-size: 1.1rem;
+        margin-left: 60%;
     }
 
     .navleft {

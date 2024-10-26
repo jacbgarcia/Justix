@@ -438,6 +438,410 @@ app.delete('/mediador/:id', (req, res) => {
   });
 });
 
+
+// GET all advogados
+app.get('/advocacia', (req, res) => {
+  const sql = 'SELECT * FROM advocacia';
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+
+// POST new advogado
+app.post('/advocacia', upload.single('imagem'), (req, res) => {
+  const { nome, profissao, experiencia, escritorio, endereco, avaliacao_media } = req.body;
+  const imagem = req.file ? `/uploads/advocacia/${req.file.filename}` : null;
+
+  // Validação condicional com base na profissão
+  if (!nome || !profissao) {
+    return res.status(400).send({ error: 'Nome e profissão são obrigatórios' });
+  }
+
+  // Validação condicional de acordo com a profissão
+  if (profissao === 'Advogado' && (!experiencia || !escritorio)) {
+    return res.status(400).send({ error: 'Experiência e escritório são obrigatórios para Advogados' });
+  }
+
+  if (profissao === 'Escritório' && !endereco) {
+    return res.status(400).send({ error: 'Endereço é obrigatório para Escritórios' });
+  }
+
+  // Validação da avaliação média
+  const avaliacaoNumero = Number(avaliacao_media);
+  if (isNaN(avaliacaoNumero) || avaliacaoNumero < 0 || avaliacaoNumero > 10) {
+    return res.status(400).send({ error: 'Avaliação média deve ser um número entre 0 e 10' });
+  }
+
+  const sql = `
+    INSERT INTO advocacia 
+    (nome, profissao, experiencia, escritorio, endereco, imagem, avaliacao_media) 
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  db.query(
+    sql, 
+    [
+      nome, 
+      profissao, 
+      experiencia || null, 
+      escritorio || null, 
+      endereco || null, 
+      imagem,
+      avaliacaoNumero
+    ], 
+    (err, result) => {
+      if (err) {
+        console.error('Erro ao inserir advogado:', err);
+        return res.status(500).send({ error: 'Erro ao inserir advogado' });
+      }
+      res.send({ ...result, imagem, avaliacao_media: avaliacaoNumero });
+    }
+  );
+});
+
+// PUT update advogado
+app.put('/advocacia/:id', upload.single('imagem'), (req, res) => {
+  const id = req.params.id;
+  const { nome, profissao, experiencia, escritorio, endereco, avaliacao_media } = req.body;
+  
+  // Log de todos os dados recebidos para depuração
+  console.log('Dados recebidos:', req.body);
+  console.log('Arquivo de imagem:', req.file);
+
+  // Validação da avaliação média
+  const avaliacaoNumero = Number(avaliacao_media);
+  if (isNaN(avaliacaoNumero) || avaliacaoNumero < 0 || avaliacaoNumero > 10) {
+    return res.status(400).send({ error: 'Avaliação média deve ser um número entre 0 e 10' });
+  }
+
+  db.query('SELECT imagem FROM advocacia WHERE id_advocacia = ?', [id], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: 'Erro ao buscar advogado' });
+    }
+
+    const antigaImagem = result[0]?.imagem;
+    const novaImagem = req.file ? `/uploads/advocacia/${req.file.filename}` : antigaImagem;
+
+    const sql = `
+      UPDATE advocacia 
+      SET nome = ?, 
+          profissao = ?, 
+          experiencia = ?, 
+          escritorio = ?, 
+          endereco = ?, 
+          imagem = ?,
+          avaliacao_media = ?
+      WHERE id_advocacia = ?
+    `;
+
+    db.query(
+      sql, 
+      [
+        nome, 
+        profissao, 
+        experiencia || null, 
+        escritorio || null, 
+        endereco || null, 
+        novaImagem,
+        avaliacaoNumero,
+        id
+      ],
+      (err, result) => {
+        if (err) {
+          console.error('Erro ao atualizar advogado:', err);
+          return res.status(500).send({ error: 'Erro ao atualizar advogado' });
+        }
+
+        if (req.file && antigaImagem) {
+          deleteImage(antigaImagem);
+        }
+
+        res.send({ 
+          message: 'Advogado atualizado com sucesso',
+          avaliacao_media: avaliacaoNumero
+        });
+      }
+    );
+  });
+});
+
+// Rota para buscar por profissão específica
+app.get('/advocacia/profissao/:profissao', (req, res) => {
+  const profissao = req.params.profissao;
+  const sql = 'SELECT * FROM advocacia WHERE profissao = ?';
+  
+  db.query(sql, [profissao], (err, result) => {
+    if (err) {
+      console.error('Erro ao buscar por profissão:', err);
+      return res.status(500).send({ error: 'Erro ao buscar por profissão' });
+    }
+    res.send(result);
+  });
+});
+
+// DELETE advogado
+app.delete('/advocacia/:id', (req, res) => {
+  const id = req.params.id;
+
+  const sql = 'DELETE FROM advocacia WHERE id_advocacia = ?';
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error('Erro ao excluir advogado:', err);
+      return res.status(500).send({ error: 'Erro ao excluir advogado' });
+    }
+    
+    if (result.affectedRows === 0) {
+      return res.status(404).send({ error: 'Advogado não encontrado' });
+    }
+
+    res.send({ message: 'Advogado excluído com sucesso' });
+  });
+});
+
+
+app.get('/portais', (req, res) => {
+  const sql = 'SELECT id_portal, nome, url, imagem, avaliacao_media FROM portal';
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error('Erro ao buscar portais:', err);
+      return res.status(500).send({ error: 'Erro ao buscar portais', details: err.message });
+    }
+    // Log para debug
+    console.log('Portais encontrados:', result);
+    res.send(result);
+  });
+});
+
+// Rota POST - Criar portal com validação de URL
+app.post('/portais', upload.single('imagem'), (req, res) => {
+  console.log('Dados recebidos:', req.body); // Log para debug
+
+  const { nome, url, avaliacao_media } = req.body;
+  const imagem = req.file ? `/uploads/portais/${req.file.filename}` : null;
+
+  // Validação mais rigorosa dos campos
+  if (!nome || !url) {
+    if (req.file) {
+      deleteImage(`/uploads/portais/${req.file.filename}`);
+    }
+    return res.status(400).send({ 
+      error: 'Nome e URL são obrigatórios',
+      receivedData: { nome, url } // Mostra os dados recebidos para debug
+    });
+  }
+
+  // Validação básica de URL
+  try {
+    new URL(url);
+  } catch (e) {
+    if (req.file) {
+      deleteImage(`/uploads/portais/${req.file.filename}`);
+    }
+    return res.status(400).send({ error: 'URL inválida' });
+  }
+
+  const sql = 'INSERT INTO portal (nome, url, imagem, avaliacao_media) VALUES (?, ?, ?, ?)';
+  const values = [
+    nome,
+    url,
+    imagem,
+    avaliacao_media || '2.00'
+  ];
+
+  // Log para debug
+  console.log('SQL:', sql);
+  console.log('Valores:', values);
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error('Erro ao inserir portal:', err);
+      if (req.file) {
+        deleteImage(`/uploads/portais/${req.file.filename}`);
+      }
+      return res.status(500).send({ 
+        error: 'Erro ao inserir portal', 
+        details: err.message,
+        sql: sql,
+        values: values
+      });
+    }
+
+    // Buscar o registro recém-inserido para confirmar
+    db.query('SELECT * FROM portal WHERE id_portal = ?', [result.insertId], (err, selectResult) => {
+      if (err) {
+        console.error('Erro ao buscar portal inserido:', err);
+        return res.status(500).send({ 
+          error: 'Portal inserido mas erro ao recuperar dados', 
+          id: result.insertId 
+        });
+      }
+      console.log('Portal inserido:', selectResult[0]); // Log para debug
+      res.status(201).send(selectResult[0]);
+    });
+  });
+});
+
+// Rota PUT - Atualizar portal com validação de URL
+app.put('/portais/:id', upload.single('imagem'), (req, res) => {
+  console.log('Dados de atualização recebidos:', req.body); // Log para debug
+  
+  const id = req.params.id;
+  const { nome, url, avaliacao_media } = req.body;
+
+  // Se uma URL foi fornecida, validá-la
+  if (url) {
+    try {
+      new URL(url);
+    } catch (e) {
+      if (req.file) {
+        deleteImage(`/uploads/portais/${req.file.filename}`);
+      }
+      return res.status(400).send({ error: 'URL inválida' });
+    }
+  }
+  
+  // Primeiro, verificar se o portal existe
+  db.query('SELECT * FROM portal WHERE id_portal = ?', [id], (err, result) => {
+    if (err) {
+      console.error('Erro ao buscar portal:', err);
+      return res.status(500).send({ 
+        error: 'Erro ao buscar portal', 
+        details: err.message 
+      });
+    }
+
+    if (result.length === 0) {
+      if (req.file) {
+        deleteImage(`/uploads/portais/${req.file.filename}`);
+      }
+      return res.status(404).send({ error: 'Portal não encontrado' });
+    }
+
+    const antigaImagem = result[0].imagem;
+    const novaImagem = req.file ? `/uploads/portais/${req.file.filename}` : antigaImagem;
+
+    // Preparar dados para atualização
+    const updateData = {
+      nome: nome || result[0].nome,
+      url: url || result[0].url,
+      imagem: novaImagem,
+      avaliacao_media: avaliacao_media || result[0].avaliacao_media
+    };
+
+    const sql = `
+      UPDATE portal 
+      SET nome = ?, 
+          url = ?, 
+          imagem = ?, 
+          avaliacao_media = ?
+      WHERE id_portal = ?
+    `;
+
+    const updateValues = [
+      updateData.nome,
+      updateData.url,
+      updateData.imagem,
+      updateData.avaliacao_media,
+      id
+    ];
+
+    // Log para debug
+    console.log('SQL de atualização:', sql);
+    console.log('Valores de atualização:', updateValues);
+
+    db.query(sql, updateValues, (updateErr, updateResult) => {
+      if (updateErr) {
+        console.error('Erro ao atualizar portal:', updateErr);
+        if (req.file) {
+          deleteImage(`/uploads/portais/${req.file.filename}`);
+        }
+        return res.status(500).send({ 
+          error: 'Erro ao atualizar portal', 
+          details: updateErr.message 
+        });
+      }
+
+      if (updateResult.affectedRows === 0) {
+        if (req.file) {
+          deleteImage(`/uploads/portais/${req.file.filename}`);
+        }
+        return res.status(404).send({ error: 'Nenhum registro foi atualizado' });
+      }
+
+      // Se há uma nova imagem e existia uma antiga, deletar a antiga
+      if (req.file && antigaImagem) {
+        deleteImage(antigaImagem);
+      }
+
+      // Buscar o registro atualizado para confirmar
+      db.query('SELECT * FROM portal WHERE id_portal = ?', [id], (err, finalResult) => {
+        if (err) {
+          console.error('Erro ao buscar portal atualizado:', err);
+          return res.status(500).send({ 
+            error: 'Portal atualizado mas erro ao recuperar dados', 
+            id: id 
+          });
+        }
+        console.log('Portal atualizado:', finalResult[0]); // Log para debug
+        res.send(finalResult[0]);
+      });
+    });
+  });
+});
+
+app.delete('/portais/:id', (req, res) => {
+  const id = req.params.id;
+
+  db.query('SELECT imagem FROM portal WHERE id_portal = ?', [id], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: 'Erro ao buscar portal' });
+    }
+
+    const imagem = result[0]?.imagem;
+
+    db.query('DELETE FROM portal WHERE id_portal = ?', [id], (err, result) => {
+      if (err) {
+        console.error('Erro ao deletar portal:', err);
+        return res.status(500).send({ error: 'Erro ao deletar portal' });
+      }
+
+      if (imagem) {
+        deleteImage(imagem);
+      }
+
+      res.send({ message: 'Portal deletado com sucesso' });
+    });
+  });
+});
+
+// Rota GET - Buscar portais com base em um termo de pesquisa
+app.get('/portais/search', (req, res) => {
+  const searchTerm = req.query.term;
+
+  // Consulta SQL para filtrar os registros que contenham o termo
+  const sql = `
+    SELECT id_portal, nome, url, imagem, avaliacao_media
+    FROM portal
+    WHERE nome LIKE ? OR url LIKE ?
+  `;
+
+  const values = [`%${searchTerm}%`, `%${searchTerm}%`];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error('Erro ao buscar portais:', err);
+      return res.status(500).send({ error: 'Erro ao buscar portais' });
+    }
+    res.send(result);
+  });
+});
+
+
+
+
+
+//usuarios
 app.get('/usuarios', (req, res) => {
   const sql = 'SELECT * FROM usuarios';
   db.query(sql, (err, result) => {
