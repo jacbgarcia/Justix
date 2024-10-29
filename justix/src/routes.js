@@ -5,6 +5,8 @@ import ForunsList from "./pages/BDForuns/ForunsList";
 import ForunsForm from "./pages/BDForuns/ForunsForm";
 import React, { useState } from 'react';
 import Forunsindex from "./pages/Foruns/Forunsindex";
+import ForunsindexFeed from "./pages/Foruns/Feedback/ForunsindexFeed";
+import ForunsForms from "./pages/Foruns/Feedback/ForunsForms";
 import AdvocaciasList from "./pages/BDAdvocacias/AdvocaciasList";
 import AdvocaciasForm from "./pages/BDAdvocacias/AdvocaciasForm";
 import TribunaisList from './pages/BDTribunais/TribunaisList';
@@ -51,7 +53,9 @@ function App() {
         <Route path="/user/dashboard/mediacoes" element={ <Mediacoesindex/> }></Route>
         <Route path="/user/dashboard/advocacia" element={ <Advocaciaindex/> }></Route>
         <Route path="/user/dashboard/portais" element={ <Portaisindex/> }></Route>
-        <Route 
+        <Route path="/user/dashboard/foruns/:id_forum/feedback" element={<ForunsindexFeed/>}></Route>
+        <Route path="/user/dashboard/foruns/:id_forum/feedback/add" element={<ForunsForms/>}></Route>
+        <Route
           path="/admin/dashboard/portais"
           element={<PortaisList onEdit={setPortaisEditado} />}
         />

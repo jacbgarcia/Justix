@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import style from '../Card/Card.module.css';
+import { Link } from 'react-router-dom';
 
 const ForunsListPageUser = () => {
   const [foruns, setForuns] = useState([]);
-  const [searchTerm, setSearchTerm] = useState(''); // Estado para armazenar o termo de busca
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     listarForuns();
@@ -27,21 +28,23 @@ const ForunsListPageUser = () => {
     return `http://localhost:3001/uploads/foruns/${imagem}`;
   };
 
-  // Filtra os fóruns com base no termo de busca
+  const handleVisualizarClick = (id_forum) => {
+    localStorage.setItem('id_forum', id_forum); // Armazena o id_forum no localStorage
+  };
+
   const filteredForuns = foruns.filter(forum => 
-    forum.nome.toLowerCase().includes(searchTerm.toLowerCase()) || // Filtra por nome
-    forum.endereco.toLowerCase().includes(searchTerm.toLowerCase()) // Filtra por endereço
+    forum.nome.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    forum.endereco.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div>
-      {/* Campo de busca */}
       <input
         type="text"
         placeholder="Buscar..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className={style.searchInput} // Adicione uma classe de estilo, se desejar
+        className={style.searchInput}
       />
 
       {filteredForuns.map(forum => (
@@ -70,12 +73,14 @@ const ForunsListPageUser = () => {
           </div>
           
           <div>
-            <button 
+            <Link
               className={style.visualizarbtn}
+              to={`/user/dashboard/foruns/${forum.id_forum}/feedback`}
+              onClick={() => handleVisualizarClick(forum.id_forum)} // Armazena o id_forum ao clicar
               style={{ marginRight: '5px' }}
             >
               Visualizar
-            </button>
+            </Link>
           </div>
         </div>
       ))}

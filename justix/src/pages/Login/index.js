@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate,  Link } from 'react-router-dom'; 
+import { useNavigate, Link } from 'react-router-dom'; 
 
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import ContainerHome from "../../components/ContainerHome";
-import styles from './Login.module.css'; // Certifique-se de ter um arquivo CSS para os estilos
+import styles from './Login.module.css';
 
 function Login() {
     const { login } = useAuth();
@@ -50,7 +50,15 @@ function Login() {
             const data = await response.json();
 
             if (response.ok) {
-                login(data);
+                // Armazena o token e os dados do usuário no localStorage
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('usuarios', JSON.stringify(data.user));
+                
+                // Atualizar o contexto de autenticação
+                login({
+                    user: data.user,
+                    token: data.token
+                });
 
                 // Redirecionar baseado no role
                 switch(data.user.role) {

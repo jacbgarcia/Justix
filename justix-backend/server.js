@@ -1,5 +1,6 @@
-const express = require('express');
 const mysql = require('mysql2');
+require ('dotenv').config();
+const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const multer = require('multer');
@@ -7,21 +8,41 @@ const path = require('path');
 const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const dbHost = process.env.DB_HOST;
+const dbPort = process.env.DB_PORT;
+
+
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.json());
 
-const JWT_SECRET = 'seu_segredo_jwt';
+const JWT_SECRET = 'root';
 
 
-// Configuração do MySQL
+// Configuração da conexão com o banco de dados
 const db = mysql.createConnection({
-  host: '127.0.0.1',
-  user: 'root',
-  password: 'root',
-  database: 'justix'
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME
 });
+// Conectar ao banco de dados
+db.connect((err) => {
+  if (err) throw err;
+  console.log('Conectado ao banco de dados.');
+});
+
+
+
+// // Configuração do MySQL
+// const db = mysql.createConnection({
+//   host: '127.0.0.1',
+//   user: 'root',
+//   password: 'root',
+//   database: 'justix'
+// });
 
 db.connect(err => {
   if (err) {
@@ -178,6 +199,13 @@ app.delete('/foruns/:id', (req, res) => {
 // ROTAS PARA TRIBUNAIS
 app.get('/tribunais', (req, res) => {
   const sql = 'SELECT * FROM tribunais';
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+app.get('/tokens', (req, res) => {
+  const sql = 'SELECT * FROM user_tokens';
   db.query(sql, (err, result) => {
     if (err) throw err;
     res.send(result);
@@ -842,6 +870,8 @@ app.get('/portais/search', (req, res) => {
 
 
 //usuarios
+
+
 app.get('/usuarios', (req, res) => {
   const sql = 'SELECT * FROM usuarios';
   db.query(sql, (err, result) => {
@@ -893,58 +923,116 @@ app.post('/usuarios', async (req, res) => {
   });
 });
 
-// Login de usuário
-// server.js - Rota de login modificada
-app.post('/login', (req, res) => {
-  const { email, senha } = req.body;
+// Adicione esta rota no seu server.js
+app.get('/api/usuario/:id', (req, res) => {
+  const userId = req.params.id;
 
-  const sql = 'SELECT * FROM usuarios WHERE email = ?';
-  db.query(sql, [email], async (err, result) => {
-    if (err) return res.status(500).send({ error: 'Erro no servidor' });
-    if (result.length === 0) return res.status(400).send({ error: 'Usuário não encontrado' });
+  const sql = 'SELECT id_usuario, nome, email, role FROM usuarios WHERE id_usuario = ?';
+  db.query(sql, [userId], (err, result) => {
+    if (err) {
+      console.error('Erro ao buscar dados do usuário:', err);
+      return res.status(500).send({ error: 'Erro interno do servidor' });
+    }
+    
+    if (result.length === 0) {
+      return res.status(404).send({ error: 'Usuário não encontrado' });
+    }
 
-    const usuario = result[0];
-    const isMatch = await bcrypt.compare(senha, usuario.senha);
-    if (!isMatch) return res.status(400).send({ error: 'Senha incorreta' });
-
-    // Incluir role no token
-    const token = jwt.sign(
-      { 
-        id: usuario.id_usuario,
-        role: usuario.role,
-        nome: usuario.nome 
-      }, 
-      JWT_SECRET, 
-      { expiresIn: '1h' }
-    );
-
-    res.send({ 
-      message: 'Login realizado com sucesso',
-      token,
-      user: {
-        id: usuario.id_usuario,
-        nome: usuario.nome,
-        role: usuario.role
-      }
-    });
+    res.json(result[0]);
   });
 });
 
-// Middleware de autenticação
-const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+// Login de usuário
+// server.js - Rota de login modificada
+app.post('/login', async (req, res) => {
+  try {
+      const { email, senha } = req.body;
 
-  if (!token) {
-    return res.status(401).send({ error: 'Token não fornecido' });
+      // Validação básica
+      if (!email || !senha) {
+          return res.status(400).json({ error: 'Email e senha são obrigatórios' });
+      }
+
+      const sql = 'SELECT * FROM usuarios WHERE email = ?';
+      
+      db.query(sql, [email], async (err, result) => {
+          if (err) {
+              console.error('Erro na consulta:', err);
+              return res.status(500).json({ error: 'Erro no servidor' });
+          }
+          
+          if (result.length === 0) {
+              return res.status(400).json({ error: 'Usuário não encontrado' });
+          }
+
+          const usuario = result[0];
+          
+          try {
+              const isMatch = await bcrypt.compare(senha, usuario.senha);
+              
+              if (!isMatch) {
+                  return res.status(400).json({ error: 'Senha incorreta' });
+              }
+
+              const token = jwt.sign(
+                  {
+                      id: usuario.id_usuario,
+                      role: usuario.role,
+                      nome: usuario.nome
+                  },
+                  process.env.JWT_SECRET,
+                  { expiresIn: '1h' }
+              );
+
+              res.json({
+                  message: 'Login realizado com sucesso',
+                  token,
+                  user: {
+                      id: usuario.id_usuario,
+                      nome: usuario.nome,
+                      role: usuario.role,
+                      cpf: usuario.cpf,         // Adicionado
+                      email: usuario.email,      // Adicionado
+                      telefone: usuario.telefone // Adicionado
+                  }
+              });
+          } catch (bcryptError) {
+              console.error('Erro ao comparar senhas:', bcryptError);
+              return res.status(500).json({ error: 'Erro ao verificar senha' });
+          }
+      });
+  } catch (error) {
+      console.error('Erro no login:', error);
+      res.status(500).json({ error: 'Erro interno do servidor' });
   }
+});
 
-  jwt.verify(token, JWT_SECRET, (err, user) => {
-    if (err) return res.status(403).send({ error: 'Token inválido' });
-    req.user = user;
-    next();
-  });
+const authenticateToken = (req, res, next) => {
+  try {
+      const authHeader = req.headers['authorization'];
+      const token = authHeader && authHeader.split(' ')[1];
+
+      if (!token) {
+          return res.status(401).json({ error: 'Token não fornecido' });
+      }
+
+      jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+          if (err) {
+              return res.status(403).json({ error: 'Token inválido' });
+          }
+          req.user = user;
+          next();
+      });
+  } catch (error) {
+      console.error('Erro na autenticação:', error);
+      res.status(500).json({ error: 'Erro na autenticação' });
+  }
 };
+
+// Exemplo de rota protegida
+app.get('/protected', authenticateToken, (req, res) => {
+  res.json({ message: 'Rota protegida', user: req.user });
+});
 
 // Middleware de autorização por role
 const authorize = (roles = []) => {
@@ -958,6 +1046,159 @@ const authorize = (roles = []) => {
   };
 };
 
+
+
+
+
+app.post('/av_foruns', async (req, res) => {
+  const { id_usuario, id_forum, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida } = req.body;
+
+  if (!avaliacao || avaliacao < 1 || avaliacao > 5) {
+    return res.status(400).json({ error: "Avaliação deve estar entre 1 e 5." });
+  }
+  if (!numero_protocolo || numero_protocolo.length < 5 || numero_protocolo.length > 20) {
+    return res.status(400).json({ error: "Número de protocolo deve ter entre 5 e 20 dígitos." });
+  }
+
+  try {
+    await db.promise().query(
+      'INSERT INTO av_foruns (id_usuario, id_forum, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [id_usuario, id_forum, numero_protocolo, comentario || null, avaliacao, horario_chegada || null, horario_saida || null]
+    );
+    // console.log(
+    //   'INSERT INTO av_foruns (id_usuario, id_forum, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida) VALUES (?, ?, ?, ?, ?, ?, ?)',
+    //   [id_usuario, id_forum, numero_protocolo, comentario || null, avaliacao, horario_chegada || null, horario_saida || null]
+    // );
+    res.status(201).json({ message: 'Comentário e avaliação adicionados com sucesso.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao adicionar o comentário e a avaliação.' });
+  }
+});
+
+// // Rota para obter os comentários de um fórum específico
+// app.get('/av_foruns/:id_forum', async (req, res) => {
+//   const { id_forum } = req.params;
+
+//   try {
+//     const [comentarios] = await db.query(
+//       `SELECT u.nome, af.comentario, af.avaliacao, af.data_criacao, af.numero_protocolo, af.horario_chegada, af.horario_saida
+//        FROM av_foruns af
+//        JOIN usuarios u ON af.id_usuario = u.id_usuario
+//        WHERE af.id_forum = ?
+//        ORDER BY af.data_criacao DESC`,
+//       [id_forum]
+//     );
+//     res.json({ comments: comentarios });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Erro ao buscar comentários.' });
+//   }
+// });
+
+// // Rota para calcular a média de avaliações de um fórum específico
+app.get('/foruns_avaliacao/:id_forum', async (req, res) => {
+  try {
+    const [resultado] = await db.promise().query(
+      'SELECT ROUND(AVG(avaliacao),2) AS media_avaliacao FROM av_foruns WHERE id_forum = ?',
+      [req.params.id_forum]
+    );
+    res.json({ media_avaliacao: resultado[0].media_avaliacao || 0 });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao calcular a média de avaliações.' });
+  }
+});
+app.get('/av_foruns', (req, res) => {
+  const sql = 'SELECT * FROM av_foruns';
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+
+// Rota com parâmetro: /av_foruns/1 (onde 1 é o id_forum)
+app.get('/av_foruns/:id_forum', (req, res) => {
+  const sql = 'SELECT * FROM av_foruns WHERE id_forum = ?';
+  db.query(sql, [req.params.id_forum], (err, result) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    res.json(result);
+  });
+});
+
+
+
+
+
+// Rota para adicionar um comentário
+// app.post('/av_foruns', (req, res) => {
+//     const { id_usuario, id_forum, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida } = req.body;
+
+//     // Validações
+//     if (!id_usuario) {
+//         return res.status(400).json({ error: 'ID do usuário não fornecido.' });
+//     }
+
+//     if (!id_forum) {
+//         return res.status(400).json({ error: 'ID do fórum não fornecido.' });
+//     }
+
+//     // Verifica se o usuário existe
+//     connection.query('SELECT id_usuario FROM usuarios WHERE id_usuario = ?', [id_usuario], (err, userRows) => {
+//         if (err) {
+//             console.error('Erro ao verificar usuário:', err);
+//             return res.status(500).json({ error: 'Erro interno do servidor' });
+//         }
+//         if (userRows.length === 0) {
+//             return res.status(404).json({ error: 'Usuário não encontrado' });
+//         }
+        
+
+//         // Verifica se o fórum existe
+//         connection.query('SELECT id_forum FROM foruns WHERE id_forum = ?', [id_forum], (err, forumRows) => {
+//             if (err) {
+//                 console.error('Erro ao verificar fórum:', err);
+//                 return res.status(500).json({ error: 'Erro interno do servidor' });
+//             }
+//             if (forumRows.length === 0) {
+//                 return res.status(404).json({ error: 'Fórum não encontrado' });
+//             }
+
+//             // Insere o comentário
+//             const insertQuery = `INSERT INTO av_foruns (id_usuario, id_forum, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+//             const insertValues = [id_usuario, id_forum, numero_protocolo, comentario || null, avaliacao, horario_chegada || null, horario_saida || null];
+
+//             connection.query(insertQuery, insertValues, (err, result) => {
+//                 if (err) {
+//                     console.error('Erro ao inserir comentário:', err);
+//                     return res.status(500).json({ error: 'Erro interno do servidor' });
+//                 }
+
+//                 // Busca o comentário recém-inserido
+//                 connection.query('SELECT af.*, u.nome as nome_usuario FROM av_foruns af JOIN usuarios u ON af.id_usuario = u.id_usuario WHERE af.id_comentario = ?', [result.insertId], (err, comentarioInserido) => {
+//                     if (err) {
+//                         console.error('Erro ao buscar comentário inserido:', err);
+//                         return res.status(500).json({ error: 'Erro interno do servidor' });
+//                     }
+
+//                     res.status(201).json({
+//                         success: true,
+//                         message: 'Comentário inserido com sucesso',
+//                         data: comentarioInserido[0]
+//                     });
+//                 });
+//             });
+//         });
+//     });
+// });
+
+
+
+
+
 // Manipulação de erros do Multer
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
@@ -969,6 +1210,12 @@ app.use((err, req, res, next) => {
   next(err);
 });
 
-app.listen(3001, () => {
-  console.log('Servidor rodando na porta 3001');
+const PORT = process.env.PORT || 3001; // Aqui, o backend escuta na porta 3001
+app.listen(PORT, () => {
+    console.log(`Servidor backend rodando na porta ${PORT}`);
 });
+
+
+// app.listen(3001, () => {
+//   console.log('Servidor rodando na porta 3001');
+// });

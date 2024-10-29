@@ -70,6 +70,7 @@
 }
 
 .visualizarbtn {
+    text-decoration: none;
     background: black;
     color: white;
     padding: 8px 15px;
