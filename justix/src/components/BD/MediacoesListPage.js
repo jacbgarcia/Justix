@@ -16,8 +16,29 @@ const MediacoesListPageO = () => {
   const listarMediadores = async () => {
     try {
       const res = await axios.get('http://localhost:3001/mediador');
-      setMediadores(res.data);
-      setFilteredMediadores(res.data); // Inicialmente, mostra todos os mediadores
+      
+      // Buscar as avaliações atualizadas para cada fórum
+      const mediadorWithRatings = await Promise.all(
+        res.data.map(async (mediador) => {
+          try {
+            const ratingRes = await axios.get(`http://localhost:3001/mediador_avaliacao/${mediador.id_mediador}`);
+            const mediaAvaliacao = parseFloat(ratingRes.data.media_avaliacao) || 0;
+            return {
+              ...mediador,
+              avaliacao_media: mediaAvaliacao
+            };
+          } catch (err) {
+            console.error(`Erro ao buscar avaliação para fórum ${mediador.id_mediador}:`, err);
+            return {
+              ...mediador,
+              avaliacao_media: 0
+            };
+          }
+        })
+      );
+
+      setMediadores(mediadorWithRatings);
+      setFilteredMediadores(mediadorWithRatings);
     } catch (err) {
       console.error('Erro ao listar mediadores:', err);
     }
@@ -60,6 +81,11 @@ const MediacoesListPageO = () => {
     setFilteredMediadores(filtered);
   };
 
+  const formatRating = (rating) => {
+    const numRating = parseFloat(rating);
+    return isNaN(numRating) ? "0.0" : numRating.toFixed(1);
+  };
+
   return (
     <div>
       {/* Campo de busca */}
@@ -87,7 +113,7 @@ const MediacoesListPageO = () => {
             <div className={style.cardinfo}>
               <h3>{mediador.nome}</h3>
               <p className={style.tag}>{mediador.estado}</p>
-              <p className={style.tag1}>Média: ★ {mediador.avaliacao_media}</p>
+              <p className={style.tag1}>Média: ★ {formatRating(mediador.avaliacao_media)}</p>
             </div>
           </div>
           <div>

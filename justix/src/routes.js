@@ -23,10 +23,20 @@ import Login from './pages/Login';
 import Cadastro from './pages/Cadastro';
 import Sobre from "./pages/Sobre";
 import Tribunaisindex from "./pages/Tribunais/Tribunaisindex";
+import TribunaisindexFeed from "./pages/Tribunais/Feedback/TribunaisindexFeed"
+import TribunaisForms from "./pages/Tribunais/Feedback/TribunaisForms"
 import Audienciasindex from "./pages/Audiencias/Audienciasindex"
+import  AudienciasindexFeed from "./pages/Audiencias/Feedback/AudienciasindexFeed";
+import AudienciasForms from "./pages/Audiencias/Feedback/AudienciasForms";
 import Mediacoesindex from "./pages/Mediacoes/Mediacoesindex";
+import MediacoesindexFeed from "./pages/Mediacoes/Feedback/MediacoesindexFeed";
+import MediacoesForms from "./pages/Mediacoes/Feedback/MediacoesForms";
 import Advocaciaindex  from "./pages/Advocacias/Advocaciasindex";
+import AdvocaciaindexFeed from "./pages/Advocacias/Feedback/AdvocaciaindexFeed"
+import  AdvocaciaForms from "./pages/Advocacias/Feedback/AdvocaciaForms";
 import Portaisindex  from "./pages/Portais/Portaisindex";
+import  PortaisindexFeed from "./pages/Portais/Feedback/PortaisindexFeed";
+import PortaisForms from "./pages/Portais/Feedback/PortaisForms";
 
 
 function App() {
@@ -55,6 +65,16 @@ function App() {
         <Route path="/user/dashboard/portais" element={ <Portaisindex/> }></Route>
         <Route path="/user/dashboard/foruns/:id_forum/feedback" element={<ForunsindexFeed/>}></Route>
         <Route path="/user/dashboard/foruns/:id_forum/feedback/add" element={<ForunsForms/>}></Route>
+        <Route path="/user/dashboard/tribunais/:id_tribunal/feedback/" element={<TribunaisindexFeed/>}></Route>
+        <Route path="/user/dashboard/tribunais/:id_tribunal/feedback/add" element={<TribunaisForms/>}></Route>
+        <Route path="/user/dashboard/mediacoes/:id_mediador/feedback/add" element={<MediacoesForms/>}></Route>
+        <Route path="/user/dashboard/mediacoes/:id_mediador/feedback/" element={<MediacoesindexFeed/>}></Route>
+        <Route path="/user/dashboard/audiencias/:id_juiz/feedback/add" element={<AudienciasForms/>}></Route>
+        <Route path="/user/dashboard/audiencias/:id_juiz/feedback/" element={<AudienciasindexFeed/>}></Route>
+        <Route path="/user/dashboard/advocacia/:id_advocacia/feedback/add" element={<AdvocaciaForms/>}></Route>
+        <Route path="/user/dashboard/advocacia/:id_advocacia/feedback/" element={<AdvocaciaindexFeed/>}></Route>
+        <Route path="/user/dashboard/portais/:id_portal/feedback/add" element={<PortaisForms/>}></Route>
+        <Route path="/user/dashboard/portais/:id_portal/feedback/" element={<PortaisindexFeed/>}></Route>
         <Route
           path="/admin/dashboard/portais"
           element={<PortaisList onEdit={setPortaisEditado} />}

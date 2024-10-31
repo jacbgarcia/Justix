@@ -144,21 +144,6 @@ const PortaisFormPageO = () => {
               />
             </div>
             <div className={styles.formGroup}>
-              <label>Avaliação Média:</label>
-              <input
-                type="number"
-                value={formData.avaliacao_media}
-                onChange={(e) => setFormData({ 
-                  ...formData, 
-                  avaliacao_media: Math.min(Math.max(0, parseFloat(e.target.value)), 5)
-                })}
-                step="0.1"
-                min="0"
-                max="5"
-                required
-              />
-            </div>
-            <div className={styles.formGroup}>
               <label>Foto:</label>
               <input
                 type="file"

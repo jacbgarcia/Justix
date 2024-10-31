@@ -16,10 +16,31 @@ const PortaisListPageO = () => {
   const listarPortais = async () => {
     try {
       const res = await axios.get('http://localhost:3001/portais');
-      setPortais(res.data);
-      setFilteredPortais(res.data); // Inicialmente, mostra todos os portais
+      
+      // Buscar as avaliações atualizadas para cada fórum
+      const portaisWithRatings = await Promise.all(
+        res.data.map(async (portal) => {
+          try {
+            const ratingRes = await axios.get(`http://localhost:3001/portal_avaliacao/${portal.id_portal}`);
+            const mediaAvaliacao = parseFloat(ratingRes.data.media_avaliacao) || 0;
+            return {
+              ...portal,
+              avaliacao_media: mediaAvaliacao
+            };
+          } catch (err) {
+            console.error(`Erro ao buscar avaliação para fórum ${portal.id_portal}:`, err);
+            return {
+              ...portal,
+              avaliacao_media: 0
+            };
+          }
+        })
+      );
+
+      setPortais(portaisWithRatings);
+      setFilteredPortais(portaisWithRatings);
     } catch (err) {
-      console.error('Erro ao listar portais:', err);
+      console.error('Erro ao listar fóruns:', err);
     }
   };
 
@@ -60,6 +81,12 @@ const PortaisListPageO = () => {
     setFilteredPortais(filtered);
   };
 
+  const formatRating = (rating) => {
+    const numRating = parseFloat(rating);
+    return isNaN(numRating) ? "0.0" : numRating.toFixed(1);
+  };
+
+
   return (
     <div>
       {/* Campo de busca */}
@@ -87,7 +114,7 @@ const PortaisListPageO = () => {
             <div className={style.cardinfo}>
               <h3>{portal.nome}</h3>
               <p className={style.tag}>{portal.url}</p>
-              <p className={style.tag1}>Média: ★ {portal.avaliacao_media}</p>
+              <p className={style.tag1}>Média: ★ {formatRating(portal.avaliacao_media)}</p>
             </div>
           </div>
           <div>

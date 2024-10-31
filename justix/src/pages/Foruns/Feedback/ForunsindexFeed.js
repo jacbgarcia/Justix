@@ -31,17 +31,17 @@ const ForunsindexFeed = () => {
         ) : (
           <div className="w-full flex justify-start items-center gap-6 pl-4 -ml-8">
             <Link to="/user/dashboard/tribunais" className={style.navlinksl}>Tribunais</Link>
-            <Link to="" className={style.navlinks2}>Fóruns</Link>
+            <Link to="/user/dashboard/foruns" className={style.navlinks2}>Fóruns</Link>
             <Link to="/user/dashboard/audiencias" className={style.navlinksl}>Audiências</Link>
             <Link to="/user/dashboard/mediacoes" className={style.navlinksl}>Mediações</Link>
-            <Link to="/user/dashboard/advocacia" className={style.navlinks1}>Advocacia</Link>
+            <Link to="/user/dashboard/advocacia" className={style.navlinksl}>Advocacia</Link>
             <Link to="/user/dashboard/portais" className={style.navlinksl}>Portais</Link>
           </div>
         )}
         {isMobile && menuOpen && (
           <div className={style.mobileMenu}>
             <Link to="/user/dashboard/tribunais" onClick={toggleMenu} className={style.navlinksl}>Tribunais</Link>
-            <Link to="" onClick={toggleMenu} className={style.navlinks2}>Fóruns</Link>
+            <Link to="/user/dashboard/foruns" onClick={toggleMenu} className={style.navlinks2}>Fóruns</Link>
             <Link to="/user/dashboard/audiencias" onClick={toggleMenu} className={style.navlinksl}>Audiências</Link>
             <Link to="/user/dashboard/mediacoes" onClick={toggleMenu} className={style.navlinksl}>Mediações</Link>
             <Link to="/user/dashboard/advocacia" onClick={toggleMenu} className={style.navlinksl}>Advocacia</Link>
@@ -49,9 +49,11 @@ const ForunsindexFeed = () => {
           </div>
         )}
       </HeaderLggd>
-      <ContainerLggd>
+      
+      <ContainerLggd><Link to="/user/dashboard/foruns" className={style.backButton}>← Voltar</Link>
+      
         <div className="flex flex-col items-center justify-center space-y-4 h-screen">
-          <h2 className="text-center text-xl">Fóruns</h2>
+          <h2 className="text-center text-xl">Feedbacks</h2>
         </div>
         <ForunsListFeed />
       </ContainerLggd>

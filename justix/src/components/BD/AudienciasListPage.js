@@ -16,10 +16,31 @@ const AudienciasListPageO = () => {
   const listarJuizes = async () => {
     try {
       const res = await axios.get('http://localhost:3001/juiz');
-      setJuizes(res.data);
-      setFilteredJuizes(res.data); // Inicialmente, mostra todos os juízes
+      
+      // Buscar as avaliações atualizadas para cada fórum
+      const juizWithRatings = await Promise.all(
+        res.data.map(async (juiz) => {
+          try {
+            const ratingRes = await axios.get(`http://localhost:3001/juiz_avaliacao/${juiz.id_juiz}`);
+            const mediaAvaliacao = parseFloat(ratingRes.data.media_avaliacao) || 0;
+            return {
+              ...juiz,
+              avaliacao_media: mediaAvaliacao
+            };
+          } catch (err) {
+            console.error(`Erro ao buscar avaliação para fórum ${juiz.id_juiz}:`, err);
+            return {
+              ...juiz,
+              avaliacao_media: 0
+            };
+          }
+        })
+      );
+
+      setJuizes(juizWithRatings);
+      setFilteredJuizes(juizWithRatings);
     } catch (err) {
-      console.error('Erro ao listar juízes:', err);
+      console.error('Erro ao listar juiz:', err);
     }
   };
 
@@ -61,6 +82,12 @@ const AudienciasListPageO = () => {
     setFilteredJuizes(filtered);
   };
 
+  const formatRating = (rating) => {
+    const numRating = parseFloat(rating);
+    return isNaN(numRating) ? "0.0" : numRating.toFixed(1);
+  };
+
+
   return (
     <div>
       {/* Campo de busca */}
@@ -90,7 +117,7 @@ const AudienciasListPageO = () => {
               <p className={style.tag}>
                 {juiz.tempo_servico} anos de serviço - {juiz.casos_julgados} casos julgados
               </p>
-              <p className={style.tag1}>Média: ★ {juiz.avaliacao_media}</p>
+              <p className={style.tag1}>Média: ★ {formatRating(juiz.avaliacao_media)}</p>
             </div>
           </div>
           <div>

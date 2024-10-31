@@ -175,23 +175,33 @@ app.put('/foruns/:id', upload.single('imagem'), (req, res) => {
 app.delete('/foruns/:id', (req, res) => {
   const id = req.params.id;
 
+  // Primeiro, buscar a imagem do forum
   db.query('SELECT imagem FROM foruns WHERE id_forum = ?', [id], (err, result) => {
     if (err) {
-      return res.status(500).send({ error: 'Erro ao buscar fórum' });
+      return res.status(500).send({ error: 'Erro ao buscar forum' });
     }
 
     const imagem = result[0]?.imagem;
 
-    db.query('DELETE FROM foruns WHERE id_forum = ?', [id], (err, result) => {
+    // Deletar as avaliações associadas
+    db.query('DELETE FROM av_foruns WHERE id_forum = ?', [id], (err, result) => {
       if (err) {
-        return res.status(500).send({ error: 'Erro ao deletar fórum' });
+        return res.status(500).send({ error: 'Erro ao deletar avaliações associadas' });
       }
 
-      if (imagem) {
-        deleteImage(imagem);
-      }
+      // Deletar o forum
+      db.query('DELETE FROM foruns WHERE id_forum = ?', [id], (err, result) => {
+        if (err) {
+          return res.status(500).send({ error: 'Erro ao deletar forum' });
+        }
 
-      res.send({ message: 'Fórum deletado com sucesso' });
+        // Se existir uma imagem, deletá-la
+        if (imagem) {
+          deleteImage(imagem);
+        }
+
+        res.send({ message: 'Forum, suas avaliações e imagem deletados com sucesso' });
+      });
     });
   });
 });
@@ -270,6 +280,7 @@ app.put('/tribunais/:id', upload.single('imagem'), (req, res) => {
 app.delete('/tribunais/:id', (req, res) => {
   const id = req.params.id;
 
+  // Primeiro, buscar a imagem do tribunal
   db.query('SELECT imagem FROM tribunais WHERE id_tribunal = ?', [id], (err, result) => {
     if (err) {
       return res.status(500).send({ error: 'Erro ao buscar tribunal' });
@@ -277,16 +288,25 @@ app.delete('/tribunais/:id', (req, res) => {
 
     const imagem = result[0]?.imagem;
 
-    db.query('DELETE FROM tribunais WHERE id_tribunal = ?', [id], (err, result) => {
+    // Deletar as avaliações associadas
+    db.query('DELETE FROM av_tribunais WHERE id_tribunal = ?', [id], (err, result) => {
       if (err) {
-        return res.status(500).send({ error: 'Erro ao deletar tribunal' });
+        return res.status(500).send({ error: 'Erro ao deletar avaliações associadas' });
       }
 
-      if (imagem) {
-        deleteImage(imagem);
-      }
+      // Deletar o tribunal
+      db.query('DELETE FROM tribunais WHERE id_tribunal = ?', [id], (err, result) => {
+        if (err) {
+          return res.status(500).send({ error: 'Erro ao deletar tribunal' });
+        }
 
-      res.send({ message: 'Tribunal deletado com sucesso' });
+        // Se existir uma imagem, deletá-la
+        if (imagem) {
+          deleteImage(imagem);
+        }
+
+        res.send({ message: 'Tribunal, suas avaliações e imagem deletados com sucesso' });
+      });
     });
   });
 });
@@ -358,6 +378,7 @@ app.put('/juiz/:id', upload.single('imagem'), (req, res) => {
 app.delete('/juiz/:id', (req, res) => {
   const id = req.params.id;
 
+  // Primeiro, buscar a imagem do juiz
   db.query('SELECT imagem FROM juiz WHERE id_juiz = ?', [id], (err, result) => {
     if (err) {
       return res.status(500).send({ error: 'Erro ao buscar juiz' });
@@ -365,16 +386,25 @@ app.delete('/juiz/:id', (req, res) => {
 
     const imagem = result[0]?.imagem;
 
-    db.query('DELETE FROM juiz WHERE id_juiz = ?', [id], (err, result) => {
+    // Deletar as avaliações associadas
+    db.query('DELETE FROM av_juiz WHERE id_juiz = ?', [id], (err, result) => {
       if (err) {
-        return res.status(500).send({ error: 'Erro ao deletar juiz' });
+        return res.status(500).send({ error: 'Erro ao deletar avaliações associadas' });
       }
 
-      if (imagem) {
-        deleteImage(imagem);
-      }
+      // Deletar o juiz
+      db.query('DELETE FROM juiz WHERE id_juiz = ?', [id], (err, result) => {
+        if (err) {
+          return res.status(500).send({ error: 'Erro ao deletar juiz' });
+        }
 
-      res.send({ message: 'Juiz deletado com sucesso' });
+        // Se existir uma imagem, deletá-la
+        if (imagem) {
+          deleteImage(imagem);
+        }
+
+        res.send({ message: 'Juiz, suas avaliações e imagem deletados com sucesso' });
+      });
     });
   });
 });
@@ -445,6 +475,7 @@ app.put('/mediador/:id', upload.single('imagem'), (req, res) => {
 app.delete('/mediador/:id', (req, res) => {
   const id = req.params.id;
 
+  // Primeiro, buscar a imagem do mediador
   db.query('SELECT imagem FROM mediador WHERE id_mediador = ?', [id], (err, result) => {
     if (err) {
       return res.status(500).send({ error: 'Erro ao buscar mediador' });
@@ -452,16 +483,25 @@ app.delete('/mediador/:id', (req, res) => {
 
     const imagem = result[0]?.imagem;
 
-    db.query('DELETE FROM mediador WHERE id_mediador = ?', [id], (err, result) => {
+    // Deletar as avaliações associadas
+    db.query('DELETE FROM av_mediador WHERE id_mediador = ?', [id], (err, result) => {
       if (err) {
-        return res.status(500).send({ error: 'Erro ao deletar mediador' });
+        return res.status(500).send({ error: 'Erro ao deletar avaliações associadas' });
       }
 
-      if (imagem) {
-        deleteImage(imagem);
-      }
+      // Deletar o mediador
+      db.query('DELETE FROM mediador WHERE id_mediador = ?', [id], (err, result) => {
+        if (err) {
+          return res.status(500).send({ error: 'Erro ao deletar mediador' });
+        }
 
-      res.send({ message: 'Mediador deletado com sucesso' });
+        // Se existir uma imagem, deletá-la
+        if (imagem) {
+          deleteImage(imagem);
+        }
+
+        res.send({ message: 'Mediador, suas avaliações e imagem deletados com sucesso' });
+      });
     });
   });
 });
@@ -608,22 +648,37 @@ app.get('/advocacia/profissao/:profissao', (req, res) => {
   });
 });
 
-// DELETE advogado
 app.delete('/advocacia/:id', (req, res) => {
   const id = req.params.id;
 
-  const sql = 'DELETE FROM advocacia WHERE id_advocacia = ?';
-  db.query(sql, [id], (err, result) => {
+  // Primeiro, buscar a imagem do advocacia
+  db.query('SELECT imagem FROM advocacia WHERE id_advocacia = ?', [id], (err, result) => {
     if (err) {
-      console.error('Erro ao excluir advogado:', err);
-      return res.status(500).send({ error: 'Erro ao excluir advogado' });
-    }
-    
-    if (result.affectedRows === 0) {
-      return res.status(404).send({ error: 'Advogado não encontrado' });
+      return res.status(500).send({ error: 'Erro ao buscar advocacia' });
     }
 
-    res.send({ message: 'Advogado excluído com sucesso' });
+    const imagem = result[0]?.imagem;
+
+    // Deletar as avaliações associadas
+    db.query('DELETE FROM av_advocacia WHERE id_advocacia = ?', [id], (err, result) => {
+      if (err) {
+        return res.status(500).send({ error: 'Erro ao deletar avaliações associadas' });
+      }
+
+      // Deletar o advocacia
+      db.query('DELETE FROM advocacia WHERE id_advocacia = ?', [id], (err, result) => {
+        if (err) {
+          return res.status(500).send({ error: 'Erro ao deletar advocacia' });
+        }
+
+        // Se existir uma imagem, deletá-la
+        if (imagem) {
+          deleteImage(imagem);
+        }
+
+        res.send({ message: 'Advocacia, suas avaliações e imagem deletados com sucesso' });
+      });
+    });
   });
 });
 
@@ -817,32 +872,6 @@ app.put('/portais/:id', upload.single('imagem'), (req, res) => {
     });
   });
 });
-
-app.delete('/portais/:id', (req, res) => {
-  const id = req.params.id;
-
-  db.query('SELECT imagem FROM portal WHERE id_portal = ?', [id], (err, result) => {
-    if (err) {
-      return res.status(500).send({ error: 'Erro ao buscar portal' });
-    }
-
-    const imagem = result[0]?.imagem;
-
-    db.query('DELETE FROM portal WHERE id_portal = ?', [id], (err, result) => {
-      if (err) {
-        console.error('Erro ao deletar portal:', err);
-        return res.status(500).send({ error: 'Erro ao deletar portal' });
-      }
-
-      if (imagem) {
-        deleteImage(imagem);
-      }
-
-      res.send({ message: 'Portal deletado com sucesso' });
-    });
-  });
-});
-
 // Rota GET - Buscar portais com base em um termo de pesquisa
 app.get('/portais/search', (req, res) => {
   const searchTerm = req.query.term;
@@ -865,6 +894,39 @@ app.get('/portais/search', (req, res) => {
   });
 });
 
+app.delete('/portais/:id', (req, res) => {
+  const id = req.params.id;
+
+  // Primeiro, buscar a imagem do portal
+  db.query('SELECT imagem FROM portal WHERE id_portal = ?', [id], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: 'Erro ao buscar portal' });
+    }
+
+    const imagem = result[0]?.imagem;
+
+    // Deletar as avaliações associadas
+    db.query('DELETE FROM av_portal WHERE id_portal = ?', [id], (err, result) => {
+      if (err) {
+        return res.status(500).send({ error: 'Erro ao deletar avaliações associadas' });
+      }
+
+      // Deletar o portal
+      db.query('DELETE FROM portal WHERE id_portal = ?', [id], (err, result) => {
+        if (err) {
+          return res.status(500).send({ error: 'Erro ao deletar portal' });
+        }
+
+        // Se existir uma imagem, deletá-la
+        if (imagem) {
+          deleteImage(imagem);
+        }
+
+        res.send({ message: 'Portal, suas avaliações e imagem deletados com sucesso' });
+      });
+    });
+  });
+});
 
 
 
@@ -1049,7 +1111,7 @@ const authorize = (roles = []) => {
 
 
 
-
+//av_foruns
 app.post('/av_foruns', async (req, res) => {
   const { id_usuario, id_forum, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida } = req.body;
 
@@ -1065,10 +1127,6 @@ app.post('/av_foruns', async (req, res) => {
       'INSERT INTO av_foruns (id_usuario, id_forum, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida) VALUES (?, ?, ?, ?, ?, ?, ?)',
       [id_usuario, id_forum, numero_protocolo, comentario || null, avaliacao, horario_chegada || null, horario_saida || null]
     );
-    // console.log(
-    //   'INSERT INTO av_foruns (id_usuario, id_forum, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida) VALUES (?, ?, ?, ?, ?, ?, ?)',
-    //   [id_usuario, id_forum, numero_protocolo, comentario || null, avaliacao, horario_chegada || null, horario_saida || null]
-    // );
     res.status(201).json({ message: 'Comentário e avaliação adicionados com sucesso.' });
   } catch (error) {
     console.error(error);
@@ -1076,27 +1134,6 @@ app.post('/av_foruns', async (req, res) => {
   }
 });
 
-// // Rota para obter os comentários de um fórum específico
-// app.get('/av_foruns/:id_forum', async (req, res) => {
-//   const { id_forum } = req.params;
-
-//   try {
-//     const [comentarios] = await db.query(
-//       `SELECT u.nome, af.comentario, af.avaliacao, af.data_criacao, af.numero_protocolo, af.horario_chegada, af.horario_saida
-//        FROM av_foruns af
-//        JOIN usuarios u ON af.id_usuario = u.id_usuario
-//        WHERE af.id_forum = ?
-//        ORDER BY af.data_criacao DESC`,
-//       [id_forum]
-//     );
-//     res.json({ comments: comentarios });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: 'Erro ao buscar comentários.' });
-//   }
-// });
-
-// // Rota para calcular a média de avaliações de um fórum específico
 app.get('/foruns_avaliacao/:id_forum', async (req, res) => {
   try {
     const [resultado] = await db.promise().query(
@@ -1117,6 +1154,7 @@ app.get('/av_foruns', (req, res) => {
   });
 });
 
+
 // Rota com parâmetro: /av_foruns/1 (onde 1 é o id_forum)
 app.get('/av_foruns/:id_forum', (req, res) => {
   const sql = 'SELECT * FROM av_foruns WHERE id_forum = ?';
@@ -1129,77 +1167,405 @@ app.get('/av_foruns/:id_forum', (req, res) => {
   });
 });
 
-
-
-
-
-// Rota para adicionar um comentário
-// app.post('/av_foruns', (req, res) => {
-//     const { id_usuario, id_forum, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida } = req.body;
-
-//     // Validações
-//     if (!id_usuario) {
-//         return res.status(400).json({ error: 'ID do usuário não fornecido.' });
-//     }
-
-//     if (!id_forum) {
-//         return res.status(400).json({ error: 'ID do fórum não fornecido.' });
-//     }
-
-//     // Verifica se o usuário existe
-//     connection.query('SELECT id_usuario FROM usuarios WHERE id_usuario = ?', [id_usuario], (err, userRows) => {
-//         if (err) {
-//             console.error('Erro ao verificar usuário:', err);
-//             return res.status(500).json({ error: 'Erro interno do servidor' });
-//         }
-//         if (userRows.length === 0) {
-//             return res.status(404).json({ error: 'Usuário não encontrado' });
-//         }
-        
-
-//         // Verifica se o fórum existe
-//         connection.query('SELECT id_forum FROM foruns WHERE id_forum = ?', [id_forum], (err, forumRows) => {
-//             if (err) {
-//                 console.error('Erro ao verificar fórum:', err);
-//                 return res.status(500).json({ error: 'Erro interno do servidor' });
-//             }
-//             if (forumRows.length === 0) {
-//                 return res.status(404).json({ error: 'Fórum não encontrado' });
-//             }
-
-//             // Insere o comentário
-//             const insertQuery = `INSERT INTO av_foruns (id_usuario, id_forum, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-//             const insertValues = [id_usuario, id_forum, numero_protocolo, comentario || null, avaliacao, horario_chegada || null, horario_saida || null];
-
-//             connection.query(insertQuery, insertValues, (err, result) => {
-//                 if (err) {
-//                     console.error('Erro ao inserir comentário:', err);
-//                     return res.status(500).json({ error: 'Erro interno do servidor' });
-//                 }
-
-//                 // Busca o comentário recém-inserido
-//                 connection.query('SELECT af.*, u.nome as nome_usuario FROM av_foruns af JOIN usuarios u ON af.id_usuario = u.id_usuario WHERE af.id_comentario = ?', [result.insertId], (err, comentarioInserido) => {
-//                     if (err) {
-//                         console.error('Erro ao buscar comentário inserido:', err);
-//                         return res.status(500).json({ error: 'Erro interno do servidor' });
-//                     }
-
-//                     res.status(201).json({
-//                         success: true,
-//                         message: 'Comentário inserido com sucesso',
-//                         data: comentarioInserido[0]
-//                     });
-//                 });
-//             });
-//         });
-//     });
-// });
+app.delete('/foruns_avaliacao/:id_forum', (req, res) => {
+  const id_forum = req.params.id_forum;
+  db.query('DELETE FROM av_foruns WHERE id_forum = ?', [id_forum], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: 'Erro ao deletar avaliações' });
+    }
+    res.send({ message: 'Avaliações deletadas com sucesso' });
+  });
+});
+app.delete('/av_foruns/:id_forum', (req, res) => {
+  const id_forum = req.params.id_forum;
+  db.query('DELETE FROM av_foruns WHERE id_forum = ?', [id_forum], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: 'Erro ao deletar avaliações' });
+    }
+    res.send({ message: 'Avaliações deletadas com sucesso' });
+  });
+});
 
 
 
 
 
-// Manipulação de erros do Multer
+
+
+
+//av_tribunais
+app.post('/av_tribunais', async (req, res) => {
+  const { id_usuario, id_tribunal, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida } = req.body;
+
+  if (!avaliacao || avaliacao < 1 || avaliacao > 5) {
+    return res.status(400).json({ error: "Avaliação deve estar entre 1 e 5." });
+  }
+  if (!numero_protocolo || numero_protocolo.length < 5 || numero_protocolo.length > 20) {
+    return res.status(400).json({ error: "Número de protocolo deve ter entre 5 e 20 dígitos." });
+  }
+
+  try {
+    await db.promise().query(
+      'INSERT INTO av_tribunais (id_usuario, id_tribunal, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [id_usuario, id_tribunal, numero_protocolo, comentario || null, avaliacao, horario_chegada || null, horario_saida || null]
+    );
+    res.status(201).json({ message: 'Comentário e avaliação adicionados com sucesso.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao adicionar o comentário e a avaliação.' });
+  }
+});
+
+app.get('/tribunais_avaliacao/:id_tribunal', async (req, res) => {
+  try {
+    const [resultado] = await db.promise().query(
+      'SELECT ROUND(AVG(avaliacao),2) AS media_avaliacao FROM av_tribunais WHERE id_tribunal = ?',
+      [req.params.id_tribunal]
+    );
+    res.json({ media_avaliacao: resultado[0].media_avaliacao || 0 });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao calcular a média de avaliações.' });
+  }
+});
+app.get('/av_tribunais', (req, res) => {
+  const sql = 'SELECT * FROM av_tribunais';
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+
+
+// Rota com parâmetro: /av_foruns/1 (onde 1 é o id_forum)
+app.get('/av_tribunais/:id_tribunal', (req, res) => {
+  const sql = 'SELECT * FROM av_tribunais WHERE id_tribunal = ?';
+  db.query(sql, [req.params.id_tribunal], (err, result) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    res.json(result);
+  });
+});
+
+app.delete('/tribunais_avaliacao/:id_tribunal', (req, res) => {
+  const id_tribunal = req.params.id_tribunal;
+  db.query('DELETE FROM av_tribunais WHERE id_tribunal = ?', [id_tribunal], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: 'Erro ao deletar avaliações' });
+    }
+    res.send({ message: 'Avaliações deletadas com sucesso' });
+  });
+});
+app.delete('/av_tribunais/:id_tribunal', (req, res) => {
+  const id_tribunal = req.params.id_tribunal;
+  db.query('DELETE FROM av_tribunais WHERE id_tribunal = ?', [id_tribunal], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: 'Erro ao deletar avaliações' });
+    }
+    res.send({ message: 'Avaliações deletadas com sucesso' });
+  });
+});
+
+//juiz
+app.post('/av_juiz', async (req, res) => {
+  const { id_usuario, id_juiz, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida } = req.body;
+
+  if (!avaliacao || avaliacao < 1 || avaliacao > 5) {
+    return res.status(400).json({ error: "Avaliação deve estar entre 1 e 5." });
+  }
+  if (!numero_protocolo || numero_protocolo.length < 5 || numero_protocolo.length > 20) {
+    return res.status(400).json({ error: "Número de protocolo deve ter entre 5 e 20 dígitos." });
+  }
+
+  try {
+    await db.promise().query(
+      'INSERT INTO av_juiz (id_usuario, id_juiz, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [id_usuario, id_juiz, numero_protocolo, comentario || null, avaliacao, horario_chegada || null, horario_saida || null]
+    );
+    res.status(201).json({ message: 'Comentário e avaliação adicionados com sucesso.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao adicionar o comentário e a avaliação.' });
+  }
+});
+
+app.get('/juiz_avaliacao/:id_juiz', async (req, res) => {
+  try {
+    const [resultado] = await db.promise().query(
+      'SELECT ROUND(AVG(avaliacao),2) AS media_avaliacao FROM av_juiz WHERE id_juiz = ?',
+      [req.params.id_juiz]
+    );
+    res.json({ media_avaliacao: resultado[0].media_avaliacao || 0 });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao calcular a média de avaliações.' });
+  }
+});
+app.get('/av_juiz', (req, res) => {
+  const sql = 'SELECT * FROM av_juiz';
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+
+
+// Rota com parâmetro: /av_foruns/1 (onde 1 é o id_forum)
+app.get('/av_juiz/:id_juiz', (req, res) => {
+  const sql = 'SELECT * FROM av_juiz WHERE id_juiz = ?';
+  db.query(sql, [req.params.id_juiz], (err, result) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    res.json(result);
+  });
+});
+
+app.delete('/juiz_avaliacao/:id_juiz', (req, res) => {
+  const id_juiz = req.params.id_juiz;
+  db.query('DELETE FROM av_juiz WHERE id_juiz = ?', [id_juiz], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: 'Erro ao deletar avaliações' });
+    }
+    res.send({ message: 'Avaliações deletadas com sucesso' });
+  });
+});
+app.delete('/av_juiz/:id_juiz', (req, res) => {
+  const id_juiz = req.params.id_juiz;
+  db.query('DELETE FROM av_juiz WHERE id_juiz = ?', [id_juiz], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: 'Erro ao deletar avaliações' });
+    }
+    res.send({ message: 'Avaliações deletadas com sucesso' });
+  });
+});
+
+
+//mediador
+app.post('/av_mediador', async (req, res) => {
+  const { id_usuario, id_mediador, comentario, avaliacao, horario_chegada, horario_saida } = req.body;
+
+  if (!avaliacao || avaliacao < 1 || avaliacao > 5) {
+    return res.status(400).json({ error: "Avaliação deve estar entre 1 e 5." });
+  }
+
+  try {
+    await db.promise().query(
+      'INSERT INTO av_mediador (id_usuario, id_mediador, comentario, avaliacao, horario_chegada, horario_saida) VALUES (?, ?, ?, ?, ?, ?)',
+      [id_usuario, id_mediador, comentario || null, avaliacao, horario_chegada || null, horario_saida || null]
+    );
+    res.status(201).json({ message: 'Comentário e avaliação adicionados com sucesso.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao adicionar o comentário e a avaliação.' });
+  }
+});
+
+app.get('/mediador_avaliacao/:id_mediador', async (req, res) => {
+  try {
+    const [resultado] = await db.promise().query(
+      'SELECT ROUND(AVG(avaliacao),2) AS media_avaliacao FROM av_mediador WHERE id_mediador = ?',
+      [req.params.id_mediador]
+    );
+    res.json({ media_avaliacao: resultado[0].media_avaliacao || 0 });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao calcular a média de avaliações.' });
+  }
+});
+app.get('/av_mediador', (req, res) => {
+  const sql = 'SELECT * FROM av_mediador';
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+
+
+// Rota com parâmetro: /av_foruns/1 (onde 1 é o id_forum)
+app.get('/av_mediador/:id_mediador', (req, res) => {
+  const sql = 'SELECT * FROM av_mediador WHERE id_mediador = ?';
+  db.query(sql, [req.params.id_mediador], (err, result) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    res.json(result);
+  });
+});
+
+app.delete('/mediador_avaliacao/:id_mediador', (req, res) => {
+  const id_mediador = req.params.id_mediador;
+  db.query('DELETE FROM av_mediador WHERE id_mediador = ?', [id_mediador], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: 'Erro ao deletar avaliações' });
+    }
+    res.send({ message: 'Avaliações deletadas com sucesso' });
+  });
+});
+app.delete('/av_mediador/:id_mediador', (req, res) => {
+  const id_mediador = req.params.id_mediador;
+  db.query('DELETE FROM av_mediador WHERE id_mediador = ?', [id_mediador], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: 'Erro ao deletar avaliações' });
+    }
+    res.send({ message: 'Avaliações deletadas com sucesso' });
+  });
+});
+
+//advocacia
+app.post('/av_advocacia', async (req, res) => {
+  const { id_usuario, id_advocacia, comentario, avaliacao, horario_chegada, horario_saida } = req.body;
+
+  if (!avaliacao || avaliacao < 1 || avaliacao > 5) {
+    return res.status(400).json({ error: "Avaliação deve estar entre 1 e 5." });
+  }
+
+  try {
+    await db.promise().query(
+      'INSERT INTO av_advocacia (id_usuario, id_advocacia, comentario, avaliacao, horario_chegada, horario_saida) VALUES (?, ?, ?, ?, ?, ?)',
+      [id_usuario, id_advocacia, comentario || null, avaliacao, horario_chegada || null, horario_saida || null]
+    );
+    res.status(201).json({ message: 'Comentário e avaliação adicionados com sucesso.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao adicionar o comentário e a avaliação.' });
+  }
+});
+
+app.get('/advocacia_avaliacao/:id_advocacia', async (req, res) => {
+  try {
+    const [resultado] = await db.promise().query(
+      'SELECT ROUND(AVG(avaliacao),2) AS media_avaliacao FROM av_advocacia WHERE id_advocacia = ?',
+      [req.params.id_advocacia]
+    );
+    res.json({ media_avaliacao: resultado[0].media_avaliacao || 0 });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao calcular a média de avaliações.' });
+  }
+});
+app.get('/av_advocacia', (req, res) => {
+  const sql = 'SELECT * FROM av_advocacia';
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+
+
+// Rota com parâmetro: /av_foruns/1 (onde 1 é o id_forum)
+app.get('/av_advocacia/:id_advocacia', (req, res) => {
+  const sql = 'SELECT * FROM av_advocacia WHERE id_advocacia = ?';
+  db.query(sql, [req.params.id_advocacia], (err, result) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    res.json(result);
+  });
+});
+
+app.delete('/advocacia_avaliacao/:id_advocacia', (req, res) => {
+  const id_advocacia = req.params.id_advocacia;
+  db.query('DELETE FROM av_advocacia WHERE id_advocacia = ?', [id_advocacia], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: 'Erro ao deletar avaliações' });
+    }
+    res.send({ message: 'Avaliações deletadas com sucesso' });
+  });
+});
+app.delete('/av_advocacia/:id_advocacia', (req, res) => {
+  const id_advocacia = req.params.id_advocacia;
+  db.query('DELETE FROM av_advocacia WHERE id_advocacia = ?', [id_advocacia], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: 'Erro ao deletar avaliações' });
+    }
+    res.send({ message: 'Avaliações deletadas com sucesso' });
+  });
+});
+
+
+//portal
+app.post('/av_portal', async (req, res) => {
+  const { id_usuario, id_portal, comentario, avaliacao, horario_chegada, horario_saida } = req.body;
+
+  if (!avaliacao || avaliacao < 1 || avaliacao > 5) {
+    return res.status(400).json({ error: "Avaliação deve estar entre 1 e 5." });
+  }
+
+  try {
+    await db.promise().query(
+      'INSERT INTO av_portal (id_usuario, id_portal, comentario, avaliacao, horario_chegada, horario_saida) VALUES (?, ?, ?, ?, ?, ?)',
+      [id_usuario, id_portal, comentario || null, avaliacao, horario_chegada || null, horario_saida || null]
+    );
+    res.status(201).json({ message: 'Comentário e avaliação adicionados com sucesso.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao adicionar o comentário e a avaliação.' });
+  }
+});
+
+app.get('/portal_avaliacao/:id_portal', async (req, res) => {
+  try {
+    const [resultado] = await db.promise().query(
+      'SELECT ROUND(AVG(avaliacao),2) AS media_avaliacao FROM av_portal WHERE id_portal = ?',
+      [req.params.id_portal]
+    );
+    res.json({ media_avaliacao: resultado[0].media_avaliacao || 0 });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao calcular a média de avaliações.' });
+  }
+});
+app.get('/av_portal', (req, res) => {
+  const sql = 'SELECT * FROM av_portal';
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+
+
+// Rota com parâmetro: /av_foruns/1 (onde 1 é o id_forum)
+app.get('/av_portal/:id_portal', (req, res) => {
+  const sql = 'SELECT * FROM av_portal WHERE id_portal = ?';
+  db.query(sql, [req.params.id_portal], (err, result) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    res.json(result);
+  });
+});
+
+app.delete('/portal_avaliacao/:id_portal', (req, res) => {
+  const id_portal = req.params.id_portal;
+  db.query('DELETE FROM av_portal WHERE id_portal = ?', [id_portal], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: 'Erro ao deletar avaliações' });
+    }
+    res.send({ message: 'Avaliações deletadas com sucesso' });
+  });
+});
+app.delete('/av_portal/:id_portal', (req, res) => {
+  const id_portal = req.params.id_portal;
+  db.query('DELETE FROM av_portal WHERE id_portal = ?', [id_portal], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: 'Erro ao deletar avaliações' });
+    }
+    res.send({ message: 'Avaliações deletadas com sucesso' });
+  });
+});
+
+
+
+
+
+
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     if (err.code === 'LIMIT_FILE_SIZE') {
@@ -1210,12 +1576,7 @@ app.use((err, req, res, next) => {
   next(err);
 });
 
-const PORT = process.env.PORT || 3001; // Aqui, o backend escuta na porta 3001
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`Servidor backend rodando na porta ${PORT}`);
 });
-
-
-// app.listen(3001, () => {
-//   console.log('Servidor rodando na porta 3001');
-// });

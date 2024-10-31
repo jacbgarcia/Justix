@@ -16,8 +16,29 @@ const TribunaisListPageO = () => {
   const listarTribunais = async () => {
     try {
       const res = await axios.get('http://localhost:3001/tribunais');
-      setTribunais(res.data);
-      setFilteredTribunais(res.data); // Inicialmente, exibe todos os tribunais
+      
+      // Buscar as avaliações atualizadas para cada tribunal
+      const tribunaisWithRatings = await Promise.all(
+        res.data.map(async (tribunal) => {
+          try {
+            const ratingRes = await axios.get(`http://localhost:3001/tribunais_avaliacao/${tribunal.id_tribunal}`);
+            const mediaAvaliacao = parseFloat(ratingRes.data.media_avaliacao) || 0;
+            return {
+              ...tribunal,
+              avaliacao_media: mediaAvaliacao
+            };
+          } catch (err) {
+            console.error(`Erro ao buscar avaliação para tribunal ${tribunal.id_tribunal}:`, err);
+            return {
+              ...tribunal,
+              avaliacao_media: 0
+            };
+          }
+        })
+      );
+
+      setTribunais(tribunaisWithRatings);
+      setFilteredTribunais(tribunaisWithRatings);
     } catch (err) {
       console.error('Erro ao listar tribunais:', err);
     }
@@ -29,7 +50,7 @@ const TribunaisListPageO = () => {
 
     try {
       await axios.delete(`http://localhost:3001/tribunais/${id}`);
-      listarTribunais(); // Atualiza a lista após a exclusão
+      listarTribunais();
     } catch (err) {
       console.error('Erro ao excluir tribunal:', err);
     }
@@ -47,12 +68,10 @@ const TribunaisListPageO = () => {
     return `http://localhost:3001/uploads/tribunais/${imagem}`;
   };
 
-  // Função para lidar com a mudança no campo de busca
   const handleSearchChange = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
 
-    // Filtra tribunais com base no termo de busca
     const filtered = tribunais.filter(tribunal =>
       tribunal.nome.toLowerCase().includes(term.toLowerCase())
     );
@@ -60,18 +79,21 @@ const TribunaisListPageO = () => {
     setFilteredTribunais(filtered);
   };
 
+  const formatRating = (rating) => {
+    const numRating = parseFloat(rating);
+    return isNaN(numRating) ? "0.0" : numRating.toFixed(1);
+  };
+
   return (
     <div>
-      {/* Campo de busca */}
       <input
         type="text"
         placeholder="Buscar..."
         value={searchTerm}
         onChange={handleSearchChange}
-        className={style.searchInput} // Adicione uma classe de estilo, se desejar
+        className={style.searchInput}
       />
 
-      {/* Renderização dos tribunais filtrados */}
       {filteredTribunais.map(tribunal => (
         <div key={tribunal.id_tribunal} className={style.card}>
           <div className={style.cardleft}>
@@ -89,15 +111,16 @@ const TribunaisListPageO = () => {
               <p className={style.tag}>
                 {tribunal.endereco}, {tribunal.cidade} - {tribunal.estado}, {tribunal.cep}
               </p>
-              <p className={style.tag1}>Média: ★ {tribunal.avaliacao_media}</p>
+              <p className={style.tag1}>
+                Média: ★ {formatRating(tribunal.avaliacao_media)}
+              </p>
             </div>
           </div>
-          
           <div>
             <button
               className={style.visualizarbtn}
               onClick={() => handleEdit(tribunal)}
-              style={{ marginRight: '10px' }}
+              style={{ marginRight: '5px' }}
             >
               Editar
             </button>

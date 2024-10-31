@@ -6,7 +6,7 @@ import style from '../Card/Card.module.css';
 const ForunsListPageO = () => {
   const [foruns, setForuns] = useState([]);
   const [filteredForuns, setFilteredForuns] = useState([]);
-  const [searchTerm, setSearchTerm] = useState(''); // Estado para o termo de busca
+  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,8 +16,29 @@ const ForunsListPageO = () => {
   const listarForuns = async () => {
     try {
       const res = await axios.get('http://localhost:3001/foruns');
-      setForuns(res.data);
-      setFilteredForuns(res.data); // Inicialmente, mostra todos os fóruns
+      
+      // Buscar as avaliações atualizadas para cada fórum
+      const forunsWithRatings = await Promise.all(
+        res.data.map(async (forum) => {
+          try {
+            const ratingRes = await axios.get(`http://localhost:3001/foruns_avaliacao/${forum.id_forum}`);
+            const mediaAvaliacao = parseFloat(ratingRes.data.media_avaliacao) || 0;
+            return {
+              ...forum,
+              avaliacao_media: mediaAvaliacao
+            };
+          } catch (err) {
+            console.error(`Erro ao buscar avaliação para fórum ${forum.id_forum}:`, err);
+            return {
+              ...forum,
+              avaliacao_media: 0
+            };
+          }
+        })
+      );
+
+      setForuns(forunsWithRatings);
+      setFilteredForuns(forunsWithRatings);
     } catch (err) {
       console.error('Erro ao listar fóruns:', err);
     }
@@ -29,7 +50,7 @@ const ForunsListPageO = () => {
 
     try {
       await axios.delete(`http://localhost:3001/foruns/${id}`);
-      listarForuns(); // Atualiza a lista após a exclusão
+      listarForuns();
     } catch (err) {
       console.error('Erro ao excluir fórum:', err);
     }
@@ -42,17 +63,15 @@ const ForunsListPageO = () => {
   const getImagemUrl = (imagem) => {
     if (!imagem) return null;
     if (imagem.startsWith('/uploads/foruns/')) {
-      return `http://localhost:3001${imagem}`; // Apenas retorna a URL completa
+      return `http://localhost:3001${imagem}`;
     }
-    return `http://localhost:3001/uploads/foruns/${imagem}`; // Adiciona o prefixo se não estiver presente
+    return `http://localhost:3001/uploads/foruns/${imagem}`;
   };
 
-  // Função para lidar com a mudança do campo de busca
   const handleSearchChange = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
 
-    // Filtra fóruns com base no termo de busca
     const filtered = foruns.filter(forum =>
       forum.nome.toLowerCase().includes(term.toLowerCase())
     );
@@ -60,18 +79,21 @@ const ForunsListPageO = () => {
     setFilteredForuns(filtered);
   };
 
+  const formatRating = (rating) => {
+    const numRating = parseFloat(rating);
+    return isNaN(numRating) ? "0.0" : numRating.toFixed(1);
+  };
+
   return (
     <div>
-      {/* Campo de busca */}
       <input
         type="text"
         placeholder="Buscar..."
         value={searchTerm}
         onChange={handleSearchChange}
-        className={style.searchInput} // Adicione uma classe de estilo, se desejar
+        className={style.searchInput}
       />
 
-      {/* Renderização dos fóruns filtrados */}
       {filteredForuns.map(forum => (
         <div key={forum.id_forum} className={style.card}>
           <div className={style.cardleft}>
@@ -89,7 +111,9 @@ const ForunsListPageO = () => {
               <p className={style.tag}>
                 {forum.endereco}, {forum.cidade} - {forum.estado}, {forum.cep}
               </p>
-              <p className={style.tag1}>Média: ★ {forum.avaliacao_media}</p>
+              <p className={style.tag1}>
+                Média: ★ {formatRating(forum.avaliacao_media)}
+              </p>
             </div>
           </div>
           <div>
@@ -100,7 +124,7 @@ const ForunsListPageO = () => {
             >
               Editar
             </button>
-            <button 
+            <button
               className={style.visualizarbtn}
               onClick={() => excluirForum(forum.id_forum)}
             >

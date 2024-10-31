@@ -14,7 +14,25 @@ const ForunsListPageUser = () => {
   const listarForuns = async () => {
     try {
       const res = await axios.get('http://localhost:3001/foruns');
-      setForuns(res.data);
+      const forunsWithRatings = await Promise.all(
+        res.data.map(async (forum) => {
+          try {
+            const ratingRes = await axios.get(`http://localhost:3001/foruns_avaliacao/${forum.id_forum}`);
+            const mediaAvaliacao = parseFloat(ratingRes.data.media_avaliacao) || 0;
+            return {
+              ...forum,
+              avaliacao_media: mediaAvaliacao
+            };
+          } catch (err) {
+            console.error(`Erro ao buscar avaliação para fórum ${forum.id_forum}:`, err);
+            return {
+              ...forum,
+              avaliacao_media: 0
+            };
+          }
+        })
+      );
+      setForuns(forunsWithRatings);
     } catch (err) {
       console.error('Erro ao listar fóruns:', err);
     }
@@ -29,13 +47,18 @@ const ForunsListPageUser = () => {
   };
 
   const handleVisualizarClick = (id_forum) => {
-    localStorage.setItem('id_forum', id_forum); // Armazena o id_forum no localStorage
+    localStorage.setItem('id_forum', id_forum);
   };
 
   const filteredForuns = foruns.filter(forum => 
     forum.nome.toLowerCase().includes(searchTerm.toLowerCase()) || 
     forum.endereco.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const formatRating = (rating) => {
+    const numRating = parseFloat(rating);
+    return isNaN(numRating) ? "0.0" : numRating.toFixed(1);
+  };
 
   return (
     <div>
@@ -67,16 +90,15 @@ const ForunsListPageUser = () => {
                 {forum.endereco}, {forum.cidade} - {forum.estado}, {forum.cep}
               </p>
               <p className={style.tag1}>
-                Média:  ★ {forum.avaliacao_media}
+                Média: ★ {formatRating(forum.avaliacao_media)}
               </p>
             </div>
           </div>
-          
           <div>
             <Link
               className={style.visualizarbtn}
               to={`/user/dashboard/foruns/${forum.id_forum}/feedback`}
-              onClick={() => handleVisualizarClick(forum.id_forum)} // Armazena o id_forum ao clicar
+              onClick={() => handleVisualizarClick(forum.id_forum)}
               style={{ marginRight: '5px' }}
             >
               Visualizar

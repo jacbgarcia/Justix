@@ -119,18 +119,6 @@ const AudienciasFormPageO = () => {
           />
         </div>
         <div className={styles.formGroup}>
-          <label>Avaliação Média:</label>
-          <input
-            type="number"
-            value={formData.avaliacao_media}
-            onChange={(e) => setFormData({ ...formData, avaliacao_media: e.target.value })}
-            step="0.01"
-            min="0"
-            max="10"
-            required
-          />
-        </div>
-        <div className={styles.formGroup}>
           <label>Foto:</label>
           <input
             type="file"

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import style from '../Card/Card.module.css';
+import { Link } from 'react-router-dom';
 
 const AudienciasListPageUser = () => {
   const [juizes, setJuizes] = useState([]);
@@ -13,9 +14,27 @@ const AudienciasListPageUser = () => {
   const listarJuiz = async () => {
     try {
       const res = await axios.get('http://localhost:3001/juiz');
-      setJuizes(res.data);
+      const juizWithRatings = await Promise.all(
+        res.data.map(async (juiz) => {
+          try {
+            const ratingRes = await axios.get(`http://localhost:3001/juiz_avaliacao/${juiz.id_juiz}`);
+            const mediaAvaliacao = parseFloat(ratingRes.data.media_avaliacao) || 0;
+            return {
+              ...juiz,
+              avaliacao_media: mediaAvaliacao
+            };
+          } catch (err) {
+            console.error(`Erro ao buscar avaliação para fórum ${juiz.id_juiz}:`, err);
+            return {
+              ...juiz,
+              avaliacao_media: 0
+            };
+          }
+        })
+      );
+      setJuizes(juizWithRatings);
     } catch (err) {
-      console.error('Erro ao listar juizes:', err);
+      console.error('Erro ao listar fóruns:', err);
     }
   };
 
@@ -27,10 +46,19 @@ const AudienciasListPageUser = () => {
     return `http://localhost:3001/uploads/juiz/${imagem}`;
   };
 
+  const handleVisualizarClick = (id_juiz) => {
+    localStorage.setItem('id_juiz', id_juiz);
+  };
+
   // Filtra os juízes com base no termo de busca
   const filteredJuizes = juizes.filter(juiz => 
     juiz.nome.toLowerCase().includes(searchTerm.toLowerCase()) // Filtra por nome
   );
+
+  const formatRating = (rating) => {
+    const numRating = parseFloat(rating);
+    return isNaN(numRating) ? "0.0" : numRating.toFixed(1);
+  };
 
   return (
     <div>
@@ -63,18 +91,20 @@ const AudienciasListPageUser = () => {
                 {juiz.tempo_servico} anos de serviço - {juiz.casos_julgados} casos julgados
               </p>
               <p className={style.tag1}>
-                Média:  ★ {juiz.avaliacao_media}
+                Média:  ★ {formatRating(juiz.avaliacao_media)}
               </p>
             </div>
           </div>
           
           <div>
-            <button
+          <Link
               className={style.visualizarbtn}
+              to={`/user/dashboard/audiencias/${juiz.id_juiz}/feedback`}
+              onClick={() => handleVisualizarClick(juiz.id_juiz)}
               style={{ marginRight: '5px' }}
             >
               Visualizar
-            </button>
+            </Link>
           </div>
         </div>
       ))}

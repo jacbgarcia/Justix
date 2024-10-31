@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import style from '../Card/Card.module.css';
+import { Link } from 'react-router-dom';
 
 const MediacoesListPageUser = () => {
   const [mediadores, setMediadores] = useState([]);
@@ -13,9 +14,27 @@ const MediacoesListPageUser = () => {
   const listarMediadores = async () => {
     try {
       const res = await axios.get('http://localhost:3001/mediador');
-      setMediadores(res.data);
+      const mediadorWithRatings = await Promise.all(
+        res.data.map(async (mediador) => {
+          try {
+            const ratingRes = await axios.get(`http://localhost:3001/mediador_avaliacao/${mediador.id_mediador}`);
+            const mediaAvaliacao = parseFloat(ratingRes.data.media_avaliacao) || 0;
+            return {
+              ...mediador,
+              avaliacao_media: mediaAvaliacao
+            };
+          } catch (err) {
+            console.error(`Erro ao buscar avaliação para fórum ${mediador.id_mediador}:`, err);
+            return {
+              ...mediador,
+              avaliacao_media: 0
+            };
+          }
+        })
+      );
+      setMediadores(mediadorWithRatings);
     } catch (err) {
-      console.error('Erro ao listar mediadores:', err);
+      console.error('Erro ao listar fóruns:', err);
     }
   };
 
@@ -27,11 +46,20 @@ const MediacoesListPageUser = () => {
     return `http://localhost:3001/uploads/mediador/${imagem}`;
   };
 
+  const handleVisualizarClick = (id_mediador) => {
+    localStorage.setItem('id_mediador', id_mediador);
+  };
+
   // Filtra os mediadores com base no termo de busca
   const filteredMediadores = mediadores.filter(mediador => 
     mediador.nome.toLowerCase().includes(searchTerm.toLowerCase()) || // Filtra por nome
     mediador.estado.toLowerCase().includes(searchTerm.toLowerCase())  // Filtra por estado
   );
+
+  const formatRating = (rating) => {
+    const numRating = parseFloat(rating);
+    return isNaN(numRating) ? "0.0" : numRating.toFixed(1);
+  };
 
   return (
     <div>
@@ -64,18 +92,20 @@ const MediacoesListPageUser = () => {
                 {mediador.estado}
               </p>
               <p className={style.tag1}>
-                Média:  ★ {mediador.avaliacao_media}
+                Média:  ★ {formatRating(mediador.avaliacao_media)}
               </p>
             </div>
           </div>
           
           <div>
-            <button
+          <Link
               className={style.visualizarbtn}
+              to={`/user/dashboard/mediacoes/${mediador.id_mediador}/feedback`}
+              onClick={() => handleVisualizarClick(mediador.id_mediador)}
               style={{ marginRight: '5px' }}
             >
               Visualizar
-            </button>
+            </Link>
           </div>
         </div>
       ))}

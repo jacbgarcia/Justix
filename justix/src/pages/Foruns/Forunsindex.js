@@ -32,7 +32,7 @@ const Forunsindex = () => {
         ) : (
           <div className="w-full flex justify-start items-center gap-6 pl-4 -ml-8">
             <Link to="/user/dashboard/tribunais" className={style.navlinksl}>Tribunais</Link>
-            <Link to="" className={style.navlinks2}>Fóruns</Link>
+            <Link to="/user/dashboard/foruns" className={style.navlinks2}>Fóruns</Link>
             <Link to="/user/dashboard/audiencias" className={style.navlinksl}>Audiências</Link>
             <Link to="/user/dashboard/mediacoes" className={style.navlinksl}>Mediações</Link>
             <Link to="/user/dashboard/advocacia" className={style.navlinks1}>Advocacia</Link>
@@ -42,7 +42,7 @@ const Forunsindex = () => {
         {isMobile && menuOpen && (
           <div className={style.mobileMenu}>
             <Link to="/user/dashboard/tribunais" onClick={toggleMenu} className={style.navlinksl}>Tribunais</Link>
-            <Link to="" onClick={toggleMenu} className={style.navlinks2}>Fóruns</Link>
+            <Link to="/user/dashboard/foruns" onClick={toggleMenu} className={style.navlinks2}>Fóruns</Link>
             <Link to="/user/dashboard/audiencias" onClick={toggleMenu} className={style.navlinksl}>Audiências</Link>
             <Link to="/user/dashboard/mediacoes" onClick={toggleMenu} className={style.navlinksl}>Mediações</Link>
             <Link to="/user/dashboard/advocacia" onClick={toggleMenu} className={style.navlinksl}>Advocacia</Link>
