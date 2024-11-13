@@ -1,78 +1,58 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import style from '../Card/Card.module.css';
 import { Link } from 'react-router-dom';
+import './AdvocaciaListPageUser.css';
+
+const API_BASE_URL = 'http://localhost:3001';
 
 const AdvocaciaListPageUser = () => {
   const [advocacia, setAdvocacia] = useState([]);
-  const [filteredAdvocacia, setFilteredAdvocacia] = useState([]);
-  const [filter, setFilter] = useState('todos');
   const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [activeFilter, setActiveFilter] = useState('todos');
 
   useEffect(() => {
     listarAdvocacia();
   }, []);
 
-  useEffect(() => {
-    const filtered = filter === 'todos' 
-      ? advocacia 
-      : advocacia.filter(prof => prof.profissao === filter);
-
-    const searchFiltered = filtered.filter(prof => 
-      prof.nome.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    setFilteredAdvocacia(searchFiltered);
-  }, [advocacia, filter, searchTerm]);
-
   const listarAdvocacia = async () => {
     try {
-      setLoading(true);
-      const res = await axios.get('http://localhost:3001/advocacia');
-      
+      const res = await axios.get(`${API_BASE_URL}/advocacia`);
       const advocaciaWithRatings = await Promise.all(
         res.data.map(async (advocacia) => {
           try {
-            const ratingRes = await axios.get(`http://localhost:3001/advocacia_avaliacao/${advocacia.id_advocacia}`);
-            const mediaAvaliacao = parseFloat(ratingRes.data.media_avaliacao) || 0;
+            // Buscar a média ponderada
+            const ratingRes = await axios.get(`${API_BASE_URL}/advocacia_avaliacao/${advocacia.id_advocacia}`);
+            
+            // Buscar total de avaliações
+            const avaliacoesRes = await axios.get(`${API_BASE_URL}/av_advocacia/${advocacia.id_advocacia}`);
+            
             return {
               ...advocacia,
-              avaliacao_media: mediaAvaliacao
+              media_ponderada: parseFloat(ratingRes.data.media_ponderada) || 0,
+              total_avaliacoes: avaliacoesRes.data.length || 0
             };
           } catch (err) {
-            console.error(`Erro ao buscar avaliação para advocacia ${advocacia.id_advocacia}:`, err);
+            console.error(`Erro ao buscar dados para advocacia ${advocacia.id_advocacia}:`, err);
             return {
               ...advocacia,
-              avaliacao_media: 0
+              media_ponderada: 0,
+              total_avaliacoes: 0
             };
           }
         })
       );
-      
       setAdvocacia(advocaciaWithRatings);
-      setFilteredAdvocacia(advocaciaWithRatings);
     } catch (err) {
       console.error('Erro ao listar advocacia:', err);
-    } finally {
-      setLoading(false);
     }
   };
 
   const getImagemUrl = (imagem) => {
     if (!imagem) return null;
-    if (imagem.startsWith('/uploads/')) {
-      return `http://localhost:3001${imagem}`;
+    if (imagem.startsWith('/uploads/advocacia/')) {
+      return `${API_BASE_URL}${imagem}`;
     }
-    return `http://localhost:3001/uploads/${imagem}`;
-  };
-
-  const handleFilterChange = (e) => {
-    setFilter(e.target.value);
-  };
-
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
+    return `${API_BASE_URL}/uploads/advocacia/${imagem}`;
   };
 
   const handleVisualizarClick = (id_advocacia) => {
@@ -84,102 +64,111 @@ const AdvocaciaListPageUser = () => {
     return isNaN(numRating) ? "0.0" : numRating.toFixed(1);
   };
 
-  const renderAdvocaciaInfo = (advocacia) => {
-    switch (advocacia.profissao) {
-      case 'Escritório':
-        return (
-          <div className={style.cardinfo}>
-            <h3>{advocacia.nome}</h3>
-            <p className={style.tag1}>Endereço: {advocacia.endereco}</p>
-            <p className={style.tag}>Escritório</p>
-            <p className={style.tag}>Média: ★{formatRating(advocacia.avaliacao_media)}</p>
-          </div>
-        );
-      case 'Advogado':
-        return (
-          <div className={style.cardinfo}>
-            <h3>{advocacia.nome}</h3>
-            <p className={style.tag}>{advocacia.experiencia} anos de experiência</p>
-            <p className={style.tag1}>{advocacia.escritorio}</p>
-            <p className={style.tag}>Advogado</p>
-            <p className={style.tag}>Média: ★{formatRating(advocacia.avaliacao_media)}</p>
-          </div>
-        );
-      case 'Promotor':
-        return (
-          <div className={style.cardinfo}>
-            <h3>{advocacia.nome}</h3>
-            <p className={style.tag1}>{advocacia.experiencia} anos de experiência</p>
-            <p className={style.tag}>Promotor</p>
-            <p className={style.tag}>Média: ★{formatRating(advocacia.avaliacao_media)}</p>
-          </div>
-        );
-      default:
-        return (
-          <div className={style.cardinfo}>
-            <h3>{advocacia.nome}</h3>
-            <p className={style.tag}>Advocacia</p>
-            <p className={style.tag}>Média: ★{formatRating(advocacia.avaliacao_media)}</p>
-          </div>
-        );
+  // Função para filtrar advocacia baseado no termo de busca e filtro ativo
+  const getFilteredAdvocacia = () => {
+    // Primeiro aplica o filtro de busca
+    let filtered = advocacia.filter(advocacia => 
+      advocacia.nome.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      advocacia.profissao.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    // Depois aplica o filtro de categoria
+    switch (activeFilter) {
+      case 'mais-avaliados':
+        filtered = filtered.sort((a, b) => b.total_avaliacoes - a.total_avaliacoes);
+        break;
+      case 'melhor-classificacao':
+        filtered = filtered.sort((a, b) => b.media_ponderada - a.media_ponderada);
+        break;
+      default: // 'todos'
+        filtered = filtered.sort((a, b) => a.nome.localeCompare(b.nome));
+        break;
     }
+
+    return filtered;
   };
 
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="Buscar..."
-        value={searchTerm}
-        onChange={handleSearchChange}
-        className={style.searchInput}
-      />
-
-      <div>
-        <select
-          onChange={handleFilterChange}
-          value={filter}
-          className={style.container}
-        >
-          <option value="todos">Todos</option>
-          <option value="Escritório">Escritórios</option>
-          <option value="Advogado">Advogados</option>
-          <option value="Promotor">Promotores</option>
-        </select>
+    <div className="container">
+      {/* Barra de Pesquisa */}
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Pesquisar advocacia..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input"
+        />
       </div>
 
-      {loading ? (
-        <div>Carregando...</div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredAdvocacia.map((advocacia) => (
-            <div key={advocacia.id_advocacia} className={style.card}>
-              <div className={style.cardleft}>
+      {/* Categorias */}
+      <div className="categories-container">
+        <div className="categories-wrapper">
+          <button 
+            className={`category-button ${activeFilter === 'todos' ? 'active' : ''}`}
+            onClick={() => setActiveFilter('todos')}
+          >
+            Todos
+          </button>
+          <button 
+            className={`category-button ${activeFilter === 'mais-avaliados' ? 'active' : ''}`}
+            onClick={() => setActiveFilter('mais-avaliados')}
+          >
+            Mais Avaliados
+          </button>
+          <button 
+            className={`category-button ${activeFilter === 'melhor-classificacao' ? 'active' : ''}`}
+            onClick={() => setActiveFilter('melhor-classificacao')}
+          >
+            Melhor Classificação
+          </button>
+        </div>
+      </div>
+
+      {/* Lista de Advocacia */}
+      <div className="advocacias-grid">
+        {getFilteredAdvocacia().map(advocacia => (
+          <Link
+            key={advocacia.id_advocacia}
+            to={`/advocacia/${advocacia.id_advocacia}/feedback`}
+            onClick={() => handleVisualizarClick(advocacia.id_advocacia)}
+            className="advocacia-card"
+          >
+            <div className="advocacia-content">
+              {/* Imagem */}
+              <div className="advocacia-image-container">
                 {advocacia.imagem ? (
                   <img
                     src={getImagemUrl(advocacia.imagem)}
-                    alt={`Imagem de ${advocacia.nome}`}
-                    className={style.cardleft1}
+                    alt={advocacia.nome}
+                    className="advocacia-image"
                   />
                 ) : (
-                  <div className={style.profileimg}>Sem imagem</div>
+                  <div className="advocacia-no-image">
+                    Sem imagem
+                  </div>
                 )}
-                {renderAdvocaciaInfo(advocacia)}
               </div>
-              <div>
-                <Link
-                  className={style.visualizarbtn}
-                  to={`/user/dashboard/advocacia/${advocacia.id_advocacia}/feedback`}
-                  onClick={() => handleVisualizarClick(advocacia.id_advocacia)}
-                  style={{ marginRight: '5px' }}
-                >
-                  Visualizar
-                </Link>
+
+              {/* Informações */}
+              <div className="advocacia-info">
+                <h3 className="advocacia-name">{advocacia.nome}</h3>
+                <div className="advocacia-rating">
+                  <span className="rating-badge">
+                    ★ {formatRating(advocacia.media_ponderada)}
+                  </span>
+                  <span className="total-ratings">
+                    ({advocacia.total_avaliacoes} avaliações)
+                  </span>
+                </div>
+                <p className="advocacia-address">
+                  {advocacia.profissao}
+                </p>
               </div>
             </div>
-          ))}
-        </div>
-      )}
+          </Link>
+        ))}
+      </div>
     </div>
   );
 };

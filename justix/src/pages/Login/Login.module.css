@@ -1,234 +1,152 @@
-/* Base styles */
-.navleft {
-    display: flex;
-    gap: 2rem;
-    align-items: center;
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
-    padding: 0 1rem; /* Add some padding on the sides */
-  }
-  
-  .cadastrese {
-    background-color: black;
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 10px;
-    text-decoration: none;
-    white-space: nowrap; /* Prevent text from breaking */
-  }
-  
-  .navlinks {
-    text-decoration: none;
-    color: black;
-  }
-  
-  .loginSection {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem; /* Reduced padding for mobile */
-    min-height: 100vh; /* Ensure full height coverage */
-  }
-  .CSection {
-    display: flex;
-    justify-content: center;
-    padding: 1rem; /* Reduced padding for mobile */
-     /* Ensure full height coverage */
-  }
-  
-  .commentarea{
-    padding: 0.7rem;
-    background-color: white;
-    border-radius: 8px;
-  }
+/* Estilos base para login alinhados ao cadastro */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
 
-  .feedbtn{
-    display: flex;
-    justify-content: center;
-    text-decoration: none;
-    color: black;
-    padding-top: 1%;
-  }
+.loginContainer {
+  background-color: white;
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  overflow-y: auto;
+  transition: transform 0.3s ease-in-out;
+  height: auto;
+  border-radius: 12px;
+}
 
-  .feedbtn:hover{
-    color: #4169E1;
-  }
+.loginHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
 
-  .feedtxt{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding-top: 2%;
-  }
-  
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.closeButton:hover {
+  color: #666;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+  text-align: center;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.formGroup label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #444;
+}
+
+.formGroup input {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.formGroup input:focus {
+  outline: none;
+  border-color: black;
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+}
+
+.errorText {
+  color: #dc2626;
+  font-size: 0.75rem;
+}
+
+.submitButton {
+  background-color: black;
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 1rem;
+}
+
+.submitButton:hover {
+  background-color: #494e53;
+}
+
+/* Mensagens de status */
+.statusMessage {
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+/* Estilos para desktop */
+@media (min-width: 768px) {
   .loginContainer {
-    width: 100%;
-    max-width: 400px;
-    padding: 1.5rem; /* Slightly reduced padding for mobile */
-    margin: 1rem; /* Add margin instead of negative margin */
-    background-color: #797b7d3c;
-    border-radius: 20px; /* Slightly reduced border radius */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
-  }
-  .commentContainer {
-    width: 100%;
-    max-width: 600px;
-    padding: 1.5rem; /* Slightly reduced padding for mobile */
-    margin: 1rem; /* Add margin instead of negative margin */
-    background-color: #797b7d3c;
-    border-radius: 20px; /* Slightly reduced border radius */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
-  }
-  
-  .backButton {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: black;
-    margin-bottom: 1.5rem;
-    font-size: 0.9rem; /* Slightly smaller font for mobile */
-  }
-  
-  .backArrow {
-    margin-right: 0.5rem;
-  }
-  
-  .title {
-    font-size: 1.25rem; /* Slightly smaller font for mobile */
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 1.5rem;
-  }
-  
-  .loginForm {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .formGroup {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  .formGroupC textarea {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    height: 100px;
-    width: 100%;
-    border-radius: 8px;
-
+      width: 400px;
+      transform: translateX(-100%);
   }
 
-  .star{
-    margin-left: 6%;
-    justify-items: center;
-    
+  .loginContainer.open {
+      transform: translateX(0);
+  }
+}
+
+/* Estilos para dispositivos móveis */
+@media (max-width: 767px) {
+  .loginContainer {
+      width: 90%;
+      margin: auto;
+      border-radius: 8px;
+      max-height: 90vh;
+      transform: translateY(100%);
   }
 
-  .formGroupD input {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    height: 28px;
-    width: 18%;
-    border-radius: 8px;
-
+  .loginContainer.open {
+      transform: translateY(0);
   }
-  
-  .formGroup label {
-    font-size: 0.875rem;
-    font-weight: 500;
-  }
-  
-  .formGroup input {
-    padding: 0.75rem; /* Increased padding for better touch targets */
-    border: 1px solid #ccc;
-    border-radius: 8px; /* Increased border radius */
-    font-size: 1rem;
-    width: 100%;
-    box-sizing: border-box; /* Ensure padding doesn't affect width */
-  }
-  
-  .formGroup input:focus {
-    outline: none;
-    border-color: black;
-    box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
-  }
-  
-  .submitButton {
-    background-color: black;
-    color: white;
-    padding: 0.875rem; /* Increased padding for better touch targets */
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    width: 100%;
-    margin-top: 0.5rem;
-  }
-  
-  .submitButton:hover {
-    background-color: #494e53;
-  }
-  
-  .errorMessage {
-    color: #dc2626;
-    text-align: center;
-    margin-top: 1rem;
-    font-size: 0.875rem;
-  }
-  
-  /* Media Queries */
-  @media screen and (max-width: 768px) {
-    .navleft {
-      gap: 1rem; /* Reduced gap for mobile */
-    }
-    
-    .loginContainer {
-      margin: 0.5rem;
-      padding: 1.25rem;
-    }
-    
-    .title {
-      font-size: 1.2rem;
-    }
-    
-    .formGroup input {
-      font-size: 16px; /* Prevent zoom on iOS */
-    }
-  }
-  
-  @media screen and (max-width: 480px) {
-    .navleft {
-      justify-content: center;
-      padding: 0.5rem;
-    }
-    
-    .cadastrese {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.9rem;
-    }
-    
-    .loginSection {
-      padding: 0.5rem;
-    }
-    
-    .loginContainer {
-      margin: 0;
-      border-radius: 15px;
-    }
-    
-    .backButton {
-      font-size: 0.85rem;
-    }
-  }
-  
-  /* Hover states for touch devices */
-  @media (hover: none) {
-    .submitButton:hover {
-      background-color: black; /* Remove hover effect on touch devices */
-    }
-  }
+}

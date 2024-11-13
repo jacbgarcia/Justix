@@ -37,7 +37,31 @@ import  AdvocaciaForms from "./pages/Advocacias/Feedback/AdvocaciaForms";
 import Portaisindex  from "./pages/Portais/Portaisindex";
 import  PortaisindexFeed from "./pages/Portais/Feedback/PortaisindexFeed";
 import PortaisForms from "./pages/Portais/Feedback/PortaisForms";
-
+import FeedTribunais from "./pages/Home/FTribunais/FeedTribunais";
+import FeedForuns from "./pages/Home/FForuns/FeedForuns";
+import FeedAudiencias from "./pages/Home/FAudiencias/FeedAudiencias";
+import FeedMediacao from "./pages/Home/FMediacoes/FeedMediacao";
+import FeedAdvocacias from "./pages/Home/FAdvocacias/FeedAdvocacias";
+import FeedPortais from "./pages/Home/FPortais/FeedPortais";
+import HomeUser from "./pages/HomeUser/HomeUser";
+import UFeedTribunais from "./pages/HomeUser/UTribunais/UFeedTribunais";
+import  UFeedForuns from "./pages/HomeUser/UForuns/UFeedForuns";
+import  UFeedAudiencias from "./pages/HomeUser/UAudiencias/UFeedAudiencias";
+import UFeedMediacao from "./pages/HomeUser/UMediacoes/UFeedMediacoes";
+import UFeedAdvocacias from "./pages/HomeUser/UAdvocacias/UFeedAdvocacias";
+import  UFeedPortais from "./pages/HomeUser/UPortais/UFeedPortais";
+import FeedbackTribunalPai from "./pages/HomeUser/UTribunais/FeedbackTribunalPai";
+import FeedbackForumPai from "./pages/HomeUser/UForuns/FeedbackForumPai";
+import FeedbackAudienciaPai from  "./pages/HomeUser/UAudiencias/FeedbackAudienciaPai";
+import FeedbackMediacoesPai from "./pages/HomeUser/UMediacoes/FeedbackMediacoesPai";
+import  FeedbackAdvocaciaPai from "./pages/HomeUser/UAdvocacias/FeedbackAdvocaciaPai";
+import FeedbackPortalPai from "./pages/HomeUser/UPortais/FeedbackPortalPai";
+import TribunaisindexL from "./pages/Tribunais/TribunaisindexL";
+import ForunsindexL from "./pages/Foruns/ForunsindexL";
+import AudienciasindexL from "./pages/Audiencias/AudienciasindexL";
+import MediacoesindexL from "./pages/Mediacoes/MediacoesindexL";
+import AdvocaciasindexL from "./pages/Advocacias/AdvocaciasindexL";
+import PortaisindexL from "./pages/Portais/PortaisindexL";
 
 function App() {
   const [forumEditado, setForumEditado] = useState(null);
@@ -57,12 +81,18 @@ function App() {
         <Route path="/cadastro"   element={<Cadastro />}></Route>
         <Route path="/" element={ <Home /> }></Route>
         <Route path="/info" element={ <Sobre/> }></Route>
-        <Route path="/user/dashboard/tribunais" element={ <Tribunaisindex/> }></Route>
-        <Route path="/user/dashboard/foruns" element={ <Forunsindex/> }></Route>
-        <Route path="/user/dashboard/audiencias" element={ <Audienciasindex/> }></Route>
-        <Route path="/user/dashboard/mediacoes" element={ <Mediacoesindex/> }></Route>
-        <Route path="/user/dashboard/advocacia" element={ <Advocaciaindex/> }></Route>
-        <Route path="/user/dashboard/portais" element={ <Portaisindex/> }></Route>
+        <Route path="/tribunais" element={ <Tribunaisindex/> }></Route>
+        <Route path="/foruns" element={ <Forunsindex/> }></Route>
+        <Route path="/juiz" element={ <Audienciasindex/> }></Route>
+        <Route path="/mediacoes" element={ <Mediacoesindex/> }></Route>
+        <Route path="/advocacia" element={ <Advocaciaindex/> }></Route>
+        <Route path="/portais" element={ <Portaisindex/> }></Route>
+        <Route path="/user/tribunais" element={ <TribunaisindexL/> }></Route>
+        <Route path="/user/foruns" element={ <ForunsindexL/> }></Route>
+        <Route path="/user/juiz" element={ <AudienciasindexL/> }></Route>
+        <Route path="/user/mediacoes" element={ <MediacoesindexL/> }></Route>
+        <Route path="/user/advocacia" element={ <AdvocaciasindexL/> }></Route>
+        <Route path="/user/portais" element={ <PortaisindexL/> }></Route>
         <Route path="/user/dashboard/foruns/:id_forum/feedback" element={<ForunsindexFeed/>}></Route>
         <Route path="/user/dashboard/foruns/:id_forum/feedback/add" element={<ForunsForms/>}></Route>
         <Route path="/user/dashboard/tribunais/:id_tribunal/feedback/" element={<TribunaisindexFeed/>}></Route>
@@ -75,6 +105,25 @@ function App() {
         <Route path="/user/dashboard/advocacia/:id_advocacia/feedback/" element={<AdvocaciaindexFeed/>}></Route>
         <Route path="/user/dashboard/portais/:id_portal/feedback/add" element={<PortaisForms/>}></Route>
         <Route path="/user/dashboard/portais/:id_portal/feedback/" element={<PortaisindexFeed/>}></Route>
+        <Route path="/tribunais/:id_tribunal/feedback/" element={<FeedTribunais/>}></Route>
+        <Route path="/foruns/:id_forum/feedback/" element={<FeedForuns/>}></Route>
+        <Route path="/juiz/:id_juiz/feedback/" element={<FeedAudiencias/>}></Route>
+        <Route path="/mediador/:id_mediador/feedback/" element={<FeedMediacao/>}></Route>
+        <Route path="/advocacia/:id_advocacia/feedback/" element={<FeedAdvocacias/>}></Route>
+        <Route path="/portais/:id_portal/feedback/" element={<FeedPortais/>}></Route>
+        <Route path="/user/" element={<HomeUser/>}></Route>
+        <Route path="/user/tribunais/:id_tribunal/feedback/" element={<UFeedTribunais/>}></Route>
+        <Route path="/user/tribunais/:id_tribunal/feedback/add" element={<FeedbackTribunalPai/>}></Route>
+        <Route path="/user/foruns/:id_forum/feedback/" element={<UFeedForuns/>}></Route>
+        <Route path="/user/foruns/:id_forum/feedback/add" element={<FeedbackForumPai/>}></Route>
+        <Route path="/user/juiz/:id_juiz/feedback/" element={<UFeedAudiencias/>}></Route>
+        <Route path="/user/juiz/:id_juiz/feedback/add" element={<FeedbackAudienciaPai/>}></Route>
+        <Route path="/user/mediador/:id_mediador/feedback/" element={<UFeedMediacao/>}></Route>
+        <Route path="/user/mediador/:id_mediador/feedback/add" element={<FeedbackMediacoesPai/>}></Route>
+        <Route  path="/user/advocacia/:id_advocacia/feedback/" element={<UFeedAdvocacias/>}></Route>
+        <Route path="/user/advocacia/:id_advocacia/feedback/add" element={<FeedbackAdvocaciaPai/>}></Route>
+        <Route  path="/user/portais/:id_portal/feedback/" element={<UFeedPortais/>}></Route>
+        <Route path="/user/portais/:id_portal/feedback/add" element={<FeedbackPortalPai/>}></Route>
         <Route
           path="/admin/dashboard/portais"
           element={<PortaisList onEdit={setPortaisEditado} />}

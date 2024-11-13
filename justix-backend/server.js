@@ -206,6 +206,20 @@ app.delete('/foruns/:id', (req, res) => {
   });
 });
 
+app.get('/foruns/:id', (req, res) => {
+  const id = req.params.id;
+  const sql = 'SELECT * FROM foruns WHERE id_forum = ?';
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: 'Erro ao buscar forum' });
+    }
+    if (result.length === 0) {
+      return res.status(404).send({ error: 'forum não encontrado' });
+    }
+    res.send(result[0]);
+  });
+});
+
 // ROTAS PARA TRIBUNAIS
 app.get('/tribunais', (req, res) => {
   const sql = 'SELECT * FROM tribunais';
@@ -214,6 +228,7 @@ app.get('/tribunais', (req, res) => {
     res.send(result);
   });
 });
+
 app.get('/tokens', (req, res) => {
   const sql = 'SELECT * FROM user_tokens';
   db.query(sql, (err, result) => {
@@ -221,6 +236,22 @@ app.get('/tokens', (req, res) => {
     res.send(result);
   });
 });
+
+app.get('/tribunais/:id', (req, res) => {
+  const id = req.params.id;
+  const sql = 'SELECT * FROM tribunais WHERE id_tribunal = ?';
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: 'Erro ao buscar tribunal' });
+    }
+    if (result.length === 0) {
+      return res.status(404).send({ error: 'Tribunal não encontrado' });
+    }
+    res.send(result[0]);
+  });
+});
+
+
 
 app.post('/tribunais', upload.single('imagem'), (req, res) => {
   const { nome, cidade, estado, endereco, cep, avaliacao_media } = req.body;
@@ -317,6 +348,20 @@ app.get('/juiz', (req, res) => {
   db.query(sql, (err, result) => {
     if (err) throw err;
     res.send(result);
+  });
+});
+
+app.get('/juiz/:id', (req, res) => {
+  const id = req.params.id;
+  const sql = 'SELECT * FROM juiz WHERE id_juiz = ?';
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: 'Erro ao buscar juiz' });
+    }
+    if (result.length === 0) {
+      return res.status(404).send({ error: 'juiz não encontrado' });
+    }
+    res.send(result[0]);
   });
 });
 
@@ -418,6 +463,21 @@ app.get('/mediador', (req, res) => {
   });
 });
 
+app.get('/mediador/:id', (req, res) => {
+  const id = req.params.id;
+  const sql = 'SELECT * FROM mediador WHERE id_mediador = ?';
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: 'Erro ao buscar mediador' });
+    }
+    if (result.length === 0) {
+      return res.status(404).send({ error: 'mediador não encontrado' });
+    }
+    res.send(result[0]);
+  });
+});
+
+
 app.post('/mediador', upload.single('imagem'), (req, res) => {
   const { nome, estado, avaliacao_media } = req.body;
   const imagem = req.file ? `/uploads/mediador/${req.file.filename}` : null;
@@ -513,6 +573,20 @@ app.get('/advocacia', (req, res) => {
   db.query(sql, (err, result) => {
     if (err) throw err;
     res.send(result);
+  });
+});
+
+app.get('/advocacia/:id', (req, res) => {
+  const id = req.params.id;
+  const sql = 'SELECT * FROM advocacia WHERE id_advocacia = ?';
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: 'Erro ao buscar advocacia' });
+    }
+    if (result.length === 0) {
+      return res.status(404).send({ error: 'advocacia não encontrado' });
+    }
+    res.send(result[0]);
   });
 });
 
@@ -693,6 +767,20 @@ app.get('/portais', (req, res) => {
     // Log para debug
     console.log('Portais encontrados:', result);
     res.send(result);
+  });
+});
+
+app.get('/portais/:id', (req, res) => {
+  const id = req.params.id;
+  const sql = 'SELECT * FROM portal WHERE id_portal = ?';
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: 'Erro ao buscar portal' });
+    }
+    if (result.length === 0) {
+      return res.status(404).send({ error: 'portal não encontrado' });
+    }
+    res.send(result[0]);
   });
 });
 
@@ -1112,40 +1200,109 @@ const authorize = (roles = []) => {
 
 
 //av_foruns
-app.post('/av_foruns', async (req, res) => {
-  const { id_usuario, id_forum, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida } = req.body;
+// app.post('/av_foruns', async (req, res) => {
+//   const { id_usuario, id_forum, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida } = req.body;
 
-  if (!avaliacao || avaliacao < 1 || avaliacao > 5) {
-    return res.status(400).json({ error: "Avaliação deve estar entre 1 e 5." });
+//   if (!avaliacao || avaliacao < 1 || avaliacao > 5) {
+//     return res.status(400).json({ error: "Avaliação deve estar entre 1 e 5." });
+//   }
+//   if (!numero_protocolo || numero_protocolo.length < 5 || numero_protocolo.length > 20) {
+//     return res.status(400).json({ error: "Número de protocolo deve ter entre 5 e 20 dígitos." });
+//   }
+
+//   try {
+//     await db.promise().query(
+//       'INSERT INTO av_foruns (id_usuario, id_forum, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida) VALUES (?, ?, ?, ?, ?, ?, ?)',
+//       [id_usuario, id_forum, numero_protocolo, comentario || null, avaliacao, horario_chegada || null, horario_saida || null]
+//     );
+//     res.status(201).json({ message: 'Comentário e avaliação adicionados com sucesso.' });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Erro ao adicionar o comentário e a avaliação.' });
+//   }
+// });
+
+app.post('/av_foruns', async (req, res) => {
+  const { 
+    id_usuario, 
+    id_forum, 
+    numero_protocolo, 
+    comentario,
+    av_atendimento,
+    av_organizacao,
+    av_digital,
+    av_infraestrutura,
+    av_seguranca,
+    horario_chegada, 
+    horario_saida 
+  } = req.body;
+
+  // Validação dos campos de avaliação
+  const avaliacoes = [
+    av_atendimento, av_organizacao, av_digital,
+    av_infraestrutura, av_seguranca
+  ];
+
+  if (avaliacoes.some(av => av < 1 || av > 5)) {
+    return res.status(400).json({ error: "Todas as avaliações devem estar entre 1 e 5." });
   }
+
   if (!numero_protocolo || numero_protocolo.length < 5 || numero_protocolo.length > 20) {
     return res.status(400).json({ error: "Número de protocolo deve ter entre 5 e 20 dígitos." });
   }
 
   try {
     await db.promise().query(
-      'INSERT INTO av_foruns (id_usuario, id_forum, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [id_usuario, id_forum, numero_protocolo, comentario || null, avaliacao, horario_chegada || null, horario_saida || null]
+      `INSERT INTO av_foruns (
+        id_usuario, id_forum, numero_protocolo, comentario,
+        av_atendimento, av_organizacao, av_digital,
+        av_infraestrutura, av_seguranca,
+        horario_chegada, horario_saida
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        id_usuario, id_forum, numero_protocolo, comentario,
+        av_atendimento, av_organizacao, av_digital,
+        av_infraestrutura, av_seguranca,
+        horario_chegada || null, horario_saida || null
+      ]
     );
-    res.status(201).json({ message: 'Comentário e avaliação adicionados com sucesso.' });
+    res.status(201).json({ message: 'Avaliação adicionada com sucesso.' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erro ao adicionar o comentário e a avaliação.' });
+    res.status(500).json({ error: 'Erro ao adicionar a avaliação.' });
   }
 });
+
+
+
+// app.get('/foruns_avaliacao/:id_forum', async (req, res) => {
+//   try {
+//     const [resultado] = await db.promise().query(
+//       'SELECT ROUND(AVG(avaliacao),2) AS media_avaliacao FROM av_foruns WHERE id_forum = ?',
+//       [req.params.id_forum]
+//     );
+//     res.json({ media_avaliacao: resultado[0].media_avaliacao || 0 });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Erro ao calcular a média de avaliações.' });
+//   }
+// });
 
 app.get('/foruns_avaliacao/:id_forum', async (req, res) => {
   try {
     const [resultado] = await db.promise().query(
-      'SELECT ROUND(AVG(avaliacao),2) AS media_avaliacao FROM av_foruns WHERE id_forum = ?',
+      'CALL CalcularMediaPonderadaForum(?)',
       [req.params.id_forum]
     );
-    res.json({ media_avaliacao: resultado[0].media_avaliacao || 0 });
+    res.json({ 
+      media_ponderada: resultado[0][0]?.media_ponderada || 0
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erro ao calcular a média de avaliações.' });
+    res.status(500).json({ error: 'Erro ao calcular a média ponderada de avaliações.' });
   }
 });
+
 app.get('/av_foruns', (req, res) => {
   const sql = 'SELECT * FROM av_foruns';
   db.query(sql, (err, result) => {
@@ -1186,6 +1343,58 @@ app.delete('/av_foruns/:id_forum', (req, res) => {
   });
 });
 
+app.get('/foruns_avaliacao_usuario/:id_forum/:id_usuario', async (req, res) => {
+  try {
+    // Buscar as avaliações individuais do usuário
+    const [avaliacoes] = await db.promise().query(
+      `SELECT 
+        av_atendimento,
+        av_organizacao,
+        av_digital,
+        av_infraestrutura,
+        av_seguranca
+      FROM av_foruns
+      WHERE id_forum = ? AND id_usuario = ?
+      ORDER BY data_criacao DESC`,
+      [req.params.id_forum, req.params.id_usuario]
+    );
+
+    if (avaliacoes.length === 0) {
+      return res.json({
+        avaliacoes: null,
+        message: "Usuário ainda não avaliou este forum"
+      });
+    }
+
+    // Calcular a média geral das avaliações do usuário com pesos
+    const avaliacoesComMedia = avaliacoes.map(avaliacao => {
+      const somaAvaliacoes = (
+        avaliacao.av_atendimento * 5 +
+        avaliacao.av_organizacao * 4 +
+        avaliacao.av_digital * 3 +
+        avaliacao.av_infraestrutura * 2 +
+        avaliacao.av_seguranca * 1 
+      );
+
+      const somaPesos = 5 + 4 + 3 + 2 + 1; // Soma dos pesos
+      const media = somaAvaliacoes / somaPesos;
+
+      return {
+        ...avaliacao,
+        media_ponderada: parseFloat(media.toFixed(2)) // Adiciona a média calculada
+      };
+    });
+
+    res.json({
+      avaliacoes: avaliacoesComMedia,
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao buscar avaliações do usuário.' });
+  }
+});
+
 
 
 
@@ -1194,40 +1403,110 @@ app.delete('/av_foruns/:id_forum', (req, res) => {
 
 
 //av_tribunais
-app.post('/av_tribunais', async (req, res) => {
-  const { id_usuario, id_tribunal, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida } = req.body;
+// app.post('/av_tribunais', async (req, res) => {
+//   const { id_usuario, id_tribunal, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida } = req.body;
 
-  if (!avaliacao || avaliacao < 1 || avaliacao > 5) {
-    return res.status(400).json({ error: "Avaliação deve estar entre 1 e 5." });
+//   if (!avaliacao || avaliacao < 1 || avaliacao > 5) {
+//     return res.status(400).json({ error: "Avaliação deve estar entre 1 e 5." });
+//   }
+//   if (!numero_protocolo || numero_protocolo.length < 5 || numero_protocolo.length > 20) {
+//     return res.status(400).json({ error: "Número de protocolo deve ter entre 5 e 20 dígitos." });
+//   }
+
+//   try {
+//     await db.promise().query(
+//       'INSERT INTO av_tribunais (id_usuario, id_tribunal, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida) VALUES (?, ?, ?, ?, ?, ?, ?)',
+//       [id_usuario, id_tribunal, numero_protocolo, comentario || null, avaliacao, horario_chegada || null, horario_saida || null]
+//     );
+//     res.status(201).json({ message: 'Comentário e avaliação adicionados com sucesso.' });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Erro ao adicionar o comentário e a avaliação.' });
+//   }
+// });
+
+app.post('/av_tribunais', async (req, res) => {
+  const { 
+    id_usuario, 
+    id_tribunal, 
+    numero_protocolo, 
+    comentario,
+    av_eficiencia,
+    av_qualidade,
+    av_infraestrutura,
+    av_tecnologia,
+    av_gestao,
+    av_transparencia,
+    av_sustentabilidade,
+    horario_chegada, 
+    horario_saida 
+  } = req.body;
+
+  // Validação dos campos de avaliação
+  const avaliacoes = [
+    av_eficiencia, av_qualidade, av_infraestrutura,
+    av_tecnologia, av_gestao, av_transparencia,
+    av_sustentabilidade
+  ];
+
+  if (avaliacoes.some(av => av < 1 || av > 5)) {
+    return res.status(400).json({ error: "Todas as avaliações devem estar entre 1 e 5." });
   }
+
   if (!numero_protocolo || numero_protocolo.length < 5 || numero_protocolo.length > 20) {
     return res.status(400).json({ error: "Número de protocolo deve ter entre 5 e 20 dígitos." });
   }
 
   try {
     await db.promise().query(
-      'INSERT INTO av_tribunais (id_usuario, id_tribunal, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [id_usuario, id_tribunal, numero_protocolo, comentario || null, avaliacao, horario_chegada || null, horario_saida || null]
+      `INSERT INTO av_tribunais (
+        id_usuario, id_tribunal, numero_protocolo, comentario,
+        av_eficiencia, av_qualidade, av_infraestrutura,
+        av_tecnologia, av_gestao, av_transparencia,
+        av_sustentabilidade, horario_chegada, horario_saida
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        id_usuario, id_tribunal, numero_protocolo, comentario,
+        av_eficiencia, av_qualidade, av_infraestrutura,
+        av_tecnologia, av_gestao, av_transparencia,
+        av_sustentabilidade, horario_chegada || null, horario_saida || null
+      ]
     );
-    res.status(201).json({ message: 'Comentário e avaliação adicionados com sucesso.' });
+    res.status(201).json({ message: 'Avaliação adicionada com sucesso.' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erro ao adicionar o comentário e a avaliação.' });
+    res.status(500).json({ error: 'Erro ao adicionar a avaliação.' });
   }
 });
+
+// app.get('/tribunais_avaliacao/:id_tribunal', async (req, res) => {
+//   try {
+//     const [resultado] = await db.promise().query(
+//       'SELECT ROUND(AVG(avaliacao),2) AS media_avaliacao FROM av_tribunais WHERE id_tribunal = ?',
+//       [req.params.id_tribunal]
+//     );
+//     res.json({ media_avaliacao: resultado[0].media_avaliacao || 0 });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Erro ao calcular a média de avaliações.' });
+//   }
+// });
 
 app.get('/tribunais_avaliacao/:id_tribunal', async (req, res) => {
   try {
     const [resultado] = await db.promise().query(
-      'SELECT ROUND(AVG(avaliacao),2) AS media_avaliacao FROM av_tribunais WHERE id_tribunal = ?',
+      'CALL CalcularMediaPonderadaTribunal(?)',
       [req.params.id_tribunal]
     );
-    res.json({ media_avaliacao: resultado[0].media_avaliacao || 0 });
+    res.json({ 
+      media_ponderada: resultado[0][0]?.media_ponderada || 0
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erro ao calcular a média de avaliações.' });
+    res.status(500).json({ error: 'Erro ao calcular a média ponderada de avaliações.' });
   }
 });
+
 app.get('/av_tribunais', (req, res) => {
   const sql = 'SELECT * FROM av_tribunais';
   db.query(sql, (err, result) => {
@@ -1238,15 +1517,28 @@ app.get('/av_tribunais', (req, res) => {
 
 
 // Rota com parâmetro: /av_foruns/1 (onde 1 é o id_forum)
-app.get('/av_tribunais/:id_tribunal', (req, res) => {
-  const sql = 'SELECT * FROM av_tribunais WHERE id_tribunal = ?';
-  db.query(sql, [req.params.id_tribunal], (err, result) => {
-    if (err) {
-      res.status(500).json({ error: err.message });
-      return;
-    }
-    res.json(result);
-  });
+// app.get('/av_tribunais/:id_tribunal', (req, res) => {
+//   const sql = 'SELECT * FROM av_tribunais WHERE id_tribunal = ?';
+//   db.query(sql, [req.params.id_tribunal], (err, result) => {
+//     if (err) {
+//       res.status(500).json({ error: err.message });
+//       return;
+//     }
+//     res.json(result);
+//   });
+// });
+
+app.get('/av_tribunais/:id_tribunal', async (req, res) => {
+  try {
+    const [resultado] = await db.promise().query(
+      'SELECT * FROM av_tribunais WHERE id_tribunal = ?',
+      [req.params.id_tribunal]
+    );
+    res.json(resultado);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao buscar avaliações.' });
+  }
 });
 
 app.delete('/tribunais_avaliacao/:id_tribunal', (req, res) => {
@@ -1258,59 +1550,258 @@ app.delete('/tribunais_avaliacao/:id_tribunal', (req, res) => {
     res.send({ message: 'Avaliações deletadas com sucesso' });
   });
 });
-app.delete('/av_tribunais/:id_tribunal', (req, res) => {
-  const id_tribunal = req.params.id_tribunal;
-  db.query('DELETE FROM av_tribunais WHERE id_tribunal = ?', [id_tribunal], (err, result) => {
-    if (err) {
-      return res.status(500).send({ error: 'Erro ao deletar avaliações' });
-    }
-    res.send({ message: 'Avaliações deletadas com sucesso' });
-  });
+// app.delete('/av_tribunais/:id_tribunal', (req, res) => {
+//   const id_tribunal = req.params.id_tribunal;
+//   db.query('DELETE FROM av_tribunais WHERE id_tribunal = ?', [id_tribunal], (err, result) => {
+//     if (err) {
+//       return res.status(500).send({ error: 'Erro ao deletar avaliações' });
+//     }
+//     res.send({ message: 'Avaliações deletadas com sucesso' });
+//   });
+// });
+
+app.delete('/av_tribunais/:id_tribunal', async (req, res) => {
+  try {
+    await db.promise().query(
+      'DELETE FROM av_tribunais WHERE id_tribunal = ?',
+      [req.params.id_tribunal]
+    );
+    res.json({ message: 'Avaliações deletadas com sucesso' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao deletar avaliações' });
+  }
 });
 
-//juiz
-app.post('/av_juiz', async (req, res) => {
-  const { id_usuario, id_juiz, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida } = req.body;
+app.get('/tribunais_avaliacao_usuario/:id_tribunal/:id_usuario', async (req, res) => {
+  try {
+    // Buscar todas as avaliações do usuário para o tribunal
+    const [avaliacoes] = await db.promise().query(
+      `SELECT 
+        av_eficiencia,
+        av_qualidade,
+        av_infraestrutura,
+        av_tecnologia,
+        av_gestao,
+        av_transparencia,
+        av_sustentabilidade
+      FROM av_tribunais 
+      WHERE id_tribunal = ? AND id_usuario = ?`,
+      [req.params.id_tribunal, req.params.id_usuario]
+    );
 
-  if (!avaliacao || avaliacao < 1 || avaliacao > 5) {
-    return res.status(400).json({ error: "Avaliação deve estar entre 1 e 5." });
+    if (avaliacoes.length === 0) {
+      return res.json({
+        avaliacoes: null,
+        message: "Usuário ainda não avaliou este tribunal"
+      });
+    }
+
+    // Calcular a média para cada avaliação
+    const avaliacoesComMedia = avaliacoes.map(avaliacao => {
+      const somaAvaliacoes = (
+        avaliacao.av_eficiencia * 5 +
+        avaliacao.av_qualidade * 4 +
+        avaliacao.av_infraestrutura * 3 +
+        avaliacao.av_tecnologia * 3 +
+        avaliacao.av_gestao * 2 +
+        avaliacao.av_transparencia * 2 +
+        avaliacao.av_sustentabilidade * 1
+      );
+
+      const somaPesos = 5 + 4 + 3 + 3 + 2 + 2 + 1; // Soma dos pesos
+      const media = somaAvaliacoes / somaPesos;
+
+      return {
+        ...avaliacao,
+        media_ponderada: parseFloat(media.toFixed(2)) // Adiciona a média calculada
+      };
+    });
+
+    res.json({
+      avaliacoes: avaliacoesComMedia,
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao buscar avaliações do usuário.' });
   }
-  if (!numero_protocolo || numero_protocolo.length < 5 || numero_protocolo.length > 20) {
-    return res.status(400).json({ error: "Número de protocolo deve ter entre 5 e 20 dígitos." });
+});
+
+// app.post('/tribunais_avaliacao_usuario', async (req, res) => {
+//   const { id_tribunal, id_usuario, av_eficiencia, av_qualidade, av_infraestrutura, av_tecnologia, av_gestao, av_transparencia, av_sustentabilidade } = req.body;
+
+//   try {
+//     // Calcular a média ponderada
+//     const somaAvaliacoes = (
+//       av_eficiencia * 5 +
+//       av_qualidade * 4 +
+//       av_infraestrutura * 3 +
+//       av_tecnologia * 3 +
+//       av_gestao * 2 +
+//       av_transparencia * 2 +
+//       av_sustentabilidade * 1
+//     );
+//     const somaPesos = 5 + 4 + 3 + 3 + 2 + 2 + 1;
+//     const mediaGeral = somaAvaliacoes / somaPesos;
+
+//     // Inserir nova avaliação com a média calculada
+//     await db.promise().query(
+//       `INSERT INTO av_tribunais (id_tribunal, id_usuario, av_eficiencia, av_qualidade, av_infraestrutura, av_tecnologia, av_gestao, av_transparencia, av_sustentabilidade, media_geral, data_criacao)
+//       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
+//       [id_tribunal, id_usuario, av_eficiencia, av_qualidade, av_infraestrutura, av_tecnologia, av_gestao, av_transparencia, av_sustentabilidade, parseFloat(mediaGeral.toFixed(2))]
+//     );
+
+//     res.status(201).json({ message: 'Avaliação salva com sucesso!', media_geral: parseFloat(mediaGeral.toFixed(2)) });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Erro ao salvar avaliação do usuário.' });
+//   }
+// });
+
+// app.get('/tribunais_avaliacao_usuario/:id_tribunal/:id_usuario', async (req, res) => {
+//   try {
+//     const [avaliacoes] = await db.promise().query(
+//       `SELECT media_geral 
+//        FROM av_tribunais 
+//        WHERE id_tribunal = ? AND id_usuario = ?
+//        ORDER BY data_criacao DESC
+//        LIMIT 1`,
+//       [req.params.id_tribunal, req.params.id_usuario]
+//     );
+
+//     if (avaliacoes.length === 0) {
+//       return res.json({
+//         media_geral: null,
+//         message: "Usuário ainda não avaliou este tribunal"
+//       });
+//     }
+
+//     res.json({
+//       media_geral: avaliacoes[0].media_geral
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Erro ao buscar média de avaliações do usuário.' });
+//   }
+// });
+
+
+
+
+//juiz
+// app.post('/av_juiz', async (req, res) => {
+//   const { id_usuario, id_juiz, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida } = req.body;
+
+//   if (!avaliacao || avaliacao < 1 || avaliacao > 5) {
+//     return res.status(400).json({ error: "Avaliação deve estar entre 1 e 5." });
+//   }
+//   if (!numero_protocolo || numero_protocolo.length < 5 || numero_protocolo.length > 20) {
+//     return res.status(400).json({ error: "Número de protocolo deve ter entre 5 e 20 dígitos." });
+//   }
+
+//   try {
+//     await db.promise().query(
+//       'INSERT INTO av_juiz (id_usuario, id_juiz, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida) VALUES (?, ?, ?, ?, ?, ?, ?)',
+//       [id_usuario, id_juiz, numero_protocolo, comentario || null, avaliacao, horario_chegada || null, horario_saida || null]
+//     );
+//     res.status(201).json({ message: 'Comentário e avaliação adicionados com sucesso.' });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Erro ao adicionar o comentário e a avaliação.' });
+//   }
+// });
+
+app.post('/av_juiz', async (req, res) => {
+  const { 
+    id_usuario, 
+    id_juiz, 
+    numero_processo, 
+    comentario,
+    av_produtividade,
+    av_fundamentacao,
+    av_pontualidade,
+    av_organizacao,
+    av_atendimento,
+    horario_chegada, 
+    horario_saida,
+    data_audiencia 
+  } = req.body;
+
+  // Validação dos campos de avaliação
+  const avaliacoes = [
+    av_produtividade,
+    av_fundamentacao,
+    av_pontualidade,
+    av_organizacao,
+    av_atendimento
+  ];
+
+  if (avaliacoes.some(av => av < 1 || av > 5)) {
+    return res.status(400).json({ error: "Todas as avaliações devem estar entre 1 e 5." });
+  }
+
+  if (!numero_processo || numero_processo.length < 5 || numero_processo.length > 20) {
+    return res.status(400).json({ error: "Número do processo deve ter entre 5 e 20 caracteres." });
   }
 
   try {
     await db.promise().query(
-      'INSERT INTO av_juiz (id_usuario, id_juiz, numero_protocolo, comentario, avaliacao, horario_chegada, horario_saida) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [id_usuario, id_juiz, numero_protocolo, comentario || null, avaliacao, horario_chegada || null, horario_saida || null]
+      `INSERT INTO av_juiz (
+        id_usuario, id_juiz, numero_processo, comentario,
+        av_produtividade, av_fundamentacao, av_pontualidade,
+        av_organizacao, av_atendimento,
+        horario_chegada, horario_saida, data_audiencia
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        id_usuario, id_juiz, numero_processo, comentario,
+        av_produtividade, av_fundamentacao, av_pontualidade,
+        av_organizacao, av_atendimento,
+        horario_chegada || null, horario_saida || null, data_audiencia || null
+      ]
     );
-    res.status(201).json({ message: 'Comentário e avaliação adicionados com sucesso.' });
+    res.status(201).json({ message: 'Avaliação do juiz adicionada com sucesso.' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erro ao adicionar o comentário e a avaliação.' });
+    res.status(500).json({ error: 'Erro ao adicionar a avaliação do juiz.' });
   }
 });
+
+
+// app.get('/juiz_avaliacao/:id_juiz', async (req, res) => {
+//   try {
+//     const [resultado] = await db.promise().query(
+//       'SELECT ROUND(AVG(avaliacao),2) AS media_avaliacao FROM av_juiz WHERE id_juiz = ?',
+//       [req.params.id_juiz]
+//     );
+//     res.json({ media_avaliacao: resultado[0].media_avaliacao || 0 });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Erro ao calcular a média de avaliações.' });
+//   }
+// });
+// app.get('/av_juiz', (req, res) => {
+//   const sql = 'SELECT * FROM av_juiz';
+//   db.query(sql, (err, result) => {
+//     if (err) throw err;
+//     res.send(result);
+//   });
+// });
 
 app.get('/juiz_avaliacao/:id_juiz', async (req, res) => {
   try {
     const [resultado] = await db.promise().query(
-      'SELECT ROUND(AVG(avaliacao),2) AS media_avaliacao FROM av_juiz WHERE id_juiz = ?',
+      'CALL CalcularMediaPonderadaJuiz(?)',
       [req.params.id_juiz]
     );
-    res.json({ media_avaliacao: resultado[0].media_avaliacao || 0 });
+    res.json({ 
+      media_ponderada: resultado[0][0]?.media_ponderada || 0
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erro ao calcular a média de avaliações.' });
+    res.status(500).json({ error: 'Erro ao calcular a média ponderada de avaliações.' });
   }
 });
-app.get('/av_juiz', (req, res) => {
-  const sql = 'SELECT * FROM av_juiz';
-  db.query(sql, (err, result) => {
-    if (err) throw err;
-    res.send(result);
-  });
-});
-
 
 // Rota com parâmetro: /av_foruns/1 (onde 1 é o id_forum)
 app.get('/av_juiz/:id_juiz', (req, res) => {
@@ -1333,6 +1824,7 @@ app.delete('/juiz_avaliacao/:id_juiz', (req, res) => {
     res.send({ message: 'Avaliações deletadas com sucesso' });
   });
 });
+
 app.delete('/av_juiz/:id_juiz', (req, res) => {
   const id_juiz = req.params.id_juiz;
   db.query('DELETE FROM av_juiz WHERE id_juiz = ?', [id_juiz], (err, result) => {
@@ -1343,47 +1835,237 @@ app.delete('/av_juiz/:id_juiz', (req, res) => {
   });
 });
 
+app.get('/juiz_avaliacao_usuario/:id_juiz/:id_usuario', async (req, res) => {
+  try {
+    // Buscar as avaliações individuais do usuário
+    const [avaliacoes] = await db.promise().query(
+      `SELECT 
+        av_produtividade,    
+        av_fundamentacao,      
+        av_pontualidade,       
+        av_organizacao,        
+        av_atendimento
+      FROM av_juiz 
+      WHERE id_juiz = ? AND id_usuario = ?
+      ORDER BY data_criacao DESC`,
+      [req.params.id_juiz, req.params.id_usuario]
+    );
+
+    if (avaliacoes.length === 0) {
+      return res.json({
+        avaliacoes: null,
+        message: "Usuário ainda não avaliou este juiz"
+      });
+    }
+
+    // Calcular a média geral das avaliações do usuário com pesos
+    const avaliacoesComMedia = avaliacoes.map(avaliacao => {
+      const somaAvaliacoes = (
+        avaliacao.av_produtividade * 5 +
+        avaliacao.av_fundamentacao * 4 +
+        avaliacao.av_pontualidade * 3 +
+        avaliacao.av_organizacao * 2 +
+        avaliacao.av_atendimento * 1 
+      );
+
+      const somaPesos = 5 + 4 + 3 + 2 + 1; // Soma dos pesos
+      const media = somaAvaliacoes / somaPesos;
+
+      return {
+        ...avaliacao,
+        media_ponderada: parseFloat(media.toFixed(2)) // Adiciona a média calculada
+      };
+    });
+
+    res.json({
+      avaliacoes: avaliacoesComMedia,
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao buscar avaliações do usuário.' });
+  }
+});
 
 //mediador
-app.post('/av_mediador', async (req, res) => {
-  const { id_usuario, id_mediador, comentario, avaliacao, horario_chegada, horario_saida } = req.body;
+// app.post('/av_mediador', async (req, res) => {
+//   const { id_usuario, id_mediador, comentario, avaliacao, horario_chegada, horario_saida } = req.body;
 
-  if (!avaliacao || avaliacao < 1 || avaliacao > 5) {
-    return res.status(400).json({ error: "Avaliação deve estar entre 1 e 5." });
+//   if (!avaliacao || avaliacao < 1 || avaliacao > 5) {
+//     return res.status(400).json({ error: "Avaliação deve estar entre 1 e 5." });
+//   }
+
+//   try {
+//     await db.promise().query(
+//       'INSERT INTO av_mediador (id_usuario, id_mediador, comentario, avaliacao, horario_chegada, horario_saida) VALUES (?, ?, ?, ?, ?, ?)',
+//       [id_usuario, id_mediador, comentario || null, avaliacao, horario_chegada || null, horario_saida || null]
+//     );
+//     res.status(201).json({ message: 'Comentário e avaliação adicionados com sucesso.' });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Erro ao adicionar o comentário e a avaliação.' });
+//   }
+// });
+
+// app.get('/mediador_avaliacao/:id_mediador', async (req, res) => {
+//   try {
+//     const [resultado] = await db.promise().query(
+//       'SELECT ROUND(AVG(avaliacao),2) AS media_avaliacao FROM av_mediador WHERE id_mediador = ?',
+//       [req.params.id_mediador]
+//     );
+//     res.json({ media_avaliacao: resultado[0].media_avaliacao || 0 });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Erro ao calcular a média de avaliações.' });
+//   }
+// });
+// app.get('/av_mediador', (req, res) => {
+//   const sql = 'SELECT * FROM av_mediador';
+//   db.query(sql, (err, result) => {
+//     if (err) throw err;
+//     res.send(result);
+//   });
+// });
+
+app.post('/av_mediador', async (req, res) => {
+  const { 
+    id_usuario, 
+    id_mediador, 
+    numero_processo, 
+    comentario,
+    av_satisfacao,
+    av_imparcialidade,
+    av_conhecimento,
+    av_pontualidade,
+    av_organizacao,
+    horario_chegada, 
+    horario_saida,
+    data_criacao 
+  } = req.body;
+
+  // Validação dos campos de avaliação
+  const avaliacoes = [
+    av_satisfacao,
+    av_imparcialidade,
+    av_conhecimento,
+    av_pontualidade,
+    av_organizacao
+  ];
+
+  if (avaliacoes.some(av => av < 1 || av > 5)) {
+    return res.status(400).json({ error: "Todas as avaliações devem estar entre 1 e 5." });
+  }
+
+  if (!numero_processo || numero_processo.length < 5 || numero_processo.length > 20) {
+    return res.status(400).json({ error: "Número do processo deve ter entre 5 e 20 caracteres." });
   }
 
   try {
     await db.promise().query(
-      'INSERT INTO av_mediador (id_usuario, id_mediador, comentario, avaliacao, horario_chegada, horario_saida) VALUES (?, ?, ?, ?, ?, ?)',
-      [id_usuario, id_mediador, comentario || null, avaliacao, horario_chegada || null, horario_saida || null]
+      `INSERT INTO av_mediador (
+        id_usuario, id_mediador, numero_processo, comentario,
+        av_satisfacao, av_imparcialidade, av_conhecimento, av_pontualidade, av_organizacao,
+        horario_chegada, horario_saida, data_criacao
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        id_usuario, id_mediador, numero_processo, comentario,
+        av_satisfacao, av_imparcialidade, av_conhecimento, av_pontualidade, av_organizacao,
+        horario_chegada || null, horario_saida || null, data_criacao || null
+      ]
     );
-    res.status(201).json({ message: 'Comentário e avaliação adicionados com sucesso.' });
+    res.status(201).json({ message: 'Avaliação do mediador adicionada com sucesso.' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erro ao adicionar o comentário e a avaliação.' });
+    res.status(500).json({ error: 'Erro ao adicionar a avaliação do juiz.' });
   }
 });
 
 app.get('/mediador_avaliacao/:id_mediador', async (req, res) => {
   try {
     const [resultado] = await db.promise().query(
-      'SELECT ROUND(AVG(avaliacao),2) AS media_avaliacao FROM av_mediador WHERE id_mediador = ?',
+      'CALL CalcularMediaPonderadaMediador(?)',
       [req.params.id_mediador]
     );
-    res.json({ media_avaliacao: resultado[0].media_avaliacao || 0 });
+    res.json({ 
+      media_ponderada: resultado[0][0]?.media_ponderada || 0
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erro ao calcular a média de avaliações.' });
+    res.status(500).json({ error: 'Erro ao calcular a média ponderada de avaliações.' });
   }
 });
-app.get('/av_mediador', (req, res) => {
-  const sql = 'SELECT * FROM av_mediador';
-  db.query(sql, (err, result) => {
-    if (err) throw err;
-    res.send(result);
+
+app.delete('/mediador_avaliacao/:id_mediador', (req, res) => {
+  const id_mediador = req.params.id_mediador;
+  db.query('DELETE FROM av_mediador WHERE id_mediador = ?', [id_mediador], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: 'Erro ao deletar avaliações' });
+    }
+    res.send({ message: 'Avaliações deletadas com sucesso' });
   });
 });
 
+app.delete('/av_mediador/:id_mediador', (req, res) => {
+  const id_mediador = req.params.id_mediador;
+  db.query('DELETE FROM av_mediador WHERE id_mediador = ?', [id_mediador], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: 'Erro ao deletar avaliações' });
+    }
+    res.send({ message: 'Avaliações deletadas com sucesso' });
+  });
+});
+
+app.get('/mediador_avaliacao_usuario/:id_mediador/:id_usuario', async (req, res) => {
+  try {
+    // Buscar as avaliações individuais do usuário
+    const [avaliacoes] = await db.promise().query(
+      `SELECT 
+        av_satisfacao,
+        av_imparcialidade,
+        av_conhecimento,
+        av_pontualidade,
+        av_organizacao
+      FROM av_mediador 
+      WHERE id_mediador = ? AND id_usuario = ?
+      ORDER BY data_criacao DESC`,
+      [req.params.id_mediador, req.params.id_usuario]
+    );
+
+    if (avaliacoes.length === 0) {
+      return res.json({
+        avaliacoes: null,
+        message: "Usuário ainda não avaliou este mediador"
+      });
+    }
+
+    // Calcular a média geral das avaliações do usuário com pesos
+    const avaliacoesComMedia = avaliacoes.map(avaliacao => {
+      const somaAvaliacoes = (
+        avaliacao.av_satisfacao * 5 +
+        avaliacao.av_imparcialidade * 4 +
+        avaliacao.av_conhecimento * 3 +
+        avaliacao.av_pontualidade * 2 +
+        avaliacao.av_organizacao * 1 
+      );
+
+      const somaPesos = 5 + 4 + 3 + 2 + 1; // Soma dos pesos
+      const media = somaAvaliacoes / somaPesos;
+
+      return {
+        ...avaliacao,
+        media_ponderada: parseFloat(media.toFixed(2)) // Adiciona a média calculada
+      };
+    });
+
+    res.json({
+      avaliacoes: avaliacoesComMedia,
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao buscar avaliações do usuário.' });
+  }
+});
 
 // Rota com parâmetro: /av_foruns/1 (onde 1 é o id_forum)
 app.get('/av_mediador/:id_mediador', (req, res) => {
@@ -1397,57 +2079,93 @@ app.get('/av_mediador/:id_mediador', (req, res) => {
   });
 });
 
-app.delete('/mediador_avaliacao/:id_mediador', (req, res) => {
-  const id_mediador = req.params.id_mediador;
-  db.query('DELETE FROM av_mediador WHERE id_mediador = ?', [id_mediador], (err, result) => {
-    if (err) {
-      return res.status(500).send({ error: 'Erro ao deletar avaliações' });
-    }
-    res.send({ message: 'Avaliações deletadas com sucesso' });
-  });
-});
-app.delete('/av_mediador/:id_mediador', (req, res) => {
-  const id_mediador = req.params.id_mediador;
-  db.query('DELETE FROM av_mediador WHERE id_mediador = ?', [id_mediador], (err, result) => {
-    if (err) {
-      return res.status(500).send({ error: 'Erro ao deletar avaliações' });
-    }
-    res.send({ message: 'Avaliações deletadas com sucesso' });
-  });
-});
+// app.delete('/mediador_avaliacao/:id_mediador', (req, res) => {
+//   const id_mediador = req.params.id_mediador;
+//   db.query('DELETE FROM av_mediador WHERE id_mediador = ?', [id_mediador], (err, result) => {
+//     if (err) {
+//       return res.status(500).send({ error: 'Erro ao deletar avaliações' });
+//     }
+//     res.send({ message: 'Avaliações deletadas com sucesso' });
+//   });
+// });
+// app.delete('/av_mediador/:id_mediador', (req, res) => {
+//   const id_mediador = req.params.id_mediador;
+//   db.query('DELETE FROM av_mediador WHERE id_mediador = ?', [id_mediador], (err, result) => {
+//     if (err) {
+//       return res.status(500).send({ error: 'Erro ao deletar avaliações' });
+//     }
+//     res.send({ message: 'Avaliações deletadas com sucesso' });
+//   });
+// });
 
 //advocacia
 app.post('/av_advocacia', async (req, res) => {
-  const { id_usuario, id_advocacia, comentario, avaliacao, horario_chegada, horario_saida } = req.body;
+  const { 
+    id_usuario, 
+    id_advocacia, 
+    numero_processo, 
+    comentario,
+    av_eficiencia_processual,
+    av_qualidade_tecnica,
+    av_etica_profissional,
+    av_comunicacao,
+    av_inovacao,
+    horario_chegada, 
+    horario_saida 
+  } = req.body;
 
-  if (!avaliacao || avaliacao < 1 || avaliacao > 5) {
-    return res.status(400).json({ error: "Avaliação deve estar entre 1 e 5." });
+  // Validação dos campos de avaliação
+  const avaliacoes = [
+    av_eficiencia_processual,
+    av_qualidade_tecnica,
+    av_etica_profissional,
+    av_comunicacao,
+    av_inovacao
+  ];
+
+  if (avaliacoes.some(av => av < 1 || av > 5)) {
+    return res.status(400).json({ error: "Todas as avaliações devem estar entre 1 e 5." });
+  }
+
+  if (!numero_processo || numero_processo.length < 5 || numero_processo.length > 20) {
+    return res.status(400).json({ error: "Número do processo deve ter entre 5 e 20 dígitos." });
   }
 
   try {
     await db.promise().query(
-      'INSERT INTO av_advocacia (id_usuario, id_advocacia, comentario, avaliacao, horario_chegada, horario_saida) VALUES (?, ?, ?, ?, ?, ?)',
-      [id_usuario, id_advocacia, comentario || null, avaliacao, horario_chegada || null, horario_saida || null]
+      `INSERT INTO av_advocacia (
+        id_usuario, id_advocacia, numero_processo, comentario,
+        av_eficiencia_processual, av_qualidade_tecnica, av_etica_profissional,
+        av_comunicacao, av_inovacao, horario_chegada, horario_saida
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        id_usuario, id_advocacia, numero_processo, comentario,
+        av_eficiencia_processual, av_qualidade_tecnica, av_etica_profissional,
+        av_comunicacao, av_inovacao, horario_chegada || null, horario_saida || null
+      ]
     );
-    res.status(201).json({ message: 'Comentário e avaliação adicionados com sucesso.' });
+    res.status(201).json({ message: 'Avaliação adicionada com sucesso.' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erro ao adicionar o comentário e a avaliação.' });
+    res.status(500).json({ error: 'Erro ao adicionar a avaliação.' });
   }
 });
 
 app.get('/advocacia_avaliacao/:id_advocacia', async (req, res) => {
   try {
     const [resultado] = await db.promise().query(
-      'SELECT ROUND(AVG(avaliacao),2) AS media_avaliacao FROM av_advocacia WHERE id_advocacia = ?',
+      'CALL CalcularMediaPonderadaAdvocacia(?)',
       [req.params.id_advocacia]
     );
-    res.json({ media_avaliacao: resultado[0].media_avaliacao || 0 });
+    res.json({ 
+      media_ponderada: resultado[0][0]?.media_ponderada || 0
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erro ao calcular a média de avaliações.' });
+    res.status(500).json({ error: 'Erro ao calcular a média ponderada de avaliações.' });
   }
 });
+
 app.get('/av_advocacia', (req, res) => {
   const sql = 'SELECT * FROM av_advocacia';
   db.query(sql, (err, result) => {
@@ -1455,6 +2173,7 @@ app.get('/av_advocacia', (req, res) => {
     res.send(result);
   });
 });
+
 
 
 // Rota com parâmetro: /av_foruns/1 (onde 1 é o id_forum)
@@ -1488,39 +2207,120 @@ app.delete('/av_advocacia/:id_advocacia', (req, res) => {
   });
 });
 
+app.get('/advocacia_avaliacao_usuario/:id_advocacia/:id_usuario', async (req, res) => {
+  try {
+    // Buscar as avaliações individuais do usuário
+    const [avaliacoes] = await db.promise().query(
+      `SELECT 
+        av_eficiencia_processual,
+        av_qualidade_tecnica,
+        av_etica_profissional,
+        av_comunicacao,
+        av_inovacao
+      FROM av_advocacia 
+      WHERE id_advocacia = ? AND id_usuario = ?
+      ORDER BY data_criacao DESC`,
+      [req.params.id_advocacia, req.params.id_usuario]
+    );
+
+    if (avaliacoes.length === 0) {
+      return res.json({
+        avaliacoes: null,
+        message: "Usuário ainda não avaliou esta advocacia"
+      });
+    }
+
+    // Calcular a média geral das avaliações do usuário com pesos
+    const avaliacoesComMedia = avaliacoes.map(avaliacao => {
+      const somaAvaliacoes = (
+        avaliacao.av_eficiencia_processual * 5 +
+        avaliacao.av_qualidade_tecnica * 4 +
+        avaliacao.av_etica_profissional * 3 +
+        avaliacao.av_comunicacao * 2 +
+        avaliacao.av_inovacao * 1 
+      );
+
+      const somaPesos = 5 + 4 + 3 + 2 + 1; // Soma dos pesos
+      const media = somaAvaliacoes / somaPesos;
+
+      return {
+        ...avaliacao,
+        media_ponderada: parseFloat(media.toFixed(2)) // Adiciona a média calculada
+      };
+    });
+
+    res.json({
+      avaliacoes: avaliacoesComMedia,
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao buscar avaliações do usuário.' });
+  }
+});
+
 
 //portal
 app.post('/av_portal', async (req, res) => {
-  const { id_usuario, id_portal, comentario, avaliacao, horario_chegada, horario_saida } = req.body;
+  const {
+      id_usuario,
+      id_portal,
+      comentario,
+      av_seguranca_sistema,
+      av_usabilidade,
+      av_integracao,
+      av_atualizacao,
+      av_acessibilidade
+  } = req.body;
 
-  if (!avaliacao || avaliacao < 1 || avaliacao > 5) {
-    return res.status(400).json({ error: "Avaliação deve estar entre 1 e 5." });
+  // Validação dos campos de avaliação
+  const avaliacoes = [
+      av_seguranca_sistema,
+      av_usabilidade,
+      av_integracao,
+      av_atualizacao,
+      av_acessibilidade
+  ];
+
+  if (avaliacoes.some(av => av < 1 || av > 5)) {
+      return res.status(400).json({ error: "Todas as avaliações devem estar entre 1 e 5." });
   }
 
   try {
-    await db.promise().query(
-      'INSERT INTO av_portal (id_usuario, id_portal, comentario, avaliacao, horario_chegada, horario_saida) VALUES (?, ?, ?, ?, ?, ?)',
-      [id_usuario, id_portal, comentario || null, avaliacao, horario_chegada || null, horario_saida || null]
-    );
-    res.status(201).json({ message: 'Comentário e avaliação adicionados com sucesso.' });
+      await db.promise().query(
+          `INSERT INTO av_portal (
+              id_usuario, id_portal, comentario,
+              av_seguranca_sistema, av_usabilidade, av_integracao,
+              av_atualizacao, av_acessibilidade
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+          [
+              id_usuario, id_portal, comentario,
+              av_seguranca_sistema, av_usabilidade, av_integracao,
+              av_atualizacao, av_acessibilidade
+          ]
+      );
+      res.status(201).json({ message: 'Avaliação adicionada com sucesso.' });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Erro ao adicionar o comentário e a avaliação.' });
+      console.error(error);
+      res.status(500).json({ error: 'Erro ao adicionar a avaliação.' });
   }
 });
 
 app.get('/portal_avaliacao/:id_portal', async (req, res) => {
   try {
     const [resultado] = await db.promise().query(
-      'SELECT ROUND(AVG(avaliacao),2) AS media_avaliacao FROM av_portal WHERE id_portal = ?',
+      'CALL CalcularMediaPonderadaPortal(?)',
       [req.params.id_portal]
     );
-    res.json({ media_avaliacao: resultado[0].media_avaliacao || 0 });
+    res.json({ 
+      media_ponderada: resultado[0][0]?.media_ponderada || 0
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erro ao calcular a média de avaliações.' });
+    res.status(500).json({ error: 'Erro ao calcular a média ponderada de avaliações.' });
   }
 });
+
 app.get('/av_portal', (req, res) => {
   const sql = 'SELECT * FROM av_portal';
   db.query(sql, (err, result) => {
@@ -1561,7 +2361,57 @@ app.delete('/av_portal/:id_portal', (req, res) => {
   });
 });
 
+app.get('/portal_avaliacao_usuario/:id_mediador/:id_usuario', async (req, res) => {
+  try {
+    // Buscar as avaliações individuais do usuário
+    const [avaliacoes] = await db.promise().query(
+      `SELECT 
+        av_seguranca_sistema,
+        av_usabilidade,
+        av_integracao,
+        av_atualizacao,
+        av_acessibilidade
+      FROM av_portal 
+      WHERE id_portal = ? AND id_usuario = ?
+      ORDER BY data_criacao DESC`,
+      [req.params.id_portal, req.params.id_usuario]
+    );
 
+    if (avaliacoes.length === 0) {
+      return res.json({
+        avaliacoes: null,
+        message: "Usuário ainda não avaliou este portal"
+      });
+    }
+
+    // Calcular a média geral das avaliações do usuário com pesos
+    const avaliacoesComMedia = avaliacoes.map(avaliacao => {
+      const somaAvaliacoes = (
+        avaliacao.av_seguranca_sistema * 5 +
+        avaliacao.av_usabilidade * 4 +
+        avaliacao.av_integracao * 3 +
+        avaliacao.av_atualizacao * 2 +
+        avaliacao.av_acessibilidade * 1 
+      );
+
+      const somaPesos = 5 + 4 + 3 + 2 + 1; // Soma dos pesos
+      const media = somaAvaliacoes / somaPesos;
+
+      return {
+        ...avaliacao,
+        media_ponderada: parseFloat(media.toFixed(2)) // Adiciona a média calculada
+      };
+    });
+
+    res.json({
+      avaliacoes: avaliacoesComMedia,
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao buscar avaliações do usuário.' });
+  }
+});
 
 
 

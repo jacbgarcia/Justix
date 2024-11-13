@@ -1,55 +1,46 @@
-.navleft {
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
-    gap: 2rem;
-    align-items: center;
-  }
-  
-  .navlinksl {
-    text-decoration: none;
-    color: black;
-    font-weight: bolder;
-  }
-  
-  .navlinks {
-    text-decoration: none;
-    color: black;
-  }
-
-  .cadastroSection {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem;
+    z-index: 1000;
 }
 
 .cadastroContainer {
-    width: 100%;
-    max-width: 500px;
+    background-color: white;
+    height: 100%;
     padding: 2rem;
-    background-color: #797b7d3c;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-top: -20px;
+    overflow-y: auto;
+    transition: transform 0.3s ease-in-out;
 }
 
-.backButton {
+.cadastroHeader {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    text-decoration: none;
-    color: black;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
 }
 
-.backArrow {
-    margin-right: 0.5rem;
+.closeButton {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.closeButton:hover {
+    color: #666;
 }
 
 .title {
     font-size: 1.5rem;
     font-weight: bold;
-    text-align: center;
-    margin-bottom: 1.5rem;
     color: #333;
+    margin: 0;
 }
 
 .cadastroForm {
@@ -78,29 +69,15 @@
     transition: all 0.2s;
 }
 
-.formGroup input::placeholder {
-    color: #aaa;
-}
-
 .formGroup input:focus {
     outline: none;
     border-color: black;
     box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
 }
 
-.inputError {
-    border-color: #dc2626 !important;
-    background-color: #fff5f5;
-}
-
-.inputError:focus {
-    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2) !important;
-}
-
 .errorText {
     color: #dc2626;
     font-size: 0.75rem;
-    margin-top: 0.25rem;
 }
 
 .submitButton {
@@ -114,16 +91,10 @@
     cursor: pointer;
     transition: background-color 0.2s;
     margin-top: 1rem;
-    width: 100%;
 }
 
 .submitButton:hover {
     background-color: #494e53;
-}
-
-.submitButton:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
 }
 
 .statusMessage {
@@ -131,7 +102,6 @@
     border-radius: 4px;
     margin-bottom: 20px;
     text-align: center;
-    width: 100%;
 }
 
 .success {
@@ -144,4 +114,31 @@
     background-color: #f8d7da;
     color: #721c24;
     border: 1px solid #f5c6cb;
+}
+
+/* Desktop styles */
+@media (min-width: 768px) {
+    .cadastroContainer {
+        width: 400px;
+        transform: translateX(-100%);
+    }
+
+    .cadastroContainer.open {
+        transform: translateX(0);
+    }
+}
+
+/* Mobile styles */
+@media (max-width: 767px) {
+    .cadastroContainer {
+        width: 90%;
+        margin: auto;
+        border-radius: 8px;
+        max-height: 90vh;
+        transform: translateY(100%);
+    }
+
+    .cadastroContainer.open {
+        transform: translateY(0);
+    }
 }

@@ -1,18 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate, Link } from 'react-router-dom'; 
-
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import ContainerHome from "../../components/ContainerHome";
+import { useNavigate, Link } from 'react-router-dom';
 import styles from './Login.module.css';
 
-function Login() {
+function Login({ isOpen, onClose }) {
     const { login } = useAuth();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({ email: '', senha: '' });
     const [errors, setErrors] = useState({ email: '', senha: '' });
     const [error, setError] = useState('');
+    const sidebarRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+                onClose();
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [onClose]);
 
     const validateEmail = (email) => {
         if (!email) return 'Email é obrigatório';
@@ -50,23 +58,22 @@ function Login() {
             const data = await response.json();
 
             if (response.ok) {
-                // Armazena o token e os dados do usuário no localStorage
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('usuarios', JSON.stringify(data.user));
                 
-                // Atualizar o contexto de autenticação
                 login({
                     user: data.user,
                     token: data.token
                 });
 
-                // Redirecionar baseado no role
+                onClose();
+                
                 switch(data.user.role) {
                     case 'admin':
                         navigate('/admin/dashboard/tribunais');
                         break;
                     default:
-                        navigate('/user/dashboard/tribunais');
+                        navigate('/user/');
                 }
             } else {
                 setError(data.error);
@@ -76,61 +83,54 @@ function Login() {
         }
     };
 
+    if (!isOpen) return null;
+
     return (
-        <>
-            <Header>
-                <div className={styles.navleft}>
-                    <Link to="/cadastro" className={styles.cadastrese}>Cadastre-se</Link>
-                    <Link to="/info" className={styles.navlinks}>Sobre nós</Link>
+        <div className={styles.overlay}>
+            <div 
+                ref={sidebarRef}
+                className={`${styles.loginContainer} ${isOpen ? styles.open : ''}`}
+            >
+                <div className={styles.loginHeader}>
+                    <h2 className={styles.title}>LOGIN</h2>
+                    <button onClick={onClose} className={styles.closeButton}>×</button>
                 </div>
-            </Header>
-            <ContainerHome>
-                <section className={styles.loginSection}>
-                    <div className={styles.loginContainer}>
-                        <Link to="/" className={styles.backButton}>
-                            <span className={styles.backArrow}>←</span>
-                            Voltar
-                        </Link>
-                        
-                        <h2 className={styles.title}>LOGIN</h2>
-                        {error && <span className={styles.errorText}>{error}</span>}
-                        
-                        <form onSubmit={handleSubmit} className={styles.loginForm}>
-                            <div className={styles.formGroup}>
-                                <label htmlFor="email">E-mail:</label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    value={formData.email}
-                                    onChange={handleInputChange}
-                                    className={errors.email ? styles.inputError : ''}
-                                    required
-                                />
-                                {errors.email && <span className={styles.errorText}>{errors.email}</span>}
-                            </div>
 
-                            <div className={styles.formGroup}>
-                                <label htmlFor="senha">Senha:</label>
-                                <input
-                                    type="password"
-                                    id="senha"
-                                    value={formData.senha}
-                                    onChange={handleInputChange}
-                                    className={errors.senha ? styles.inputError : ''}
-                                    required
-                                />
-                                {errors.senha && <span className={styles.errorText}>{errors.senha}</span>}
-                            </div>
-
-                            <button type="submit" className={styles.submitButton}>
-                                Entrar
-                            </button>
-                        </form>
+                {error && <span className={styles.errorText}>{error}</span>}
+                
+                <form onSubmit={handleSubmit} className={styles.loginForm}>
+                    <div className={styles.formGroup}>
+                        <label htmlFor="email">E-mail:</label>
+                        <input
+                            type="email"
+                            id="email"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            className={errors.email ? styles.inputError : ''}
+                            required
+                        />
+                        {errors.email && <span className={styles.errorText}>{errors.email}</span>}
                     </div>
-                </section>
-            </ContainerHome>
-            <Footer />
-        </>
+
+                    <div className={styles.formGroup}>
+                        <label htmlFor="senha">Senha:</label>
+                        <input
+                            type="password"
+                            id="senha"
+                            value={formData.senha}
+                            onChange={handleInputChange}
+                            className={errors.senha ? styles.inputError : ''}
+                            required
+                        />
+                        {errors.senha && <span className={styles.errorText}>{errors.senha}</span>}
+                    </div>
+
+                    <button type="submit" className={styles.submitButton}>
+                        Entrar
+                    </button>
+                </form>
+            </div>
+        </div>
     );
 }
 

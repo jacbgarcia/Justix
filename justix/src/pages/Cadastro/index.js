@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './Cadastro.module.css';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-import ContainerHome from '../../components/ContainerHome';
 
-function Cadastro() {
+function Cadastro({ isOpen, onClose }) {
     const navigate = useNavigate();
+    const sidebarRef = useRef(null);
 
     const [formData, setFormData] = useState({
         nome: '',
@@ -31,6 +29,18 @@ function Cadastro() {
         type: ''
     });
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+                onClose();
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [onClose]);
+
+    // Existing format and validation functions remain the same
     const formatCPF = (value) => {
         return value
             .replace(/\D/g, '')
@@ -113,8 +123,6 @@ function Cadastro() {
         e.preventDefault();
         
         try {
-            console.log('Enviando dados:', formData); // Log dos dados enviados
-    
             const response = await fetch('http://localhost:3001/usuarios', {
                 method: 'POST',
                 headers: {
@@ -130,14 +138,16 @@ function Cadastro() {
             });
     
             const data = await response.json();
-            console.log('Resposta do servidor:', data); // Log da resposta
     
             if (response.ok) {
                 setSubmitStatus({
                     message: 'Cadastro realizado com sucesso!',
                     type: 'success'
                 });
-                setTimeout(() => navigate('/login'), 2000);
+                setTimeout(() => {
+                    onClose();
+                    navigate('/login');
+                }, 2000);
             } else {
                 throw new Error(data.error || 'Erro ao realizar cadastro');
             }
@@ -149,111 +159,107 @@ function Cadastro() {
             });
         }
     };
+
+    if (!isOpen) return null;
+
     return (
-       
-            <>
-            <Header> 
-            <div className={styles.navleft}>
-            <Link to="/login" className={styles.navlinksl}>Login</Link>
-            <Link to="/info" className={styles.navlinks}>Sobre nós</Link>
-            </div>
-            </Header>
-            <ContainerHome>
-                <section className={styles.cadastroSection}>
-                    <div className={styles.cadastroContainer}>
-                        <Link to="/" className={styles.backButton}>← Voltar</Link>
-                        <h2 className={styles.title}>Cadastro</h2>
+        <div className={styles.overlay}>
+            <div 
+                ref={sidebarRef}
+                className={`${styles.cadastroContainer} ${isOpen ? styles.open : ''}`}
+            >
+                <div className={styles.cadastroHeader}>
+                    <h2 className={styles.title}>Cadastro</h2>
+                    <button onClick={onClose} className={styles.closeButton}>×</button>
+                </div>
 
-                        {submitStatus.message && (
-                            <div className={`${styles.statusMessage} ${styles[submitStatus.type]}`}>
-                                {submitStatus.message}
-                            </div>
-                        )}
-
-                        <form onSubmit={handleSubmit} className={styles.cadastroForm}>
-                            <div className={styles.formGroup}>
-                                <label htmlFor="nome">Nome:</label>
-                                <input
-                                    type="text"
-                                    id="nome"
-                                    value={formData.nome}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                                {errors.nome && <span className={styles.errorText}>{errors.nome}</span>}
-                            </div>
-
-                            <div className={styles.formGroup}>
-                                <label htmlFor="cpf">CPF:</label>
-                                <input
-                                    type="text"
-                                    id="cpf"
-                                    value={formData.cpf}
-                                    onChange={handleInputChange}
-                                    required
-                                    maxLength="14"
-                                />
-                                {errors.cpf && <span className={styles.errorText}>{errors.cpf}</span>}
-                            </div>
-
-                            <div className={styles.formGroup}>
-                                <label htmlFor="email">E-mail:</label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    value={formData.email}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                                {errors.email && <span className={styles.errorText}>{errors.email}</span>}
-                            </div>
-
-                            <div className={styles.formGroup}>
-                                <label htmlFor="telefone">Telefone:</label>
-                                <input
-                                    type="text"
-                                    id="telefone"
-                                    value={formData.telefone}
-                                    onChange={handleInputChange}
-                                    required
-                                    maxLength="15"
-                                />
-                                {errors.telefone && <span className={styles.errorText}>{errors.telefone}</span>}
-                            </div>
-
-                            <div className={styles.formGroup}>
-                                <label htmlFor="senha">Senha:</label>
-                                <input
-                                    type="password"
-                                    id="senha"
-                                    value={formData.senha}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                                {errors.senha && <span className={styles.errorText}>{errors.senha}</span>}
-                            </div>
-
-                            <div className={styles.formGroup}>
-                                <label htmlFor="confirmarSenha">Confirmar Senha:</label>
-                                <input
-                                    type="password"
-                                    id="confirmarSenha"
-                                    value={formData.confirmarSenha}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                                {errors.confirmarSenha && (
-                                    <span className={styles.errorText}>{errors.confirmarSenha}</span>
-                                )}
-                            </div>
-
-                            <button type="submit" className={styles.submitButton}>Cadastrar</button>
-                        </form>
+                {submitStatus.message && (
+                    <div className={`${styles.statusMessage} ${styles[submitStatus.type]}`}>
+                        {submitStatus.message}
                     </div>
-                </section>
-            </ContainerHome>
-            <Footer />
-        </>
+                )}
+
+                <form onSubmit={handleSubmit} className={styles.cadastroForm}>
+                    <div className={styles.formGroup}>
+                        <label htmlFor="nome">Nome:</label>
+                        <input
+                            type="text"
+                            id="nome"
+                            value={formData.nome}
+                            onChange={handleInputChange}
+                            required
+                        />
+                        {errors.nome && <span className={styles.errorText}>{errors.nome}</span>}
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <label htmlFor="cpf">CPF:</label>
+                        <input
+                            type="text"
+                            id="cpf"
+                            value={formData.cpf}
+                            onChange={handleInputChange}
+                            required
+                            maxLength="14"
+                        />
+                        {errors.cpf && <span className={styles.errorText}>{errors.cpf}</span>}
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <label htmlFor="email">E-mail:</label>
+                        <input
+                            type="email"
+                            id="email"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            required
+                        />
+                        {errors.email && <span className={styles.errorText}>{errors.email}</span>}
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <label htmlFor="telefone">Telefone:</label>
+                        <input
+                            type="text"
+                            id="telefone"
+                            value={formData.telefone}
+                            onChange={handleInputChange}
+                            required
+                            maxLength="15"
+                        />
+                        {errors.telefone && <span className={styles.errorText}>{errors.telefone}</span>}
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <label htmlFor="senha">Senha:</label>
+                        <input
+                            type="password"
+                            id="senha"
+                            value={formData.senha}
+                            onChange={handleInputChange}
+                            required
+                        />
+                        {errors.senha && <span className={styles.errorText}>{errors.senha}</span>}
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <label htmlFor="confirmarSenha">Confirmar Senha:</label>
+                        <input
+                            type="password"
+                            id="confirmarSenha"
+                            value={formData.confirmarSenha}
+                            onChange={handleInputChange}
+                            required
+                        />
+                        {errors.confirmarSenha && (
+                            <span className={styles.errorText}>{errors.confirmarSenha}</span>
+                        )}
+                    </div>
+
+                    <button type="submit" className={styles.submitButton}>Cadastrar</button>
+                </form>
+            </div>
+        </div>
     );
 }
 

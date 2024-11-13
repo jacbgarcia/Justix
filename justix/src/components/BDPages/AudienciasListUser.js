@@ -1,113 +1,170 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import style from '../Card/Card.module.css';
 import { Link } from 'react-router-dom';
+import './AudienciasListPageUser.css';
+
+const API_BASE_URL = 'http://localhost:3001';
 
 const AudienciasListPageUser = () => {
-  const [juizes, setJuizes] = useState([]);
-  const [searchTerm, setSearchTerm] = useState(''); // Estado para armazenar o termo de busca
+  const [juiz, setAudiencias] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeFilter, setActiveFilter] = useState('todos');
 
   useEffect(() => {
-    listarJuiz();
+    listarAudiencias();
   }, []);
 
-  const listarJuiz = async () => {
+  const listarAudiencias = async () => {
     try {
-      const res = await axios.get('http://localhost:3001/juiz');
+      const res = await axios.get(`${API_BASE_URL}/juiz`);
       const juizWithRatings = await Promise.all(
         res.data.map(async (juiz) => {
           try {
-            const ratingRes = await axios.get(`http://localhost:3001/juiz_avaliacao/${juiz.id_juiz}`);
-            const mediaAvaliacao = parseFloat(ratingRes.data.media_avaliacao) || 0;
+            // Buscar a média ponderada
+            const ratingRes = await axios.get(`${API_BASE_URL}/juiz_avaliacao/${juiz.id_juiz}`);
+            
+            // Buscar total de avaliações
+            const avaliacoesRes = await axios.get(`${API_BASE_URL}/av_juiz/${juiz.id_juiz}`);
+            
             return {
               ...juiz,
-              avaliacao_media: mediaAvaliacao
+              media_ponderada: parseFloat(ratingRes.data.media_ponderada) || 0,
+              total_avaliacoes: avaliacoesRes.data.length || 0
             };
           } catch (err) {
-            console.error(`Erro ao buscar avaliação para fórum ${juiz.id_juiz}:`, err);
+            console.error(`Erro ao buscar dados para juiz ${juiz.id_juiz}:`, err);
             return {
               ...juiz,
-              avaliacao_media: 0
+              media_ponderada: 0,
+              total_avaliacoes: 0
             };
           }
         })
       );
-      setJuizes(juizWithRatings);
+      setAudiencias(juizWithRatings);
     } catch (err) {
-      console.error('Erro ao listar fóruns:', err);
+      console.error('Erro ao listar juiz:', err);
     }
   };
 
   const getImagemUrl = (imagem) => {
     if (!imagem) return null;
     if (imagem.startsWith('/uploads/juiz/')) {
-      return `http://localhost:3001${imagem}`;
+      return `${API_BASE_URL}${imagem}`;
     }
-    return `http://localhost:3001/uploads/juiz/${imagem}`;
+    return `${API_BASE_URL}/uploads/juiz/${imagem}`;
   };
 
   const handleVisualizarClick = (id_juiz) => {
     localStorage.setItem('id_juiz', id_juiz);
   };
 
-  // Filtra os juízes com base no termo de busca
-  const filteredJuizes = juizes.filter(juiz => 
-    juiz.nome.toLowerCase().includes(searchTerm.toLowerCase()) // Filtra por nome
-  );
-
   const formatRating = (rating) => {
     const numRating = parseFloat(rating);
     return isNaN(numRating) ? "0.0" : numRating.toFixed(1);
   };
 
-  return (
-    <div>
-      {/* Campo de busca */}
-      <input
-        type="text"
-        placeholder="Buscar..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className={style.searchInput} // Adicione uma classe de estilo, se desejar
-      />
+  // Função para filtrar juiz baseado no termo de busca e filtro ativo
+  const getFilteredAudiencias = () => {
+    // Primeiro aplica o filtro de busca
+    let filtered = juiz.filter(juiz => 
+      juiz.nome.toLowerCase().includes(searchTerm.toLowerCase()) 
+    );
 
-      {filteredJuizes.map(juiz => (
-        <div key={juiz.id_juiz} className={style.card}>
-          <div className={style.cardleft}>
-            {juiz.imagem ? (
-              <img
-                src={getImagemUrl(juiz.imagem)}
-                alt={`Imagem de ${juiz.nome}`}
-                className={style.cardleft1}
-              />
-            ) : (
-              <div className={style.profileimg}>
-                Sem imagem
-              </div>
-            )}
-            <div className={style.cardinfo}>
-              <h3>{juiz.nome}</h3>
-              <p className={style.tag}>
-                {juiz.tempo_servico} anos de serviço - {juiz.casos_julgados} casos julgados
-              </p>
-              <p className={style.tag1}>
-                Média:  ★ {formatRating(juiz.avaliacao_media)}
-              </p>
-            </div>
-          </div>
-          
-          <div>
-          <Link
-              className={style.visualizarbtn}
-              to={`/user/dashboard/audiencias/${juiz.id_juiz}/feedback`}
-              onClick={() => handleVisualizarClick(juiz.id_juiz)}
-              style={{ marginRight: '5px' }}
-            >
-              Visualizar
-            </Link>
-          </div>
+    // Depois aplica o filtro de categoria
+    switch (activeFilter) {
+      case 'mais-avaliados':
+        filtered = filtered.sort((a, b) => b.total_avaliacoes - a.total_avaliacoes);
+        break;
+      case 'melhor-classificacao':
+        filtered = filtered.sort((a, b) => b.media_ponderada - a.media_ponderada);
+        break;
+      default: // 'todos'
+        filtered = filtered.sort((a, b) => a.nome.localeCompare(b.nome));
+        break;
+    }
+
+    return filtered;
+  };
+
+  return (
+    <div className="container">
+      {/* Barra de Pesquisa */}
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Pesquisar juiz..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input"
+        />
+      </div>
+
+      {/* Categorias */}
+      <div className="categories-container">
+        <div className="categories-wrapper">
+          <button 
+            className={`category-button ${activeFilter === 'todos' ? 'active' : ''}`}
+            onClick={() => setActiveFilter('todos')}
+          >
+            Todos
+          </button>
+          <button 
+            className={`category-button ${activeFilter === 'mais-avaliados' ? 'active' : ''}`}
+            onClick={() => setActiveFilter('mais-avaliados')}
+          >
+            Mais Avaliados
+          </button>
+          <button 
+            className={`category-button ${activeFilter === 'melhor-classificacao' ? 'active' : ''}`}
+            onClick={() => setActiveFilter('melhor-classificacao')}
+          >
+            Melhor Classificação
+          </button>
         </div>
-      ))}
+      </div>
+
+      {/* Lista de Audiencias */}
+      <div className="juizs-grid">
+        {getFilteredAudiencias().map(juiz => (
+          <Link
+            key={juiz.id_juiz}
+            to={`/juiz/${juiz.id_juiz}/feedback`}
+            onClick={() => handleVisualizarClick(juiz.id_juiz)}
+            className="juiz-card"
+          >
+            <div className="juiz-content">
+              {/* Imagem */}
+              <div className="juiz-image-container">
+                {juiz.imagem ? (
+                  <img
+                    src={getImagemUrl(juiz.imagem)}
+                    alt={juiz.nome}
+                    className="juiz-image"
+                  />
+                ) : (
+                  <div className="juiz-no-image">
+                    Sem imagem
+                  </div>
+                )}
+              </div>
+
+              {/* Informações */}
+              <div className="juiz-info">
+                <h3 className="juiz-name">{juiz.nome}</h3>
+                <div className="juiz-rating">
+                  <span className="rating-badge">
+                    ★ {formatRating(juiz.media_ponderada)}
+                  </span>
+                  <span className="total-ratings">
+                    ({juiz.total_avaliacoes} avaliações)
+                  </span>
+                </div>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 };
