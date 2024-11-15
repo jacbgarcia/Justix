@@ -12,12 +12,12 @@ function HomeCards() {
     const [portais, setPortais] = useState([]);
 
     const sections = [
-        { name: 'Tribunais', items: tribunais || [] },
-        { name: 'Fóruns', items: foruns || [] },
-        { name: 'Audiências', items: juiz || [] },
-        { name: 'Mediações', items: mediador || [] },
-        { name: 'Advocacia', items: advocacia || [] },
-        { name: 'Portais', items: portais || [] }
+        { name: 'Destaques em: Tribunais', items: tribunais || [] },
+        { name: 'Destaques em: Fóruns', items: foruns || [] },
+        { name: 'Destaques em: Audiências', items: juiz || [] },
+        { name: 'Destaques em: Mediações', items: mediador || [] },
+        { name: 'Destaques em: Advocacia', items: advocacia || [] },
+        { name: 'Destaques em: Portais', items: portais || [] }
     ].filter(section => section.items && section.items.length > 0);
 
     const getImageUrl = (type, imagem) => {
@@ -44,7 +44,7 @@ function HomeCards() {
                                     <div>{entidade.profissao}</div>
                                 </>
                             ),
-                            subtitle: <>Média Ponderada: {mediaPonderada.toFixed(1)} <Star size={14} color="#4169E1" fill="#4169E1" style={{ verticalAlign: 'middle' }} /></>,
+                            subtitle: <>Média: {mediaPonderada.toFixed(1)} <Star size={14} color="#4169E1" fill="#4169E1" style={{ verticalAlign: 'middle' }} /></>,
                             image: getImageUrl(endpoint, entidade.imagem),
                             link: `/user/${endpoint}/${entidade[idField]}/feedback`,
                             id: entidade[idField],
@@ -63,7 +63,13 @@ function HomeCards() {
                     }
                 })
             );
-            setStateFunc(entidadesWithRatings);
+
+            // Ordena por média ponderada (maior para menor) e pega os 8 primeiros
+            const topEntidades = entidadesWithRatings
+                .sort((a, b) => b.media_ponderada - a.media_ponderada)
+                .slice(0, 8);
+
+            setStateFunc(topEntidades);
         } catch (err) {
             console.error(`Erro ao listar ${endpoint}:`, err);
         }

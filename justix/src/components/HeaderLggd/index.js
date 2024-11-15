@@ -11,6 +11,9 @@ function HeaderLggd({ children }) {
     const [showOverlay, setShowOverlay] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isMobileSearchOptionsOpen, setIsMobileSearchOptionsOpen] = useState(false);
+
 
     const sidebarRef = useRef(null);
     const searchRef = useRef(null);
@@ -169,7 +172,12 @@ function HeaderLggd({ children }) {
 
       useEffect(() => {
         const handleClickOutside = (event) => {
-            // Verifica se clicou fora do sidebar
+            // Verifica se o clique foi dentro do sidebar
+            if (sidebarRef.current && sidebarRef.current.contains(event.target)) {
+                return; // Se for dentro do sidebar, não faz nada
+            }
+
+            // Se for fora do sidebar, fecha tudo
             if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
                 setIsSidebarOpen(false);
                 setIsOpen(false);
@@ -200,11 +208,32 @@ function HeaderLggd({ children }) {
         window.location.href = '/';
     };
 
+    const toggleMobileMenu = () => {
+        setIsMobileMenuOpen(!isMobileMenuOpen);
+        if (!isMobileMenuOpen) {
+            setIsMobileSearchOptionsOpen(false);
+        }
+    };
+
+    const toggleMobileSearchOptions = () => {
+        setIsMobileSearchOptionsOpen(!isMobileSearchOptionsOpen);
+    };
+
+    const handleMobileMenuClick = () => {
+        setIsMobileMenuOpen(false);
+        setIsMobileSearchOptionsOpen(false);
+    };
+
+    // UserPanel component para o sidebar
     const UserPanel = () => (
-        <div className={isMobile ? styles.mobilePopup : styles.sidebarContent}>
+        <div 
+            className={isMobile ? styles.mobilePopup : styles.sidebarContent}
+            ref={sidebarRef}
+        >
             <button
                 className={styles.closeButton}
-                onClick={() => {
+                onClick={(e) => {
+                    e.stopPropagation();
                     setIsSidebarOpen(false);
                     setIsOpen(false);
                     setShowOverlay(false);
@@ -221,26 +250,32 @@ function HeaderLggd({ children }) {
             {user?.role !== 'admin' && (
                 <>
                     <button
-                        onClick={() => setShowDetails(!showDetails)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setShowDetails(!showDetails);
+                        }}
                         className={styles.menuItem}
                     >
                         Dados do usuário
                     </button>
                     {showDetails && (
-                        <div className={styles.userDetails}>
+                        <div className={styles.userDetails} onClick={(e) => e.stopPropagation()}>
                             <div>CPF: {user?.cpf || 'Não disponível'}</div>
                             <div>Telefone: {user?.telefone || 'Não disponível'}</div>
                             <div>Email: {user?.email || 'Não disponível'}</div>
                         </div>
                     )}
                     <button
-                        onClick={() => setShowProgress(!showProgress)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setShowProgress(!showProgress);
+                        }}
                         className={styles.menuItem}
                     >
                         Pontuação
                     </button>
                     {showProgress && (
-                        <div className={styles.progressContainer}>
+                        <div className={styles.progressContainer} onClick={(e) => e.stopPropagation()}>
                             <div className={styles.progressBar}>
                                 <div
                                     className={styles.progressFill}
@@ -266,12 +301,14 @@ function HeaderLggd({ children }) {
                     )}
                 </>
             )}
-            <button onClick={handleLogout} className={styles.menuItem}>
+            <button 
+                onClick={handleLogout}
+                className={styles.menuItem}
+            >
                 Logout
             </button>
         </div>
     );
-
 
     return (
         <header>
@@ -279,44 +316,47 @@ function HeaderLggd({ children }) {
                 <Link to="/user/" className={styles.brandL}>
                     <span className={styles.brand}>JUSTIX</span>
                 </Link>
-        <div className={styles.searchContainer} ref={searchRef}>
-          <form onSubmit={handleSearch} className={styles.searchForm}>
-            <div className={styles.searchWrapper}>
-              <input
-                type="text"
-                placeholder="Pesquisar..."
-                value={searchQuery}
-                onChange={handleInputChange}
-                className={styles.searchInput}
-              />
-              <button type="submit" className={styles.searchButton}>
-                Buscar
-              </button>
-            </div>
-          </form>
-          
-          {isMenuOpen && searchResults.length > 0 && (
-            <div className={styles.megaMenu}>
-              <ul>
-                {searchResults.map((result, index) => (
-                  <li 
-                    key={index} 
-                    ref={(el) => (resultRefs.current[index] = el)}
-                    className={`${styles.menuItem} ${activeIndex === index ? styles.activeItem : ''}`}
-                  >
-                    <Link 
-                      to={result.link}
-                      onClick={() => handleResultClick(result.link)}
-                    >
-                      {result.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-        <div className={styles.navleft}>
+
+                <div className={styles.searchContainer} ref={searchRef}>
+                    <form onSubmit={handleSearch} className={styles.searchForm}>
+                        <div className={styles.searchWrapper}>
+                            <input
+                                type="text"
+                                placeholder="Pesquisar..."
+                                value={searchQuery}
+                                onChange={handleInputChange}
+                                className={styles.searchInput}
+                            />
+                            <button type="submit" className={styles.searchButton}>
+                                Buscar
+                            </button>
+                        </div>
+                    </form>
+                    
+                    {isMenuOpen && searchResults.length > 0 && (
+                        <div className={styles.megaMenu}>
+                            <ul>
+                                {searchResults.map((result, index) => (
+                                    <li 
+                                        key={index} 
+                                        ref={(el) => (resultRefs.current[index] = el)}
+                                        className={`${styles.menuItem} ${activeIndex === index ? styles.activeItem : ''}`}
+                                    >
+                                        <Link 
+                                            to={result.link}
+                                            onClick={() => handleResultClick(result.link)}
+                                        >
+                                            {result.name}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                </div>
+
+                {/* Desktop Menu */}
+                <div className={`${styles.navleft} ${styles.desktopOnly}`}>
                     <div
                         className={styles.dropdown}
                         onMouseEnter={() => setIsDropdownOpen(true)}
@@ -347,31 +387,78 @@ function HeaderLggd({ children }) {
                         </span>
                     </button>
                 </div>
+
+                {/* Hamburger Menu Button - Apenas Mobile */}
+                <button 
+                    className={styles.hamburgerMenu}
+                    onClick={toggleMobileMenu}
+                >
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </nav>
-            {(showOverlay ) && (
+
+            {/* Mobile Menu */}
+            <div className={`${styles.mobileMenuOverlay} ${isMobileMenuOpen ? styles.open : ''}`} onClick={toggleMobileMenu}></div>
+            <div className={`${styles.mobileMenu} ${isMobileMenuOpen ? styles.open : ''}`}>
+                <div className={styles.mobileMenuHeader}>
+                    <h3>Menu</h3>
+                    <button className={styles.closeButton} onClick={toggleMobileMenu}>×</button>
+                </div>
+                <div className={styles.mobileMenuContent}>
+                    <button onClick={toggleMobileSearchOptions} className={styles.mobileMenuButton}>
+                        Opções de busca {isMobileSearchOptionsOpen ? '▼' : '▶'}
+                    </button>
+                    <div className={`${styles.mobileSearchOptions} ${isMobileSearchOptionsOpen ? styles.open : ''}`}>
+                        <Link to="/user/tribunais" onClick={handleMobileMenuClick}>Tribunais</Link>
+                        <Link to="/user/foruns" onClick={handleMobileMenuClick}>Fóruns</Link>
+                        <Link to="/user/juiz" onClick={handleMobileMenuClick}>Juiz</Link>
+                        <Link to="/user/mediacoes" onClick={handleMobileMenuClick}>Mediação</Link>
+                        <Link to="/user/advocacia" onClick={handleMobileMenuClick}>Advocacia</Link>
+                        <Link to="/user/portais" onClick={handleMobileMenuClick}>Portais</Link>
+                    </div>
+                    <button
+                        className={styles.mobileUserButton}
+                        onClick={() => {
+                            setIsSidebarOpen(true);
+                            setIsOpen(true);
+                            setShowOverlay(true);
+                            setIsMobileMenuOpen(false);
+                        }}
+                    >
+                        <span className={styles.usuario} style={{ backgroundColor: userColor }}>
+                            {firstLetter}
+                        </span>
+                        <span>Perfil</span>
+                    </button>
+                </div>
+            </div>
+
+            {/* Sidebar e Overlay */}
+            {(showOverlay || isMobileMenuOpen) && (
                 <div 
-                    className={`${styles.overlay} ${(showOverlay ) ? styles.show : ''}`}
+                    className={`${styles.overlay} ${(showOverlay || isMobileMenuOpen) ? styles.show : ''}`}
                     onClick={() => {
                         setIsSidebarOpen(false);
                         setIsOpen(false);
                         setShowOverlay(false);
+                        setIsMobileMenuOpen(false);
                         setIsMenuOpen(false);
                         setSearchResults([]);
                     }}
                 />
             )}
 
-{isMobile ? (
+            {isMobile ? (
                 <div className={`${styles.mobileContainer} ${isSidebarOpen ? styles.show : ''}`}>
                     <UserPanel />
                 </div>
             ) : (
-
                 <div className={`${styles.sidebar} ${isOpen ? styles.show : ''}`}>
-                <UserPanel />
-            </div>
-        )}
-
+                    <UserPanel />
+                </div>
+            )}
         </header>
     );
 }
