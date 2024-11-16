@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import styles from '../../pages/Login/Login.module.css';
+import styles from './css.module.css';
 import ContainerHome from '../ContainerHome';
 
 
