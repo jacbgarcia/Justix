@@ -25,7 +25,7 @@ const ForunsFormPageO = () => {
     if (forumAtivo) {
       setFormData(forumAtivo);
       if (forumAtivo.imagem) {
-        setPreviewUrl(`http://localhost:3001/uploads/${forumAtivo.imagem}`);
+        setPreviewUrl(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/uploads/${forumAtivo.imagem}`);
       }
     }
   }, [forumAtivo]);
@@ -56,7 +56,7 @@ const ForunsFormPageO = () => {
 
       if (forumAtivo) {
         await axios.put(
-          `http://localhost:3001/foruns/${forumAtivo.id_forum}`,
+          `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/foruns/${forumAtivo.id_forum}`,
           submitFormData,
           {
             headers: {
@@ -66,7 +66,7 @@ const ForunsFormPageO = () => {
         );
       } else {
         await axios.post(
-          'http://localhost:3001/foruns',
+          'https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/foruns',
           submitFormData,
           {
             headers: {

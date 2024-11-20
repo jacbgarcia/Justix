@@ -33,7 +33,7 @@ const PortaisFormPageO = () => {
         const imagemPath = portaisAtivo.imagem.startsWith('/uploads/') 
           ? portaisAtivo.imagem 
           : `/uploads/${portaisAtivo.imagem}`;
-        setPreviewUrl(`http://localhost:3001${imagemPath}`);
+        setPreviewUrl(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/${imagemPath}`);
       }
     }
   }, [portaisAtivo]);
@@ -79,7 +79,7 @@ const PortaisFormPageO = () => {
       if (portaisAtivo) {
         // Corrigindo o nome do parâmetro ID
         const response = await axios.put(
-          `http://localhost:3001/portais/${portaisAtivo.id_portal || portaisAtivo.id_portais}`,
+          `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/portais/${portaisAtivo.id_portal || portaisAtivo.id_portais}`,
           submitFormData,
           {
             headers: {
@@ -90,7 +90,7 @@ const PortaisFormPageO = () => {
         console.log('Resposta da atualização:', response.data);
       } else {
         const response = await axios.post(
-          'http://localhost:3001/portais',
+          'https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/portais',
           submitFormData,
           {
             headers: {

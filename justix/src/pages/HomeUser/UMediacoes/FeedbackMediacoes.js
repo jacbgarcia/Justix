@@ -102,7 +102,7 @@ const FeedbackMediacoes = ({ id_mediador }) => {
     }
 
     try {
-      const response = await axios.post('http://localhost:3001/av_mediador', {
+      const response = await axios.post('https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/av_mediador', {
         ...formData,
         id_mediador: parseInt(id_mediador, 10),
         id_usuario: parseInt(user.id, 10)

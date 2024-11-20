@@ -18,7 +18,7 @@ const ForunsListFeed = () => {
 
     const fetchComments = async () => {
         try {
-            const res = await axios.get(`http://localhost:3001/av_foruns/${id_forum}`);
+            const res = await axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/av_foruns/${id_forum}`);
             setComments(res.data);
         } catch (error) {
             console.error('Erro ao buscar comentários:', error);
@@ -27,7 +27,7 @@ const ForunsListFeed = () => {
 
     const fetchAverageRating = async () => {
         try {
-            const res = await axios.get(`http://localhost:3001/foruns_avaliacao/${id_forum}`);
+            const res = await axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/foruns_avaliacao/${id_forum}`);
             setAverageRating(res.data.media_avaliacao || 0);
         } catch (error) {
             console.error('Erro ao calcular média de avaliações:', error);

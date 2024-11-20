@@ -100,7 +100,7 @@ const FeedbackAudiencia = ({ id_juiz }) => {
     }
 
     try {
-      const response = await axios.post('http://localhost:3001/av_juiz', {
+      const response = await axios.post('https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/av_juiz', {
         ...formData,
         id_juiz: parseInt(id_juiz, 10),
         id_usuario: parseInt(user.id, 10)

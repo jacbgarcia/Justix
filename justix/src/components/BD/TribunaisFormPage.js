@@ -25,7 +25,7 @@ const TribunaisFormPageO = () => {
     if (tribunalAtivo) {
       setFormData(tribunalAtivo);
       if (tribunalAtivo.imagem) {
-        setPreviewUrl(`http://localhost:3001/uploads/tribunais/${tribunalAtivo.imagem}`);
+        setPreviewUrl(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/uploads/tribunais/${tribunalAtivo.imagem}`);
       }
     }
   }, [tribunalAtivo]);
@@ -56,7 +56,7 @@ const TribunaisFormPageO = () => {
 
       if (tribunalAtivo) {
         await axios.put(
-          `http://localhost:3001/tribunais/${tribunalAtivo.id_tribunal}`,
+          `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/tribunais/${tribunalAtivo.id_tribunal}`,
           submitFormData,
           {
             headers: {
@@ -66,7 +66,7 @@ const TribunaisFormPageO = () => {
         );
       } else {
         await axios.post(
-          'http://localhost:3001/tribunais',
+          'https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/tribunais',
           submitFormData,
           {
             headers: {

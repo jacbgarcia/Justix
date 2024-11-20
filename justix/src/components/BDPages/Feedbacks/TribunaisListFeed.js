@@ -18,7 +18,7 @@ const TribunaisListFeed = () => {
 
     const fetchComments = async () => {
         try {
-            const res = await axios.get(`http://localhost:3001/av_tribunais/${id_tribunal}`);
+            const res = await axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/av_tribunais/${id_tribunal}`);
             setComments(res.data);
         } catch (error) {
             console.error('Erro ao buscar comentários:', error);
@@ -27,7 +27,7 @@ const TribunaisListFeed = () => {
 
     const fetchAverageRating = async () => {
         try {
-            const res = await axios.get(`http://localhost:3001/tribunais_avaliacao/${id_tribunal}`);
+            const res = await axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/tribunais_avaliacao/${id_tribunal}`);
             setAverageRating(res.data.media_avaliacao || 0);
         } catch (error) {
             console.error('Erro ao calcular média de avaliações:', error);

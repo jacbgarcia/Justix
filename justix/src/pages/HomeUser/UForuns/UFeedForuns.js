@@ -6,7 +6,7 @@ import styles from "../../Home/FForuns/Feed.module.css";
 import HeaderLggd from "../../../components/HeaderLggd";
 import Footer from "../../../components/Footer/index";
 
-const API_BASE_URL = 'http://localhost:3001';
+const API_BASE_URL = 'https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/';
 
 const UFeedForuns = () => {
     const { id_forum } = useParams();

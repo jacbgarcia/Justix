@@ -98,7 +98,7 @@ const FeedbackForum = ({ id_forum }) => {
     }
 
     try {
-      const response = await axios.post('http://localhost:3001/av_foruns', {
+      const response = await axios.post('https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/av_foruns', {
         ...formData,
         id_forum: parseInt(id_forum, 10),
         id_usuario: parseInt(user.id, 10)

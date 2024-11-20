@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Cadastro.module.css';
 
-function Cadastro({ isOpen, onClose }) {
+function Cadastro({ isOpen, onClose, onSwitchToLogin }) {
     const navigate = useNavigate();
     const sidebarRef = useRef(null);
 
@@ -40,7 +40,6 @@ function Cadastro({ isOpen, onClose }) {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [onClose]);
 
-    // Existing format and validation functions remain the same
     const formatCPF = (value) => {
         return value
             .replace(/\D/g, '')
@@ -123,7 +122,7 @@ function Cadastro({ isOpen, onClose }) {
         e.preventDefault();
         
         try {
-            const response = await fetch('http://localhost:3001/usuarios', {
+            const response = await fetch('https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/usuarios', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -146,7 +145,7 @@ function Cadastro({ isOpen, onClose }) {
                 });
                 setTimeout(() => {
                     onClose();
-                    navigate('/login');
+                    onSwitchToLogin(); // Chama a troca para o login
                 }, 2000);
             } else {
                 throw new Error(data.error || 'Erro ao realizar cadastro');

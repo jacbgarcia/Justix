@@ -63,7 +63,7 @@ function HeaderAdm({ children }) {
             ];
 
             const promises = endpoints.map(({ name, idField }) =>
-                axios.get(`http://localhost:3001/${name}`).then((res) =>
+                axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/${name}`).then((res) =>
                     res.data.map((item) => ({
                         name: item.nome,
                         link: `/user/${name}/${item[idField]}/feedback`,

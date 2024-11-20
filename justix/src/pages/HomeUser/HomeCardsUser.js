@@ -23,18 +23,18 @@ function HomeCards() {
     const getImageUrl = (type, imagem) => {
         if (!imagem) return null;
         if (imagem.startsWith('/uploads/')) {
-            return `http://localhost:3001${imagem}`;
+            return `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/${imagem}`;
         }
-        return `http://localhost:3001/uploads/${type}/${imagem}`;
+        return `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/uploads/${type}/${imagem}`;
     };
 
     const fetchDataWithWeightedAverage = async (endpoint, setStateFunc, ratingEndpoint, idField) => {
         try {
-            const res = await axios.get(`http://localhost:3001/${endpoint}`);
+            const res = await axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/${endpoint}`);
             const entidadesWithRatings = await Promise.all(
                 res.data.map(async (entidade) => {
                     try {
-                        const ratingRes = await axios.get(`http://localhost:3001/${ratingEndpoint}/${entidade[idField]}`);
+                        const ratingRes = await axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/${ratingEndpoint}/${entidade[idField]}`);
                         const mediaPonderada = parseFloat(ratingRes.data.media_ponderada) || 0;
 
                         return {

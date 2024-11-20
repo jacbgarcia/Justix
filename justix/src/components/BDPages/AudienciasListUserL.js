@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './AudienciasListPageUser.css';
 
-const API_BASE_URL = 'http://localhost:3001';
+const API_BASE_URL = 'https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/';
 
 const AudienciasListPageUserL = () => {
   const [juiz, setAudiencias] = useState([]);

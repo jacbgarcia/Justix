@@ -15,13 +15,13 @@ const MediacoesListPageO = () => {
 
   const listarMediadores = async () => {
     try {
-      const res = await axios.get('http://localhost:3001/mediador');
+      const res = await axios.get('https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/mediador');
       
       // Buscar as avaliações atualizadas para cada fórum
       const mediadorWithRatings = await Promise.all(
         res.data.map(async (mediador) => {
           try {
-            const ratingRes = await axios.get(`http://localhost:3001/mediador_avaliacao/${mediador.id_mediador}`);
+            const ratingRes = await axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/mediador_avaliacao/${mediador.id_mediador}`);
             const mediaAvaliacao = parseFloat(ratingRes.data.media_avaliacao) || 0;
             return {
               ...mediador,
@@ -49,7 +49,7 @@ const MediacoesListPageO = () => {
     if (!confirmacao) return;
 
     try {
-      await axios.delete(`http://localhost:3001/mediador/${id}`);
+      await axios.delete(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/mediador/${id}`);
       listarMediadores(); // Atualiza a lista após a exclusão
     } catch (err) {
       console.error('Erro ao excluir mediador:', err);
@@ -63,9 +63,9 @@ const MediacoesListPageO = () => {
   const getImagemUrl = (imagem) => {
     if (!imagem) return null;
     if (imagem.startsWith('/uploads/mediador/')) {
-      return `http://localhost:3001${imagem}`;
+      return `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/${imagem}`;
     }
-    return `http://localhost:3001/uploads/mediador/${imagem}`;
+    return `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/uploads/mediador/${imagem}`;
   };
 
   // Função para lidar com a mudança do campo de busca

@@ -18,7 +18,7 @@ const MediacoesListFeed = () => {
 
     const fetchComments = async () => {
         try {
-            const res = await axios.get(`http://localhost:3001/av_mediador/${id_mediador}`);
+            const res = await axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/av_mediador/${id_mediador}`);
             setComments(res.data);
         } catch (error) {
             console.error('Erro ao buscar comentários:', error);
@@ -27,7 +27,7 @@ const MediacoesListFeed = () => {
 
     const fetchAverageRating = async () => {
         try {
-            const res = await axios.get(`http://localhost:3001/mediador_avaliacao/${id_mediador}`);
+            const res = await axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/mediador_avaliacao/${id_mediador}`);
             setAverageRating(res.data.media_avaliacao || 0);
         } catch (error) {
             console.error('Erro ao calcular média de avaliações:', error);

@@ -6,7 +6,7 @@ import styles from "../../Home/FAdvocacias/Feed.module.css";
 import HeaderLggd from "../../../components/HeaderLggd";
 import Footer from "../../../components/Footer/index";
 
-const API_BASE_URL = 'http://localhost:3001';
+const API_BASE_URL = 'https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/';
 
 const UFeedAdvocacias = () => {
     const { id_advocacia } = useParams();

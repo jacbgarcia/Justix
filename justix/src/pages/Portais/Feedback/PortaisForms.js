@@ -16,7 +16,7 @@ const PortaisFormPage = () => {
   // Função para buscar comentários
   const fetchComments = async () => {
     try {
-      const response = await axios.get(`http://localhost:3001/av_portal/${id_portal}`);
+      const response = await axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/av_portal/${id_portal}`);
       setComments(response.data.comments); // Supondo que a resposta tenha um array de comentários
     } catch (error) {
       console.error('Erro ao buscar comentários:', error);

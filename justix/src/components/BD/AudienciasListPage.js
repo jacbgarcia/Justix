@@ -15,13 +15,13 @@ const AudienciasListPageO = () => {
 
   const listarJuizes = async () => {
     try {
-      const res = await axios.get('http://localhost:3001/juiz');
+      const res = await axios.get('https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/juiz');
       
       // Buscar as avaliações atualizadas para cada fórum
       const juizWithRatings = await Promise.all(
         res.data.map(async (juiz) => {
           try {
-            const ratingRes = await axios.get(`http://localhost:3001/juiz_avaliacao/${juiz.id_juiz}`);
+            const ratingRes = await axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/juiz_avaliacao/${juiz.id_juiz}`);
             const mediaAvaliacao = parseFloat(ratingRes.data.media_avaliacao) || 0;
             return {
               ...juiz,
@@ -49,7 +49,7 @@ const AudienciasListPageO = () => {
     if (!confirmacao) return;
 
     try {
-      await axios.delete(`http://localhost:3001/juiz/${id}`);
+      await axios.delete(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/juiz/${id}`);
       listarJuizes(); // Atualiza a lista após a exclusão
     } catch (err) {
       console.error('Erro ao excluir juiz:', err);
@@ -64,9 +64,9 @@ const AudienciasListPageO = () => {
     if (!imagem) return null;
     // Verifique se a imagem já contém o prefixo
     if (imagem.startsWith('/uploads/juiz/')) {
-      return `http://localhost:3001${imagem}`; // Apenas retorna a URL completa
+      return `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/${imagem}`; // Apenas retorna a URL completa
     }
-    return `http://localhost:3001/uploads/juiz/${imagem}`; // Adiciona o prefixo se não estiver presente
+    return `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/uploads/juiz/${imagem}`; // Adiciona o prefixo se não estiver presente
   };
 
   // Função para lidar com a mudança do campo de busca

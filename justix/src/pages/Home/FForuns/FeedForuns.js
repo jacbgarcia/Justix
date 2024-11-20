@@ -7,7 +7,7 @@ import Header from "../../../components/Header";
 import Footer from "../../../components/Footer/index";
 import Cadastro from '../../Cadastro';
 
-const API_BASE_URL = 'http://localhost:3001';
+const API_BASE_URL = 'https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/';
 
 const FeedForuns = () => {
     const { id_forum } = useParams();

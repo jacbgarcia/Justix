@@ -24,7 +24,7 @@ const AudienciasFormPageO = () => {
     if (juizAtivo) {
       setFormData(juizAtivo);
       if (juizAtivo.imagem) {
-        setPreviewUrl(`http://localhost:3001/uploads/${juizAtivo.imagem}`);
+        setPreviewUrl(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/uploads/${juizAtivo.imagem}`);
       }
     }
   }, [juizAtivo]);
@@ -56,7 +56,7 @@ const AudienciasFormPageO = () => {
 
       if (juizAtivo) {
         await axios.put(
-          `http://localhost:3001/juiz/${juizAtivo.id_juiz}`,
+          `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/juiz/${juizAtivo.id_juiz}`,
           submitFormData,
           {
             headers: {
@@ -66,7 +66,7 @@ const AudienciasFormPageO = () => {
         );
       } else {
         await axios.post(
-          'http://localhost:3001/juiz',
+          'https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/juiz',
           submitFormData,
           {
             headers: {

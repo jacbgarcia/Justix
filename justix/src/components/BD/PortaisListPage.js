@@ -15,13 +15,13 @@ const PortaisListPageO = () => {
 
   const listarPortais = async () => {
     try {
-      const res = await axios.get('http://localhost:3001/portais');
+      const res = await axios.get('https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/portais');
       
       // Buscar as avaliações atualizadas para cada fórum
       const portaisWithRatings = await Promise.all(
         res.data.map(async (portal) => {
           try {
-            const ratingRes = await axios.get(`http://localhost:3001/portal_avaliacao/${portal.id_portal}`);
+            const ratingRes = await axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/portal_avaliacao/${portal.id_portal}`);
             const mediaAvaliacao = parseFloat(ratingRes.data.media_avaliacao) || 0;
             return {
               ...portal,
@@ -49,7 +49,7 @@ const PortaisListPageO = () => {
     if (!confirmacao) return;
 
     try {
-      await axios.delete(`http://localhost:3001/portais/${id}`);
+      await axios.delete(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/portais/${id}`);
       listarPortais(); // Atualiza a lista após a exclusão
     } catch (err) {
       console.error('Erro ao excluir portais:', err);
@@ -63,9 +63,9 @@ const PortaisListPageO = () => {
   const getImagemUrl = (imagem) => {
     if (!imagem) return null;
     if (imagem.startsWith('/uploads/portais/')) {
-      return `http://localhost:3001${imagem}`;
+      return `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/${imagem}`;
     }
-    return `http://localhost:3001/uploads/portais/${imagem}`;
+    return `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/uploads/portais/${imagem}`;
   };
 
   // Função para lidar com a mudança do campo de busca

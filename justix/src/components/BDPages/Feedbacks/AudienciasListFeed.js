@@ -18,7 +18,7 @@ const AudienciasListFeed = () => {
 
     const fetchComments = async () => {
         try {
-            const res = await axios.get(`http://localhost:3001/av_juiz/${id_juiz}`);
+            const res = await axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/av_juiz/${id_juiz}`);
             setComments(res.data);
         } catch (error) {
             console.error('Erro ao buscar comentários:', error);
@@ -27,7 +27,7 @@ const AudienciasListFeed = () => {
 
     const fetchAverageRating = async () => {
         try {
-            const res = await axios.get(`http://localhost:3001/juiz_avaliacao/${id_juiz}`);
+            const res = await axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/juiz_avaliacao/${id_juiz}`);
             setAverageRating(res.data.media_avaliacao || 0);
         } catch (error) {
             console.error('Erro ao calcular média de avaliações:', error);

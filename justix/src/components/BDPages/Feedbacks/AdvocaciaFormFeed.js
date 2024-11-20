@@ -49,7 +49,7 @@ const AdvocaciaForm = ({ id_advocacia, onCommentAdded }) => {
         };
 
         try {
-            const response = await axios.post('http://localhost:3001/av_advocacia', formData);
+            const response = await axios.post('https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/av_advocacia', formData);
             
             // Update progress after successful submission
             updateUserProgress(user.id);

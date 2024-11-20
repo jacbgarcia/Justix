@@ -25,7 +25,7 @@ const AdvocaciaFormPageO = () => {
     if (advocaciaAtivo) {
       setFormData(advocaciaAtivo);
       if (advocaciaAtivo.imagem) {
-        setPreviewUrl(`http://localhost:3001/uploads/${advocaciaAtivo.imagem}`);
+        setPreviewUrl(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/uploads/${advocaciaAtivo.imagem}`);
       }
     }
   }, [advocaciaAtivo]);
@@ -96,7 +96,7 @@ const AdvocaciaFormPageO = () => {
 
       if (advocaciaAtivo) {
         await axios.put(
-          `http://localhost:3001/advocacia/${advocaciaAtivo.id_advocacia}`,
+          `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/advocacia/${advocaciaAtivo.id_advocacia}`,
           submitFormData,
           {
             headers: {
@@ -106,7 +106,7 @@ const AdvocaciaFormPageO = () => {
         );
       } else {
         await axios.post(
-          'http://localhost:3001/advocacia',
+          'https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/advocacia',
           submitFormData,
           {
             headers: {

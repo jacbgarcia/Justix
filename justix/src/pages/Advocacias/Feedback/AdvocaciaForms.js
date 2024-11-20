@@ -16,7 +16,7 @@ const AdvocaciaFormPage = () => {
   // Função para buscar comentários
   const fetchComments = async () => {
     try {
-      const response = await axios.get(`http://localhost:3001/av_advocacia/${id_advocacia}`);
+      const response = await axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/av_advocacia/${id_advocacia}`);
       setComments(response.data.comments); // Supondo que a resposta tenha um array de comentários
     } catch (error) {
       console.error('Erro ao buscar comentários:', error);

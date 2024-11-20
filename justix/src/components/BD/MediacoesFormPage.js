@@ -23,7 +23,7 @@ const MediacoesFormPageO = () => {
     if (mediadorAtivo) {
       setFormData(mediadorAtivo);
       if (mediadorAtivo.imagem) {
-        setPreviewUrl(`http://localhost:3001/uploads/mediador/${mediadorAtivo.imagem}`);
+        setPreviewUrl(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/uploads/mediador/${mediadorAtivo.imagem}`);
       }
     }
   }, [mediadorAtivo]);
@@ -54,7 +54,7 @@ const MediacoesFormPageO = () => {
 
       if (mediadorAtivo) {
         await axios.put(
-          `http://localhost:3001/mediador/${mediadorAtivo.id_mediador}`,
+          `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/mediador/${mediadorAtivo.id_mediador}`,
           submitFormData,
           {
             headers: {
@@ -64,7 +64,7 @@ const MediacoesFormPageO = () => {
         );
       } else {
         await axios.post(
-          'http://localhost:3001/mediador',
+          'https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/mediador',
           submitFormData,
           {
             headers: {

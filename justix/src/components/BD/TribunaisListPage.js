@@ -15,13 +15,13 @@ const TribunaisListPageO = () => {
 
   const listarTribunais = async () => {
     try {
-      const res = await axios.get('http://localhost:3001/tribunais');
+      const res = await axios.get('https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/tribunais');
       
       // Buscar as avaliações atualizadas para cada tribunal
       const tribunaisWithRatings = await Promise.all(
         res.data.map(async (tribunal) => {
           try {
-            const ratingRes = await axios.get(`http://localhost:3001/tribunais_avaliacao/${tribunal.id_tribunal}`);
+            const ratingRes = await axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/tribunais_avaliacao/${tribunal.id_tribunal}`);
             const mediaAvaliacao = parseFloat(ratingRes.data.media_avaliacao) || 0;
             return {
               ...tribunal,
@@ -49,7 +49,7 @@ const TribunaisListPageO = () => {
     if (!confirmacao) return;
 
     try {
-      await axios.delete(`http://localhost:3001/tribunais/${id}`);
+      await axios.delete(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/tribunais/${id}`);
       listarTribunais();
     } catch (err) {
       console.error('Erro ao excluir tribunal:', err);
@@ -63,9 +63,9 @@ const TribunaisListPageO = () => {
   const getImagemUrl = (imagem) => {
     if (!imagem) return null;
     if (imagem.startsWith('/uploads/tribunais/')) {
-      return `http://localhost:3001${imagem}`;
+      return `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/${imagem}`;
     }
-    return `http://localhost:3001/uploads/tribunais/${imagem}`;
+    return `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/uploads/tribunais/${imagem}`;
   };
 
   const handleSearchChange = (e) => {

@@ -56,7 +56,7 @@ const TribunaisForm = ({ id_tribunal, onCommentAdded }) => {
         };
 
         try {
-            const response = await axios.post('http://localhost:3001/av_tribunais', formData);
+            const response = await axios.post('https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/av_tribunais', formData);
             
             // Update progress after successful submission
             updateUserProgress(user.id);

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './ForunsListPageUser.css';
 
-const API_BASE_URL = 'http://localhost:3001';
+const API_BASE_URL = 'https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/';
 
 const ForunsListPageUser = () => {
   const [foruns, setForuns] = useState([]);

@@ -56,7 +56,7 @@ const ForunsForm = ({ id_forum, onCommentAdded }) => {
         };
 
         try {
-            const response = await axios.post('http://localhost:3001/av_foruns', formData);
+            const response = await axios.post('https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/av_foruns', formData);
             
             // Atualiza progresso após envio bem-sucedido
             updateUserProgress(user.id);

@@ -15,13 +15,13 @@ const ForunsListPageO = () => {
 
   const listarForuns = async () => {
     try {
-      const res = await axios.get('http://localhost:3001/foruns');
+      const res = await axios.get('https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/foruns');
       
       // Buscar as avaliações atualizadas para cada fórum
       const forunsWithRatings = await Promise.all(
         res.data.map(async (forum) => {
           try {
-            const ratingRes = await axios.get(`http://localhost:3001/foruns_avaliacao/${forum.id_forum}`);
+            const ratingRes = await axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/foruns_avaliacao/${forum.id_forum}`);
             const mediaAvaliacao = parseFloat(ratingRes.data.media_avaliacao) || 0;
             return {
               ...forum,
@@ -49,7 +49,7 @@ const ForunsListPageO = () => {
     if (!confirmacao) return;
 
     try {
-      await axios.delete(`http://localhost:3001/foruns/${id}`);
+      await axios.delete(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/foruns/${id}`);
       listarForuns();
     } catch (err) {
       console.error('Erro ao excluir fórum:', err);
@@ -63,9 +63,9 @@ const ForunsListPageO = () => {
   const getImagemUrl = (imagem) => {
     if (!imagem) return null;
     if (imagem.startsWith('/uploads/foruns/')) {
-      return `http://localhost:3001${imagem}`;
+      return `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/${imagem}`;
     }
-    return `http://localhost:3001/uploads/foruns/${imagem}`;
+    return `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/uploads/foruns/${imagem}`;
   };
 
   const handleSearchChange = (e) => {
