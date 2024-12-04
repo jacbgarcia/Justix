@@ -63,7 +63,7 @@ function HeaderAdm({ children }) {
             ];
 
             const promises = endpoints.map(({ name, idField }) =>
-                axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/${name}`).then((res) =>
+                axios.get(`https://justix-back.vercel.app/${name}`).then((res) =>
                     res.data.map((item) => ({
                         name: item.nome,
                         link: `/user/${name}/${item[idField]}/feedback`,
@@ -172,26 +172,26 @@ function HeaderAdm({ children }) {
 
       useEffect(() => {
         const handleClickOutside = (event) => {
-            // Verifica se o clique foi dentro do sidebar
+            
             if (sidebarRef.current && sidebarRef.current.contains(event.target)) {
-                return; // Se for dentro do sidebar, não faz nada
+                return; 
             }
 
-            // Se for fora do sidebar, fecha tudo
+            
             if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
                 setIsSidebarOpen(false);
                 setIsOpen(false);
                 setShowOverlay(false);
             }
 
-            // Verifica se clicou fora do menu de busca
+            
             if (searchRef.current && !searchRef.current.contains(event.target)) {
                 setIsMenuOpen(false);
                 setSearchResults([]);
             }
         };
 
-        // Adiciona o listener quando o overlay está ativo
+        
         if (showOverlay || isMenuOpen) {
             document.addEventListener('mousedown', handleClickOutside);
         }
@@ -224,7 +224,7 @@ function HeaderAdm({ children }) {
         setIsMobileSearchOptionsOpen(false);
     };
 
-    // UserPanel component para o sidebar
+  
     const UserPanel = () => (
         <div 
             className={isMobile ? styles.mobilePopup : styles.sidebarContent}
@@ -313,7 +313,7 @@ function HeaderAdm({ children }) {
     return (
         <header>
             <nav className={styles.navbar}>
-                <Link to="/user/" className={styles.brandL}>
+                <Link to="/admin/dashboard/tribunais" className={styles.brandL}>
                     <span className={styles.brand}>JUSTIX</span>
                 </Link>
 
@@ -411,12 +411,12 @@ function HeaderAdm({ children }) {
                         Opções de busca {isMobileSearchOptionsOpen ? '▼' : '▶'}
                     </button>
                     <div className={`${styles.mobileSearchOptions} ${isMobileSearchOptionsOpen ? styles.open : ''}`}>
-                        <Link to="/user/tribunais" onClick={handleMobileMenuClick}>Tribunais</Link>
-                        <Link to="/user/foruns" onClick={handleMobileMenuClick}>Fóruns</Link>
-                        <Link to="/user/juiz" onClick={handleMobileMenuClick}>Juiz</Link>
-                        <Link to="/user/mediacoes" onClick={handleMobileMenuClick}>Mediação</Link>
-                        <Link to="/user/advocacia" onClick={handleMobileMenuClick}>Advocacia</Link>
-                        <Link to="/user/portais" onClick={handleMobileMenuClick}>Portais</Link>
+                        <Link to="/admin/dashboard/tribunais" onClick={handleMobileMenuClick}>Tribunais</Link>
+                        <Link to="/admin/dashboard/foruns" onClick={handleMobileMenuClick}>Fóruns</Link>
+                        <Link to="/admin/dashboard/juiz" onClick={handleMobileMenuClick}>Juiz</Link>
+                        <Link to="/admin/dashboard/mediacoes" onClick={handleMobileMenuClick}>Mediação</Link>
+                        <Link to="/admin/dashboard/advocacia" onClick={handleMobileMenuClick}>Advocacia</Link>
+                        <Link to="/admin/dashboard/portais" onClick={handleMobileMenuClick}>Portais</Link>
                     </div>
                     <button
                         className={styles.mobileUserButton}

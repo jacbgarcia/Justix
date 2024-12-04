@@ -6,7 +6,7 @@ import styles from "../../Home/FPortais/Feed.module.css";
 import HeaderLggd from "../../../components/HeaderLggd";
 import Footer from "../../../components/Footer/index";
 
-const API_BASE_URL = 'https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/';
+const API_BASE_URL = 'https://justix-back.vercel.app';
 
 const UFeedPortais = () => {
     const { id_portal } = useParams();
@@ -89,7 +89,7 @@ const UFeedPortais = () => {
     const calculateRatingStats = (commentsData) => {
         const newStats = { ...ratingStats };
         
-        // Calcula stats para categorias normais
+       
         Object.keys(ratingCategories).forEach(category => {
             if (category !== 'weighted') {
                 const stats = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
@@ -103,7 +103,7 @@ const UFeedPortais = () => {
             }
         });
     
-        // Calcula stats para weighted
+        
         const weightedStats = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
         commentsData.forEach(comment => {
             const weightedRating = calculateWeightedRating(comment);

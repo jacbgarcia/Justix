@@ -23,7 +23,7 @@ const MediacoesFormPageO = () => {
     if (mediadorAtivo) {
       setFormData(mediadorAtivo);
       if (mediadorAtivo.imagem) {
-        setPreviewUrl(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/uploads/mediador/${mediadorAtivo.imagem}`);
+        setPreviewUrl(`https://justix-back.vercel.app/uploads/mediador/${mediadorAtivo.imagem}`);
       }
     }
   }, [mediadorAtivo]);
@@ -42,19 +42,19 @@ const MediacoesFormPageO = () => {
     try {
       const submitFormData = new FormData();
       
-      // Adiciona todos os campos do formulário ao FormData
+      
       Object.keys(formData).forEach(key => {
         submitFormData.append(key, formData[key]);
       });
 
-      // Adiciona a imagem apenas se uma nova imagem foi selecionada
+      
       if (imagemFile) {
         submitFormData.append('imagem', imagemFile);
       }
 
       if (mediadorAtivo) {
         await axios.put(
-          `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/mediador/${mediadorAtivo.id_mediador}`,
+          `https://justix-back.vercel.app/mediador/${mediadorAtivo.id_mediador}`,
           submitFormData,
           {
             headers: {
@@ -64,7 +64,7 @@ const MediacoesFormPageO = () => {
         );
       } else {
         await axios.post(
-          'https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/mediador',
+          'https://justix-back.vercel.app/mediador',
           submitFormData,
           {
             headers: {

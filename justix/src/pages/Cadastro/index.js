@@ -122,7 +122,7 @@ function Cadastro({ isOpen, onClose, onSwitchToLogin }) {
         e.preventDefault();
         
         try {
-            const response = await fetch('https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/usuarios', {
+            const response = await fetch('https://justix-back.vercel.app/usuarios', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -145,7 +145,7 @@ function Cadastro({ isOpen, onClose, onSwitchToLogin }) {
                 });
                 setTimeout(() => {
                     onClose();
-                    onSwitchToLogin(); // Chama a troca para o login
+                    onSwitchToLogin(); 
                 }, 2000);
             } else {
                 throw new Error(data.error || 'Erro ao realizar cadastro');

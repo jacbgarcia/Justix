@@ -25,7 +25,7 @@ const AdvocaciaFormPageO = () => {
     if (advocaciaAtivo) {
       setFormData(advocaciaAtivo);
       if (advocaciaAtivo.imagem) {
-        setPreviewUrl(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/uploads/${advocaciaAtivo.imagem}`);
+        setPreviewUrl(`https://justix-back.vercel.app/uploads/${advocaciaAtivo.imagem}`);
       }
     }
   }, [advocaciaAtivo]);
@@ -39,11 +39,11 @@ const AdvocaciaFormPageO = () => {
     }
   };
 
-  // Função para limpar campos baseado na profissão selecionada
+  
   const handleProfissaoChange = (e) => {
     const profissaoSelecionada = e.target.value;
     
-    // Reseta o formulário mantendo apenas o nome e a profissão selecionada
+    
     const novoFormData = {
       nome: formData.nome,
       profissao: profissaoSelecionada,
@@ -67,12 +67,12 @@ const AdvocaciaFormPageO = () => {
     try {
       const submitFormData = new FormData();
       
-      // Adiciona apenas os campos relevantes baseado na profissão
+     
       submitFormData.append('nome', formData.nome);
       submitFormData.append('profissao', formData.profissao);
       submitFormData.append('avaliacao_media', formData.avaliacao_media);
 
-      // Adiciona campos específicos baseado na profissão
+     
       switch (formData.profissao) {
         case 'Escritório':
           submitFormData.append('endereco', formData.endereco);
@@ -85,18 +85,18 @@ const AdvocaciaFormPageO = () => {
           submitFormData.append('experiencia', formData.experiencia);
           break;
         default:
-          // Caso nenhuma das opções acima seja selecionada
+         
           break;
       }
 
-      // Adiciona a imagem apenas se uma nova imagem foi selecionada
+     
       if (imagemFile) {
         submitFormData.append('imagem', imagemFile);
       }
 
       if (advocaciaAtivo) {
         await axios.put(
-          `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/advocacia/${advocaciaAtivo.id_advocacia}`,
+          `https://justix-back.vercel.app/advocacia/${advocaciaAtivo.id_advocacia}`,
           submitFormData,
           {
             headers: {
@@ -106,7 +106,7 @@ const AdvocaciaFormPageO = () => {
         );
       } else {
         await axios.post(
-          'https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/advocacia',
+          'https://justix-back.vercel.app/advocacia',
           submitFormData,
           {
             headers: {
@@ -125,7 +125,7 @@ const AdvocaciaFormPageO = () => {
     navigate('/admin/dashboard/advocacia');
   };
 
-  // Função para determinar se um campo deve ser mostrado
+   
   const shouldShowField = (fieldName) => {
     switch (formData.profissao) {
       case 'Escritório':

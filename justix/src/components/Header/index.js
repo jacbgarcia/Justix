@@ -31,7 +31,7 @@ const Header = () => {
       ];
 
       const promises = endpoints.map(({ name, idField }) =>
-        axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/${name}`).then((res) =>
+        axios.get(`https://justix-back.vercel.app/${name}`).then((res) =>
           res.data.map((item) => ({
             name: item.nome,
             link: `/${name}/${item[idField]}/feedback`,

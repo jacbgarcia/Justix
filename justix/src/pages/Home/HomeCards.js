@@ -3,6 +3,8 @@ import CarouselCustom from '../../components/Carrosel/CarouselCustom';
 import axios from 'axios';
 import { Star } from 'lucide-react';
 
+const API_BASE_URL = 'https://justix-back.vercel.app';
+
 function HomeCards() {
     const [tribunais, setTribunais] = useState([]);
     const [foruns, setForuns] = useState([]);
@@ -12,29 +14,29 @@ function HomeCards() {
     const [portais, setPortais] = useState([]);
 
     const sections = [
-        { name: 'Destaques em: Tribunais', items: tribunais || [] },
-        { name: 'Destaques em: Fóruns', items: foruns || [] },
-        { name: 'Destaques em: Audiências', items: juiz || [] },
-        { name: 'Destaques em: Mediações', items: mediador || [] },
-        { name: 'Destaques em: Advocacia', items: advocacia || [] },
-        { name: 'Destaques em: Portais', items: portais || [] }
+        { name: 'Destaques em Tribunais', items: tribunais || [] },
+        { name: 'Destaques em Fóruns', items: foruns || [] },
+        { name: 'Destaques em Audiências', items: juiz || [] },
+        { name: 'Destaques em Mediações', items: mediador || [] },
+        { name: 'Destaques em Advocacia', items: advocacia || [] },
+        { name: 'Destaques em Portais', items: portais || [] }
     ].filter(section => section.items && section.items.length > 0);
 
     const getImageUrl = (type, imagem) => {
         if (!imagem) return null;
         if (imagem.startsWith('/uploads/')) {
-            return `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/${imagem}`;
+            return `${API_BASE_URL}${imagem}`;
         }
-        return `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/uploads/${type}/${imagem}`;
+        return `${API_BASE_URL}/uploads/${type}/${imagem}`;
     };
 
     const fetchDataWithWeightedAverage = async (endpoint, setStateFunc, ratingEndpoint, idField) => {
         try {
-            const res = await axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/${endpoint}`);
+            const res = await axios.get(`${API_BASE_URL}/${endpoint}`);
             const entidadesWithRatings = await Promise.all(
                 res.data.map(async (entidade) => {
                     try {
-                        const ratingRes = await axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/${ratingEndpoint}/${entidade[idField]}`);
+                        const ratingRes = await axios.get(`${API_BASE_URL}/${ratingEndpoint}/${entidade[idField]}`);
                         const mediaPonderada = parseFloat(ratingRes.data.media_ponderada) || 0;
 
                         return {
@@ -64,7 +66,6 @@ function HomeCards() {
                 })
             );
 
-            // Ordena por média ponderada (maior para menor) e pega os 8 primeiros
             const topEntidades = entidadesWithRatings
                 .sort((a, b) => b.media_ponderada - a.media_ponderada)
                 .slice(0, 8);

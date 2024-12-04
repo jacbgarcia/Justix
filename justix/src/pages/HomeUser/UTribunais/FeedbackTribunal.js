@@ -34,7 +34,7 @@ const FeedbackTribunal = ({ id_tribunal }) => {
 
   const updateUserProgress = (userId) => {
     const currentProgress = parseInt(localStorage.getItem(`userProgress_${userId}`)) || 0;
-    const newProgress = Math.min(currentProgress + 50, 1000); // Add 50 points per submission, max 1000
+    const newProgress = Math.min(currentProgress + 50, 1000); 
     localStorage.setItem(`userProgress_${userId}`, newProgress.toString());
   };
 
@@ -102,13 +102,12 @@ const FeedbackTribunal = ({ id_tribunal }) => {
     }
 
     try {
-      const response = await axios.post('https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/av_tribunais', {
+      const response = await axios.post('https://justix-back.vercel.app/av_tribunais', {
         ...formData,
         id_tribunal: parseInt(id_tribunal, 10),
         id_usuario: parseInt(user.id, 10)
       });
 
-      // Update progress after successful submission
       updateUserProgress(user.id);
       
       setSuccess(true);

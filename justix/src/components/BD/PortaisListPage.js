@@ -6,7 +6,7 @@ import style from '../Card/Card.module.css';
 const PortaisListPageO = () => {
   const [portais, setPortais] = useState([]);
   const [filteredPortais, setFilteredPortais] = useState([]);
-  const [searchTerm, setSearchTerm] = useState(''); // Estado para o termo de busca
+  const [searchTerm, setSearchTerm] = useState(''); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,13 +15,13 @@ const PortaisListPageO = () => {
 
   const listarPortais = async () => {
     try {
-      const res = await axios.get('https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/portais');
+      const res = await axios.get('https://justix-back.vercel.app/portais');
       
-      // Buscar as avaliações atualizadas para cada fórum
+      
       const portaisWithRatings = await Promise.all(
         res.data.map(async (portal) => {
           try {
-            const ratingRes = await axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/portal_avaliacao/${portal.id_portal}`);
+            const ratingRes = await axios.get(`https://justix-back.vercel.app/portal_avaliacao/${portal.id_portal}`);
             const mediaAvaliacao = parseFloat(ratingRes.data.media_avaliacao) || 0;
             return {
               ...portal,
@@ -49,8 +49,8 @@ const PortaisListPageO = () => {
     if (!confirmacao) return;
 
     try {
-      await axios.delete(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/portais/${id}`);
-      listarPortais(); // Atualiza a lista após a exclusão
+      await axios.delete(`https://justix-back.vercel.app/portais/${id}`);
+      listarPortais(); 
     } catch (err) {
       console.error('Erro ao excluir portais:', err);
     }
@@ -63,17 +63,17 @@ const PortaisListPageO = () => {
   const getImagemUrl = (imagem) => {
     if (!imagem) return null;
     if (imagem.startsWith('/uploads/portais/')) {
-      return `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/${imagem}`;
+      return `https://justix-back.vercel.app/${imagem}`;
     }
-    return `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/uploads/portais/${imagem}`;
+    return `https://justix-back.vercel.app/uploads/portais/${imagem}`;
   };
 
-  // Função para lidar com a mudança do campo de busca
+  
   const handleSearchChange = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
 
-    // Filtra portais com base no termo de busca
+   
     const filtered = portais.filter(portal =>
       portal.nome.toLowerCase().includes(term.toLowerCase())
     );
@@ -95,7 +95,7 @@ const PortaisListPageO = () => {
         placeholder="Buscar..."
         value={searchTerm}
         onChange={handleSearchChange}
-        className={style.searchInput} // Adicione uma classe de estilo, se desejar
+        className={style.searchInput}
       />
 
       {/* Renderização dos portais filtrados */}

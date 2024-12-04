@@ -78,7 +78,7 @@ const DynamicBannerUser = () => {
         <div className={`banner-subtitle ${isVisible ? 'visible' : ''}`}>
           <p>
             Aqui você não apenas compartilha sua opinião sobre ações jurídicas, você também é recompensado por isso!
-            Avalie, contribua com suas análises e adquira isenção de custo no seu próximo processo ao alcançar metas de avaliações.
+            Avalie, contribua com suas análises e adquira benefícios ao alcançar metas de avaliações.
           </p>
         </div>
 

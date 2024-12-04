@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './TribunaisListPageUser.css';
 
-const API_BASE_URL = 'https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/';
+const API_BASE_URL = 'https://justix-back.vercel.app';
 
 const TribunaisListPageUserL = () => {
   const [tribunais, setTribunais] = useState([]);
@@ -20,10 +20,8 @@ const TribunaisListPageUserL = () => {
       const tribunaisWithRatings = await Promise.all(
         res.data.map(async (tribunal) => {
           try {
-            // Buscar a média ponderada
             const ratingRes = await axios.get(`${API_BASE_URL}/tribunais_avaliacao/${tribunal.id_tribunal}`);
             
-            // Buscar total de avaliações
             const avaliacoesRes = await axios.get(`${API_BASE_URL}/av_tribunais/${tribunal.id_tribunal}`);
             
             return {
@@ -64,15 +62,12 @@ const TribunaisListPageUserL = () => {
     return isNaN(numRating) ? "0.0" : numRating.toFixed(1);
   };
 
-  // Função para filtrar tribunais baseado no termo de busca e filtro ativo
   const getFilteredTribunais = () => {
-    // Primeiro aplica o filtro de busca
     let filtered = tribunais.filter(tribunal => 
       tribunal.nome.toLowerCase().includes(searchTerm.toLowerCase()) || 
       tribunal.endereco.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    // Depois aplica o filtro de categoria
     switch (activeFilter) {
       case 'mais-avaliados':
         filtered = filtered.sort((a, b) => b.total_avaliacoes - a.total_avaliacoes);
@@ -80,7 +75,7 @@ const TribunaisListPageUserL = () => {
       case 'melhor-classificacao':
         filtered = filtered.sort((a, b) => b.media_ponderada - a.media_ponderada);
         break;
-      default: // 'todos'
+      default: 
         filtered = filtered.sort((a, b) => a.nome.localeCompare(b.nome));
         break;
     }

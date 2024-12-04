@@ -30,12 +30,12 @@ const AdvocaciaListPageO = () => {
   const listarAdvocacia = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/advocacia');
+      const res = await axios.get('https://justix-back.vercel.app/advocacia');
       
       const advocaciaWithRatings = await Promise.all(
         res.data.map(async (prof) => {
           try {
-            const ratingRes = await axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/advocacia_avaliacao/${prof.id_advocacia}`);
+            const ratingRes = await axios.get(`https://justix-back.vercel.app/advocacia_avaliacao/${prof.id_advocacia}`);
             const mediaAvaliacao = parseFloat(ratingRes.data.media_avaliacao) || 0;
             return {
               ...prof,
@@ -63,9 +63,9 @@ const AdvocaciaListPageO = () => {
   const getImagemUrl = (imagem) => {
     if (!imagem) return null;
     if (imagem.startsWith('/uploads/')) {
-      return `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/${imagem}`;
+      return `https://justix-back.vercel.app/${imagem}`;
     }
-    return `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/uploads/${imagem}`;
+    return `https://justix-back.vercel.app/uploads/${imagem}`;
   };
 
   const handleFilterChange = (e) => {
@@ -89,7 +89,7 @@ const AdvocaciaListPageO = () => {
     if (!confirmacao) return;
 
     try {
-      await axios.delete(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/advocacia/${id}`);
+      await axios.delete(`https://justix-back.vercel.app/advocacia/${id}`);
       listarAdvocacia();
     } catch (err) {
       console.error('Erro ao excluir profissional:', err);

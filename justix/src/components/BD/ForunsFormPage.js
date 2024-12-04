@@ -25,7 +25,7 @@ const ForunsFormPageO = () => {
     if (forumAtivo) {
       setFormData(forumAtivo);
       if (forumAtivo.imagem) {
-        setPreviewUrl(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/uploads/${forumAtivo.imagem}`);
+        setPreviewUrl(`https://justix-back.vercel.app/uploads/${forumAtivo.imagem}`);
       }
     }
   }, [forumAtivo]);
@@ -44,19 +44,19 @@ const ForunsFormPageO = () => {
     try {
       const submitFormData = new FormData();
       
-      // Adiciona todos os campos do formulário ao FormData
+      
       Object.keys(formData).forEach(key => {
         submitFormData.append(key, formData[key]);
       });
 
-      // Adiciona a imagem apenas se uma nova imagem foi selecionada
+      
       if (imagemFile) {
         submitFormData.append('imagem', imagemFile);
       }
 
       if (forumAtivo) {
         await axios.put(
-          `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/foruns/${forumAtivo.id_forum}`,
+          `https://justix-back.vercel.app/foruns/${forumAtivo.id_forum}`,
           submitFormData,
           {
             headers: {
@@ -66,7 +66,7 @@ const ForunsFormPageO = () => {
         );
       } else {
         await axios.post(
-          'https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/foruns',
+          'https://justix-back.vercel.app/foruns',
           submitFormData,
           {
             headers: {

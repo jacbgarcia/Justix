@@ -25,7 +25,7 @@ const TribunaisFormPageO = () => {
     if (tribunalAtivo) {
       setFormData(tribunalAtivo);
       if (tribunalAtivo.imagem) {
-        setPreviewUrl(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/uploads/tribunais/${tribunalAtivo.imagem}`);
+        setPreviewUrl(`https://justix-back.vercel.app/uploads/tribunais/${tribunalAtivo.imagem}`);
       }
     }
   }, [tribunalAtivo]);
@@ -44,19 +44,19 @@ const TribunaisFormPageO = () => {
     try {
       const submitFormData = new FormData();
       
-      // Adiciona todos os campos do formulário ao FormData
+    
       Object.keys(formData).forEach(key => {
         submitFormData.append(key, formData[key]);
       });
 
-      // Adiciona a imagem apenas se uma nova imagem foi selecionada
+     
       if (imagemFile) {
         submitFormData.append('imagem', imagemFile);
       }
 
       if (tribunalAtivo) {
         await axios.put(
-          `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/tribunais/${tribunalAtivo.id_tribunal}`,
+          `https://justix-back.vercel.app/tribunais/${tribunalAtivo.id_tribunal}`,
           submitFormData,
           {
             headers: {
@@ -66,7 +66,7 @@ const TribunaisFormPageO = () => {
         );
       } else {
         await axios.post(
-          'https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/tribunais',
+          'https://justix-back.vercel.app/tribunais',
           submitFormData,
           {
             headers: {

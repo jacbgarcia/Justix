@@ -6,7 +6,7 @@ import style from '../Card/Card.module.css';
 const MediacoesListPageO = () => {
   const [mediador, setMediadores] = useState([]);
   const [filteredMediadores, setFilteredMediadores] = useState([]);
-  const [searchTerm, setSearchTerm] = useState(''); // Estado para o termo de busca
+  const [searchTerm, setSearchTerm] = useState(''); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,13 +15,13 @@ const MediacoesListPageO = () => {
 
   const listarMediadores = async () => {
     try {
-      const res = await axios.get('https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/mediador');
+      const res = await axios.get('https://justix-back.vercel.app/mediador');
       
-      // Buscar as avaliações atualizadas para cada fórum
+      
       const mediadorWithRatings = await Promise.all(
         res.data.map(async (mediador) => {
           try {
-            const ratingRes = await axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/mediador_avaliacao/${mediador.id_mediador}`);
+            const ratingRes = await axios.get(`https://justix-back.vercel.app/mediador_avaliacao/${mediador.id_mediador}`);
             const mediaAvaliacao = parseFloat(ratingRes.data.media_avaliacao) || 0;
             return {
               ...mediador,
@@ -49,8 +49,8 @@ const MediacoesListPageO = () => {
     if (!confirmacao) return;
 
     try {
-      await axios.delete(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/mediador/${id}`);
-      listarMediadores(); // Atualiza a lista após a exclusão
+      await axios.delete(`https://justix-back.vercel.app/mediador/${id}`);
+      listarMediadores(); 
     } catch (err) {
       console.error('Erro ao excluir mediador:', err);
     }
@@ -63,17 +63,17 @@ const MediacoesListPageO = () => {
   const getImagemUrl = (imagem) => {
     if (!imagem) return null;
     if (imagem.startsWith('/uploads/mediador/')) {
-      return `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/${imagem}`;
+      return `https://justix-back.vercel.app/${imagem}`;
     }
-    return `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/uploads/mediador/${imagem}`;
+    return `https://justix-back.vercel.app/uploads/mediador/${imagem}`;
   };
 
-  // Função para lidar com a mudança do campo de busca
+  
   const handleSearchChange = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
 
-    // Filtra mediadores com base no termo de busca
+    
     const filtered = mediador.filter(mediador =>
       mediador.nome.toLowerCase().includes(term.toLowerCase())
     );
@@ -94,7 +94,7 @@ const MediacoesListPageO = () => {
         placeholder="Buscar..."
         value={searchTerm}
         onChange={handleSearchChange}
-        className={style.searchInput} // Adicione uma classe de estilo, se desejar
+        className={style.searchInput} 
       />
 
       {/* Renderização dos mediadores filtrados */}

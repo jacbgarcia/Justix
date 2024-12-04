@@ -6,13 +6,15 @@ import styles from "../../Home/FTribunais/Feed.module.css";
 import Header from "../../../components/Header";
 import Footer from "../../../components/Footer/index";
 import Cadastro from '../../Cadastro';
+import Login from '../../Login';
 
-const API_BASE_URL = 'https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/';
+const API_BASE_URL = 'https://justix-back.vercel.app';
 
 const FeedTribunais = () => {
     const { id_tribunal } = useParams();
     const [comments, setComments] = useState([]);
     const [isCadastroOpen, setIsCadastroOpen] = useState(false);
+    const [isLoginOpen, setIsLoginOpen] = useState(false);
     const [averageRatings, setAverageRatings] = useState({
         av_eficiencia: 0,
         av_qualidade: 0,
@@ -97,7 +99,7 @@ const FeedTribunais = () => {
     const calculateRatingStats = (commentsData) => {
         const newStats = { ...ratingStats };
         
-        // Calcula stats para categorias normais
+        
         Object.keys(ratingCategories).forEach(category => {
             if (category !== 'weighted') {
                 const stats = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
@@ -111,7 +113,7 @@ const FeedTribunais = () => {
             }
         });
     
-        // Calcula stats para weighted
+        
         const weightedStats = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
         commentsData.forEach(comment => {
             const weightedRating = calculateWeightedRating(comment);
@@ -384,9 +386,17 @@ const FeedTribunais = () => {
                     </div>
                 </div>
             </div>
+            <Login 
+        isOpen={isLoginOpen}
+        onClose={() => setIsLoginOpen(false)}
+      />
             <Cadastro 
         isOpen={isCadastroOpen}
         onClose={() => setIsCadastroOpen(false)}
+        onSwitchToLogin={() => {
+            setIsCadastroOpen(false);
+            setIsLoginOpen(true);
+          }}
       />
             <Footer />
         </>

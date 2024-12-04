@@ -24,7 +24,7 @@ const AudienciasFormPageO = () => {
     if (juizAtivo) {
       setFormData(juizAtivo);
       if (juizAtivo.imagem) {
-        setPreviewUrl(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/uploads/${juizAtivo.imagem}`);
+        setPreviewUrl(`https://justix-back.vercel.app/uploads/${juizAtivo.imagem}`);
       }
     }
   }, [juizAtivo]);
@@ -44,19 +44,19 @@ const AudienciasFormPageO = () => {
     try {
       const submitFormData = new FormData();
       
-      // Adiciona todos os campos do formulário ao FormData
+      
       Object.keys(formData).forEach(key => {
         submitFormData.append(key, formData[key]);
       });
 
-      // Adiciona a imagem apenas se uma nova imagem foi selecionada
+     
       if (imagemFile) {
         submitFormData.append('imagem', imagemFile);
       }
 
       if (juizAtivo) {
         await axios.put(
-          `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/juiz/${juizAtivo.id_juiz}`,
+          `https://justix-back.vercel.app/juiz/${juizAtivo.id_juiz}`,
           submitFormData,
           {
             headers: {
@@ -66,7 +66,7 @@ const AudienciasFormPageO = () => {
         );
       } else {
         await axios.post(
-          'https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/juiz',
+          'https://justix-back.vercel.app/juiz',
           submitFormData,
           {
             headers: {

@@ -6,7 +6,7 @@ import style from '../Card/Card.module.css';
 const TribunaisListPageO = () => {
   const [tribunais, setTribunais] = useState([]);
   const [filteredTribunais, setFilteredTribunais] = useState([]);
-  const [searchTerm, setSearchTerm] = useState(''); // Estado para o termo de busca
+  const [searchTerm, setSearchTerm] = useState(''); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,13 +15,13 @@ const TribunaisListPageO = () => {
 
   const listarTribunais = async () => {
     try {
-      const res = await axios.get('https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/tribunais');
+      const res = await axios.get('https://justix-back.vercel.app/tribunais');
       
-      // Buscar as avaliações atualizadas para cada tribunal
+      
       const tribunaisWithRatings = await Promise.all(
         res.data.map(async (tribunal) => {
           try {
-            const ratingRes = await axios.get(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/tribunais_avaliacao/${tribunal.id_tribunal}`);
+            const ratingRes = await axios.get(`https://justix-back.vercel.app/tribunais_avaliacao/${tribunal.id_tribunal}`);
             const mediaAvaliacao = parseFloat(ratingRes.data.media_avaliacao) || 0;
             return {
               ...tribunal,
@@ -49,7 +49,7 @@ const TribunaisListPageO = () => {
     if (!confirmacao) return;
 
     try {
-      await axios.delete(`https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/tribunais/${id}`);
+      await axios.delete(`https://justix-back.vercel.app/tribunais/${id}`);
       listarTribunais();
     } catch (err) {
       console.error('Erro ao excluir tribunal:', err);
@@ -63,9 +63,9 @@ const TribunaisListPageO = () => {
   const getImagemUrl = (imagem) => {
     if (!imagem) return null;
     if (imagem.startsWith('/uploads/tribunais/')) {
-      return `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/${imagem}`;
+      return `https://justix-back.vercel.app/${imagem}`;
     }
-    return `https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/uploads/tribunais/${imagem}`;
+    return `https://justix-back.vercel.app/uploads/tribunais/${imagem}`;
   };
 
   const handleSearchChange = (e) => {

@@ -157,8 +157,10 @@
 
 
 @media screen and (max-width: 768px) {
+  header{
+    padding-top: 6%;
+  }
   .navbar {
-    padding: 0.5rem 1rem;
     width: 100%;
   }
   
@@ -228,17 +230,6 @@
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
 .noResults {
   padding: 10px;
   color: #999;
@@ -278,10 +269,8 @@
     display: flex;
     gap: 1.5rem;
     align-items: center;
-    flex-wrap: nowrap; /* Evitar quebra dos itens */
+    flex-wrap: nowrap; 
 }
-
-/* Adicione estes estilos ao seu arquivo CSS existente */
 
 .hamburgerMenu {
   display: none;

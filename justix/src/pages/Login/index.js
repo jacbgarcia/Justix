@@ -47,7 +47,7 @@ function Login({ isOpen, onClose }) {
         }
 
         try {
-            const response = await fetch('https://justix-back-oqeus76ol-jacbgarcias-projects.vercel.app/login', {
+            const response = await fetch('https://justix-back.vercel.app/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
